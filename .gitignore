@@ -1,0 +1,13 @@
+# IntelliJ IDEA
+.idea/*
+*.class
+target/
+
+# sbt
+sbt-cache/
+
+# lightbend credentials
+.lightbend/commercial.credentials
+
+# log
+/log/
