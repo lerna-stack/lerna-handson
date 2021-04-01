@@ -21,16 +21,15 @@ object Dependencies {
   }
 
   object Akka {
-    val actor            = "com.typesafe.akka" %% "akka-actor"             % Versions.akka
-    val stream           = "com.typesafe.akka" %% "akka-stream"            % Versions.akka
-    val slf4j            = "com.typesafe.akka" %% "akka-slf4j"             % Versions.akka
-    val testKit          = "com.typesafe.akka" %% "akka-testkit"           % Versions.akka
-    val cluster          = "com.typesafe.akka" %% "akka-cluster"           % Versions.akka
-    val clusterTools     = "com.typesafe.akka" %% "akka-cluster-tools"     % Versions.akka
-    val clusterSharding  = "com.typesafe.akka" %% "akka-cluster-sharding"  % Versions.akka
-    val persistence      = "com.typesafe.akka" %% "akka-persistence"       % Versions.akka
-    val persistenceQuery = "com.typesafe.akka" %% "akka-persistence-query" % Versions.akka
-    val streamTestKit    = "com.typesafe.akka" %% "akka-stream-testkit"    % Versions.akka
+    val actor              = "com.typesafe.akka" %% "akka-actor-typed"            % Versions.akka
+    val actorTestKit       = "com.typesafe.akka" %% "akka-actor-testkit-typed"    % Versions.akka
+    val cluster            = "com.typesafe.akka" %% "akka-cluster-typed"          % Versions.akka
+    val clusterSharding    = "com.typesafe.akka" %% "akka-cluster-sharding-typed" % Versions.akka
+    val persistence        = "com.typesafe.akka" %% "akka-persistence-typed"      % Versions.akka
+    val persistenceTestKit = "com.typesafe.akka" %% "akka-persistence-testkit"    % Versions.akka
+    val persistenceQuery   = "com.typesafe.akka" %% "akka-persistence-query"      % Versions.akka
+    val stream             = "com.typesafe.akka" %% "akka-stream-typed"           % Versions.akka
+    val streamTestKit      = "com.typesafe.akka" %% "akka-stream-testkit"         % Versions.akka
   }
 
   object AkkaHttp {
