@@ -17,4 +17,8 @@ final class DefaultBoxOfficeResourceSpec extends RouteSpecBase with BoxOfficeRes
     behave like boxOfficeResource(newResource)
   }
 
+  "CI should fail" in {
+    fail("CI should fail!")
+  }
+
 }
