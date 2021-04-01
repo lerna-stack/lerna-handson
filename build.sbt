@@ -30,7 +30,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-Xlint",
-)
+) ++ sys.env.get("lerna.enable.discipline").filter(_ == "true").map(_ => "-Xfatal-warnings").toSeq
+
 // See: https://www.scalatest.org/user_guide/using_the_runner
 ThisBuild / Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oT")
 
