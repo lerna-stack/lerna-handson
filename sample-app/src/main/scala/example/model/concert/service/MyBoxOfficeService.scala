@@ -3,9 +3,9 @@ package example.model.concert.service
 import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
+import example.model.concert.ConcertId
 
 import scala.concurrent.Future
-
 import jp.co.tis.lerna.util.AtLeastOnceDelivery
 import jp.co.tis.lerna.util.AtLeastOnceDelivery._
 
@@ -27,19 +27,19 @@ final class MyBoxOfficeService(
   // 起動時に ShardedConcertActor の ClusterSharding を開始する。
   private val shardRegion = factory.create(system).shardRegion
 
-  override def createConcert(request: CreateConcertRequest): Future[CreateConcertResponse] = {
+  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
     ???
   }
 
-  override def getConcert(request: GetConcertRequest): Future[GetConcertResponse] = {
+  override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
     ???
   }
 
-  override def cancelConcert(request: CancelConcertRequest): Future[CancelConcertResponse] = {
+  override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
     ???
   }
 
-  override def buyConcertTickets(request: BuyConcertTicketsRequest): Future[BuyConcertTicketsResponse] = {
+  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse] = {
     ???
   }
 }

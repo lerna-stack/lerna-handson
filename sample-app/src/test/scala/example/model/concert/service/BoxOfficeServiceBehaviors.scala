@@ -20,18 +20,17 @@ trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
     "create a concert" in {
       val service        = newService
       val id             = idGenerator.nextId()
-      val request        = CreateConcertRequest(id, 100)
-      val responseFuture = service.createConcert(request)
+      val responseFuture = service.createConcert(id, 100)
       responseFuture.futureValue shouldBe CreateConcertSucceeded(100)
     }
 
     "get the concert" in {
       val service              = newService
       val id                   = idGenerator.nextId()
-      val createResponseFuture = service.createConcert(CreateConcertRequest(id, 10))
+      val createResponseFuture = service.createConcert(id, 10)
       createResponseFuture.futureValue.isInstanceOf[CreateConcertSucceeded] shouldBe true
 
-      val getResponseFuture = service.getConcert(GetConcertRequest(id))
+      val getResponseFuture = service.getConcert(id)
       getResponseFuture.futureValue shouldBe
       GetConcertSucceeded(id, (1 to 10).map(ConcertTicketId).toVector, cancelled = false)
     }
@@ -39,10 +38,10 @@ trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
     "buy concert tickets" in {
       val service              = newService
       val id                   = idGenerator.nextId()
-      val createResponseFuture = service.createConcert(CreateConcertRequest(id, 10))
+      val createResponseFuture = service.createConcert(id, 10)
       createResponseFuture.futureValue.isInstanceOf[CreateConcertSucceeded] shouldBe true
 
-      val buyResponseFuture = service.buyConcertTickets(BuyConcertTicketsRequest(id, 3))
+      val buyResponseFuture = service.buyConcertTickets(id, 3)
       buyResponseFuture.futureValue shouldBe
       BuyConcertTicketsSucceeded((1 to 3).map(ConcertTicketId).toVector)
     }
@@ -50,10 +49,10 @@ trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
     "cancel the concert" in {
       val service              = newService
       val id                   = idGenerator.nextId()
-      val createResponseFuture = service.createConcert(CreateConcertRequest(id, 10))
+      val createResponseFuture = service.createConcert(id, 10)
       createResponseFuture.futureValue.isInstanceOf[CreateConcertSucceeded] shouldBe true
 
-      val cancelResponseFuture = service.cancelConcert(CancelConcertRequest(id))
+      val cancelResponseFuture = service.cancelConcert(id)
       cancelResponseFuture.futureValue shouldBe CancelConcertSucceeded(10)
     }
 
