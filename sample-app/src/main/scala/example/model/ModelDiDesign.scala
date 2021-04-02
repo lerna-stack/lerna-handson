@@ -10,9 +10,9 @@ object ModelDiDesign {
     newDesign
       .bind[BoxOfficeService].to[DefaultBoxOfficeService]
       .bind[ConcertActorClusterShardingFactory].toSingleton
-      .bind[ConcertActorClusterShardingFactory.ConcertActorProps].toInstance(DefaultConcertActor.props)
+      .bind[ConcertActorBehaviorFactory].toInstance(DefaultConcertActor)
       // MyConcertActor実装時にコメントアウトを外す (この行はそのまま)
-      // .bind[ConcertActorClusterShardingFactory.ConcertActorProps].toInstance(MyConcertActor.props)
+      // .bind[ConcertActorBehaviorFactory].toInstance(MyConcertActor)
       // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)
       // .bind[BoxOfficeService].to[MyBoxOfficeService]
 }

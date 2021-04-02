@@ -2,8 +2,7 @@ package example.model
 
 import akka.actor.ActorSystem
 import example.ActorSpecBase
-import example.model.concert.actor._
-import example.model.concert.service.ConcertActorClusterShardingFactory
+import example.model.concert.actor.{ ConcertActorBehaviorFactory, _ }
 import example.testing.tags.ExerciseTest
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
@@ -19,7 +18,7 @@ final class MyConcertActorBindSpec
   // 演習で bind 成功を確認するために使用する
   // MyConcertActor.props のバインドに成功したら success になる
   "ConcertActorClusterShardingFactory.ConcertActorProps bind to MyConcertActor.props" in {
-    val props = session.build[ConcertActorClusterShardingFactory.ConcertActorProps]
-    props shouldBe MyConcertActor.props
+    val behaviorFactory = session.build[ConcertActorBehaviorFactory]
+    behaviorFactory shouldBe MyConcertActor
   }
 }

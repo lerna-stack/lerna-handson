@@ -1,23 +1,29 @@
 package example.model.concert.actor
 
 import java.time.ZonedDateTime
-
 import akka.actor._
+import akka.actor.typed.Behavior
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent._
 import example.model.concert._
+import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 
 import scala.annotation.nowarn
 import scala.concurrent.duration._
 
-object DefaultConcertActorWithEventPersistence {
-  def props: Props = Props(new DefaultConcertActorWithEventPersistence)
+object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFactory {
+  def props(id: ConcertId): Props = Props(new DefaultConcertActorWithEventPersistence(id))
 
   /** DefaultConcertActorWoPersistence の State を表す。
     */
   sealed trait State extends ActorStateBase[ConcertEvent, State] {
     def toDataModel: ConcertStateData
   }
+
+  override def apply(id: ConcertId): Behavior[ConcertCommandRequest] = {
+    ConcertActorBase.createBehavior(props(id))
+  }
+
 }
 
 /** 演習途中成果物として参照するとよい。
@@ -26,7 +32,7 @@ object DefaultConcertActorWithEventPersistence {
   * nowarn付与は現在の実装方法ではunchecked警告が解決できないため
   */
 @nowarn("cat=unchecked")
-final class DefaultConcertActorWithEventPersistence
+final class DefaultConcertActorWithEventPersistence(id: ConcertId)
     extends ConcertActorBase[DefaultConcertActorWithEventPersistence.State] {
   import DefaultConcertActorWithEventPersistence._
   import ConcertActorProtocol._

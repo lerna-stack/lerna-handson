@@ -1,8 +1,6 @@
 package example.model.concert.actor
 
-import akka.actor.Props
 import akka.actor.typed.ActorRef
-import akka.actor.typed.scaladsl.adapter._
 import example.ActorSpecBase
 import example.model.concert.ConcertError._
 
@@ -20,14 +18,14 @@ trait ConcertActorBehaviors {
   import example.model.concert._
   import example.model.concert.actor.ConcertActorProtocol._
 
-  class EmptyConcertActorFactory(props: Props) {
+  class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     def create(id: ConcertId): ActorRef[ConcertCommandRequest] = {
-      system.classicSystem.actorOf(props, ConcertActorBase.actorNameFor(id))
+      testKit.spawn(createBehavior(id))
     }
   }
 
-  class AvailableConcertActorFactory(props: Props) {
-    private val underlyingFactory = new EmptyConcertActorFactory(props)
+  class AvailableConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
+    private val underlyingFactory = new EmptyConcertActorFactory(createBehavior)
     def create(id: ConcertId, numOfTickets: Int): ActorRef[ConcertCommandRequest] = {
       val actor = underlyingFactory.create(id)
       val probe = testKit.createTestProbe[CreateConcertResponse]()
@@ -37,8 +35,8 @@ trait ConcertActorBehaviors {
     }
   }
 
-  class CancelledConcertActorFactory(props: Props) {
-    private val underlyingFactory = new AvailableConcertActorFactory(props)
+  class CancelledConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
+    private val underlyingFactory = new AvailableConcertActorFactory(createBehavior)
     def create(id: ConcertId, numOfTickets: Int): ActorRef[ConcertCommandRequest] = {
       val actor = underlyingFactory.create(id, numOfTickets)
       val probe = testKit.createTestProbe[CancelConcertResponse]()

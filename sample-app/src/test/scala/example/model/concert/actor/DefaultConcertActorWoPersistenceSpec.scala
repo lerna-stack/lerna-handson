@@ -6,12 +6,13 @@ import example.ActorSpecBase
 final class DefaultConcertActorWoPersistenceSpec
     extends ActorSpecBase(ActorSystem("default-concert-actor-wo-persistence"))
     with ConcertActorBehaviors {
-  private def props: Props = DefaultConcertActorWoPersistence.props
+
+  private def createBehavior: ConcertActorBehaviorFactory = DefaultConcertActorWoPersistence
 
   classOf[DefaultConcertActorWoPersistence].getSimpleName should {
-    behave like emptyConcertActor(new EmptyConcertActorFactory(props))
-    behave like availableConcertActor(new AvailableConcertActorFactory(props))
-    behave like cancelledConcertActor(new CancelledConcertActorFactory(props))
+    behave like emptyConcertActor(new EmptyConcertActorFactory(createBehavior))
+    behave like availableConcertActor(new AvailableConcertActorFactory(createBehavior))
+    behave like cancelledConcertActor(new CancelledConcertActorFactory(createBehavior))
   }
 
 }

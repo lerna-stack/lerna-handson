@@ -1,28 +1,34 @@
 package example.model.concert.actor
 
 import java.time.ZonedDateTime
-
 import akka.actor.Props
+import akka.actor.typed.Behavior
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent._
 import example.model.concert._
+import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 
 import scala.annotation.nowarn
 import scala.concurrent.duration._
 
-object MyConcertActor {
-  def props: Props = Props(new MyConcertActor)
+object MyConcertActor extends ConcertActorBehaviorFactory {
+  def props(id: ConcertId): Props = Props(new MyConcertActor(id))
 
   /** MyConcertActor の State を表す。
     */
   sealed trait State extends ActorStateBase[ConcertEvent, State] {
     def toDataModel: ConcertStateData
   }
+
+  def apply(id: ConcertId): Behavior[ConcertCommandRequest] = {
+    ConcertActorBase.createBehavior(props(id))
+  }
+
 }
 
 // 現在の実装方法ではunchecked警告が解決できないため
 @nowarn("cat=unchecked")
-final class MyConcertActor extends ConcertActorBase[MyConcertActor.State] {
+final class MyConcertActor(id: ConcertId) extends ConcertActorBase[MyConcertActor.State] {
   import MyConcertActor._
   import ConcertActorProtocol._
 
