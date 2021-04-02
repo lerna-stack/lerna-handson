@@ -1,7 +1,7 @@
 package example.model.concert.actor
 
 import akka.actor._
-import akka.testkit.TestKit
+import akka.actor.typed.scaladsl.adapter.TypedActorRefOps
 import example.ActorSpecBase
 import example.model.concert.ConcertError._
 
@@ -19,11 +19,6 @@ trait ConcertActorBehaviors {
   import example.model.concert._
   import example.model.concert.actor.ConcertActorProtocol._
 
-  // TODO Use typed testKit
-  val classicTestKit = new TestKit(system.classicSystem)
-  import classicTestKit._
-  implicit def self: ActorRef = classicTestKit.testActor
-
   class EmptyConcertActorFactory(props: Props) {
     def create(id: ConcertId): ActorRef = {
       system.classicSystem.actorOf(props, ConcertActorBase.actorNameFor(id))
@@ -34,8 +29,9 @@ trait ConcertActorBehaviors {
     private val underlyingFactory = new EmptyConcertActorFactory(props)
     def create(id: ConcertId, numOfTickets: Int): ActorRef = {
       val actor = underlyingFactory.create(id)
-      actor ! CreateConcertRequest(id, numOfTickets)
-      expectMsgType[CreateConcertSucceeded]
+      val probe = testKit.createTestProbe[CreateConcertResponse]()
+      actor.tell(CreateConcertRequest(id, numOfTickets), probe.ref.toClassic)
+      probe.expectMessageType[CreateConcertSucceeded]
       actor
     }
   }
@@ -44,8 +40,9 @@ trait ConcertActorBehaviors {
     private val underlyingFactory = new AvailableConcertActorFactory(props)
     def create(id: ConcertId, numOfTickets: Int): ActorRef = {
       val actor = underlyingFactory.create(id, numOfTickets)
-      actor ! CancelConcertRequest(id)
-      expectMsgType[CancelConcertSucceeded]
+      val probe = testKit.createTestProbe[CancelConcertResponse]()
+      actor.tell(CancelConcertRequest(id), probe.ref.toClassic)
+      probe.expectMessageType[CancelConcertSucceeded]
       actor
     }
   }
@@ -60,8 +57,9 @@ trait ConcertActorBehaviors {
       val actor        = newConcertActor.create(id)
       val numOfTickets = 3
 
-      actor ! CreateConcertRequest(id, numOfTickets)
-      val resp = expectMsgType[CreateConcertSucceeded]
+      val probe = testKit.createTestProbe[CreateConcertResponse]()
+      actor.tell(CreateConcertRequest(id, numOfTickets), probe.ref.toClassic)
+      val resp = probe.expectMessageType[CreateConcertSucceeded]
       resp.numTickets shouldBe numOfTickets
     }
 
@@ -69,8 +67,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id)
 
-      actor ! GetConcertRequest(id)
-      val resp = expectMsgType[GetConcertFailed]
+      val probe = testKit.createTestProbe[GetConcertResponse]()
+      actor.tell(GetConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[GetConcertFailed]
       resp.error shouldBe a[ConcertNotFoundError]
     }
 
@@ -78,8 +77,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id)
 
-      actor ! CancelConcertRequest(id)
-      val resp = expectMsgType[CancelConcertFailed]
+      val probe = testKit.createTestProbe[CancelConcertResponse]()
+      actor.tell(CancelConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[CancelConcertFailed]
       resp.error shouldBe a[ConcertNotFoundError]
     }
 
@@ -91,8 +91,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
-      actor ! CreateConcertRequest(id, 2)
-      val resp = expectMsgType[CreateConcertFailed]
+      val probe = testKit.createTestProbe[CreateConcertResponse]()
+      actor.tell(CreateConcertRequest(id, 2), probe.ref.toClassic)
+      val resp = probe.expectMessageType[CreateConcertFailed]
       resp.error shouldBe a[DuplicatedConcertError]
     }
 
@@ -100,8 +101,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
-      actor ! GetConcertRequest(id)
-      val resp = expectMsgType[GetConcertSucceeded]
+      val probe = testKit.createTestProbe[GetConcertResponse]()
+      actor.tell(GetConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[GetConcertSucceeded]
       resp.id shouldBe id
       resp.tickets.size shouldBe 3
     }
@@ -110,8 +112,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
-      actor ! CancelConcertRequest(id)
-      val resp = expectMsgType[CancelConcertSucceeded]
+      val probe = testKit.createTestProbe[CancelConcertResponse]()
+      actor.tell(CancelConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[CancelConcertSucceeded]
       resp.numberOfTickets shouldBe 3
     }
 
@@ -119,8 +122,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
-      actor ! BuyConcertTicketsRequest(id, 2)
-      val resp = expectMsgType[BuyConcertTicketsSucceeded]
+      val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
+      actor.tell(BuyConcertTicketsRequest(id, 2), probe.ref.toClassic)
+      val resp = probe.expectMessageType[BuyConcertTicketsSucceeded]
       resp.tickets.size shouldBe 2
     }
 
@@ -128,8 +132,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
-      actor ! BuyConcertTicketsRequest(id, 0)
-      val resp = expectMsgType[BuyConcertTicketsFailed]
+      val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
+      actor.tell(BuyConcertTicketsRequest(id, 0), probe.ref.toClassic)
+      val resp = probe.expectMessageType[BuyConcertTicketsFailed]
       resp.error shouldBe a[InvalidConcertOperationError]
     }
 
@@ -137,8 +142,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
-      actor ! BuyConcertTicketsRequest(id, 3)
-      val resp = expectMsgType[BuyConcertTicketsFailed]
+      val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
+      actor.tell(BuyConcertTicketsRequest(id, 3), probe.ref.toClassic)
+      val resp = probe.expectMessageType[BuyConcertTicketsFailed]
       resp.error shouldBe a[InvalidConcertOperationError]
     }
 
@@ -149,8 +155,10 @@ trait ConcertActorBehaviors {
     "can get the concert even if it is cancelled" in {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
-      actor ! GetConcertRequest(id)
-      val resp = expectMsgType[GetConcertSucceeded]
+
+      val probe = testKit.createTestProbe[GetConcertResponse]()
+      actor.tell(GetConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[GetConcertSucceeded]
       resp.tickets.size shouldBe 2
       resp.cancelled shouldBe true
     }
@@ -159,8 +167,9 @@ trait ConcertActorBehaviors {
       val id    = nextId()
       val actor = newConcertActor.create(id, numOfTickets = 1)
 
-      actor ! CancelConcertRequest(id)
-      val resp = expectMsgType[CancelConcertFailed]
+      val probe = testKit.createTestProbe[CancelConcertResponse]()
+      actor.tell(CancelConcertRequest(id), probe.ref.toClassic)
+      val resp = probe.expectMessageType[CancelConcertFailed]
       resp.error shouldBe a[InvalidConcertOperationError]
     }
 
