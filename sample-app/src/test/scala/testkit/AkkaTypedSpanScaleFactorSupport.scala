@@ -1,6 +1,6 @@
 package testkit
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import akka.testkit.TestKitExtension
 import org.scalatest.concurrent.ScaledTimeSpans
 
@@ -12,9 +12,9 @@ import org.scalatest.concurrent.ScaledTimeSpans
   *
   * The time scale factor can be configured by `akka.test.timefactor` in a configuration file.
   */
-trait AkkaSpanScaleFactorSupport extends ScaledTimeSpans {
+trait AkkaTypedSpanScaleFactorSupport extends ScaledTimeSpans {
   // No trait provides the ActorSystem in both TestKit and RouteTest
-  implicit def system: ActorSystem
+  implicit def system: ActorSystem[Nothing]
 
   /** Configure the ScalaTest time factor from Akka TestKit's test time factor.
     * <p>

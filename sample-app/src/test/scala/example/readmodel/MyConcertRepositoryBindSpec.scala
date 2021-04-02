@@ -13,7 +13,7 @@ final class MyConcertRepositoryBindSpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     DefaultReadModelDiDesign.design
-      .bind[ActorSystem].toInstance(system)
+      .bind[ActorSystem].toInstance(system.classicSystem)
 
   // 演習で bind 成功を確認するために使用する
   // MyConcertRepository のバインドに成功したら success になる

@@ -18,7 +18,7 @@ final class MyBoxOfficeResourceBindSpec
 
   override protected val design: Design =
     MainHttpApiServerDiDesign.design
-      .bind[ActorSystem].toInstance(system)
+      .bind[ActorSystem].toInstance(system.classicSystem)
       .bind[BoxOfficeUseCase].toInstance(mock[BoxOfficeUseCase])
       .bind[BoxOfficeReadModelUseCase].toInstance(mock[BoxOfficeReadModelUseCase])
 

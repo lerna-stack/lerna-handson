@@ -1,6 +1,7 @@
 package example.model.concert.actor
 
 import akka.actor._
+import akka.testkit.TestKit
 import example.ActorSpecBase
 import example.model.concert.ConcertError._
 
@@ -18,9 +19,14 @@ trait ConcertActorBehaviors {
   import example.model.concert._
   import example.model.concert.actor.ConcertActorProtocol._
 
+  // TODO Use typed testKit
+  val classicTestKit = new TestKit(system.classicSystem)
+  import classicTestKit._
+  implicit def self: ActorRef = classicTestKit.testActor
+
   class EmptyConcertActorFactory(props: Props) {
     def create(id: ConcertId): ActorRef = {
-      system.actorOf(props, ConcertActorBase.actorNameFor(id))
+      system.classicSystem.actorOf(props, ConcertActorBase.actorNameFor(id))
     }
   }
 
