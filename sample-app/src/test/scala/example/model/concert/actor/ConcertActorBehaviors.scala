@@ -3,6 +3,7 @@ package example.model.concert.actor
 import akka.actor.typed.ActorRef
 import example.ActorSpecBase
 import example.model.concert.ConcertError._
+import example.model.concert.ConcertIdGeneratorSupport
 
 /** ConcertActor の 共通テスト を定義する
   *
@@ -12,7 +13,7 @@ import example.model.concert.ConcertError._
   * [[https://www.scalatest.org/user_guide/sharing_tests Sharing tests]]
   * を参照すること
   */
-trait ConcertActorBehaviors {
+trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
   this: ActorSpecBase =>
 
   import example.model.concert._
@@ -46,13 +47,10 @@ trait ConcertActorBehaviors {
     }
   }
 
-  val idGenerator         = new ConcertIdGenerator()
-  def nextId(): ConcertId = idGenerator.nextId()
-
   def emptyConcertActor(newConcertActor: EmptyConcertActorFactory): Unit = {
 
     "can create a concert" in {
-      val id           = nextId()
+      val id           = newConcertId()
       val actor        = newConcertActor.create(id)
       val numOfTickets = 3
 
@@ -63,7 +61,7 @@ trait ConcertActorBehaviors {
     }
 
     "cannot get the concert if it is not created yet" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id)
 
       val probe = testKit.createTestProbe[GetConcertResponse]()
@@ -73,7 +71,7 @@ trait ConcertActorBehaviors {
     }
 
     "cannot cancel a concert if the concert is not created" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id)
 
       val probe = testKit.createTestProbe[CancelConcertResponse]()
@@ -87,7 +85,7 @@ trait ConcertActorBehaviors {
   def availableConcertActor(newConcertActor: AvailableConcertActorFactory): Unit = {
 
     "cannot create a concert if it's already exists" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[CreateConcertResponse]()
@@ -97,7 +95,7 @@ trait ConcertActorBehaviors {
     }
 
     "can get the concert" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[GetConcertResponse]()
@@ -108,7 +106,7 @@ trait ConcertActorBehaviors {
     }
 
     "can cancel a concert" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[CancelConcertResponse]()
@@ -118,7 +116,7 @@ trait ConcertActorBehaviors {
     }
 
     "can buy tickets" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
@@ -128,7 +126,7 @@ trait ConcertActorBehaviors {
     }
 
     "cannot buy no tickets" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
@@ -138,7 +136,7 @@ trait ConcertActorBehaviors {
     }
 
     "cannot buy exceeded tickets" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyConcertTicketsResponse]()
@@ -152,7 +150,7 @@ trait ConcertActorBehaviors {
   def cancelledConcertActor(newConcertActor: CancelledConcertActorFactory): Unit = {
 
     "can get the concert even if it is cancelled" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[GetConcertResponse]()
@@ -163,7 +161,7 @@ trait ConcertActorBehaviors {
     }
 
     "cannot cancel a concert if the concert is already cancelled" in {
-      val id    = nextId()
+      val id    = newConcertId()
       val actor = newConcertActor.create(id, numOfTickets = 1)
 
       val probe = testKit.createTestProbe[CancelConcertResponse]()
