@@ -13,7 +13,7 @@ final class MyConcertActorSpec
 
   private def createBehavior: ConcertActorBehaviorFactory = MyConcertActor
 
-  classOf[MyConcertActor].getSimpleName should {
+  "MyConcertActor" should {
     behave like emptyConcertActor(new EmptyConcertActorFactory(createBehavior))
     behave like availableConcertActor(new AvailableConcertActorFactory(createBehavior))
     behave like cancelledConcertActor(new CancelledConcertActorFactory(createBehavior))
