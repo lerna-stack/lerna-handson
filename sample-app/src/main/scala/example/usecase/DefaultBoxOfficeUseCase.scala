@@ -18,7 +18,7 @@ final class DefaultBoxOfficeUseCase(
 
   override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
     boxOfficeService
-      .createConcert(CreateConcertRequest(id, numberOfTickets))
+      .createConcert(id, numberOfTickets)
       .map {
         case succeeded: CreateConcertSucceeded =>
           CreateConcertResponse(succeeded.numTickets)
@@ -29,7 +29,7 @@ final class DefaultBoxOfficeUseCase(
 
   override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
     boxOfficeService
-      .getConcert(GetConcertRequest(id))
+      .getConcert(id)
       .map {
         case succeeded: GetConcertSucceeded =>
           GetConcertResponse(succeeded.tickets, succeeded.cancelled)
@@ -40,7 +40,7 @@ final class DefaultBoxOfficeUseCase(
 
   override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
     boxOfficeService
-      .cancelConcert(CancelConcertRequest(id))
+      .cancelConcert(id)
       .map {
         case succeeded: CancelConcertSucceeded =>
           CancelConcertResponse(succeeded.numberOfTickets)
@@ -51,7 +51,7 @@ final class DefaultBoxOfficeUseCase(
 
   override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse] = {
     boxOfficeService
-      .buyConcertTickets(BuyConcertTicketsRequest(id, numberOfTickets))
+      .buyConcertTickets(id, numberOfTickets)
       .map {
         case succeeded: BuyConcertTicketsSucceeded =>
           BuyConcertTicketsResponse(succeeded.tickets)

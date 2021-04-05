@@ -43,29 +43,29 @@ final class DefaultConcertActor extends ConcertActorBase[DefaultConcertActor.Sta
         AvailableConcertState(tickets)
     }
     override def receiveCommand: Receive = {
-      case _: GetConcertRequest =>
+      case getRequest: GetConcertRequest =>
         // 未作成なのでエラー
-        sender() ! GetConcertFailed(ConcertNotFoundError(id))
+        getRequest.replyTo ! GetConcertFailed(ConcertNotFoundError(id))
       case createRequest: CreateConcertRequest =>
         // 作成イベントを発行する処理
         if (createRequest.numTickets <= 0) {
           // チケット数が0枚以下なのでエラー
           val error = InvalidConcertOperationError("Cannot create concert without tickets.")
-          sender() ! CreateConcertFailed(error)
+          createRequest.replyTo ! CreateConcertFailed(error)
         } else {
           // 作成成功
           val event = ConcertCreated(createRequest.concertId, createRequest.numTickets, ZonedDateTime.now)
           persist(event) { _ =>
             updateState(event)
-            sender() ! CreateConcertSucceeded(event.numOfTickets)
+            createRequest.replyTo ! CreateConcertSucceeded(event.numOfTickets)
           }
         }
-      case _: CancelConcertRequest =>
+      case cancelRequest: CancelConcertRequest =>
         // 未作成なのでエラー
-        sender() ! CancelConcertFailed(ConcertNotFoundError(id))
-      case _: BuyConcertTicketsRequest =>
+        cancelRequest.replyTo ! CancelConcertFailed(ConcertNotFoundError(id))
+      case buyTicketsRequest: BuyConcertTicketsRequest =>
         // 未作成なのでエラー
-        sender() ! BuyConcertTicketsFailed(ConcertNotFoundError(id))
+        buyTicketsRequest.replyTo ! BuyConcertTicketsFailed(ConcertNotFoundError(id))
     }
   }
 
@@ -83,35 +83,35 @@ final class DefaultConcertActor extends ConcertActorBase[DefaultConcertActor.Sta
         AvailableConcertState(remainingTickets)
     }
     override def receiveCommand: Receive = {
-      case _: GetConcertRequest =>
-        sender() ! GetConcertSucceeded(id, tickets, false)
-      case _: CreateConcertRequest =>
+      case getRequest: GetConcertRequest =>
+        getRequest.replyTo ! GetConcertSucceeded(id, tickets, false)
+      case createRequest: CreateConcertRequest =>
         // 既に作成済みなのでエラー
-        sender() ! CreateConcertFailed(DuplicatedConcertError(id))
-      case _: CancelConcertRequest =>
+        createRequest.replyTo ! CreateConcertFailed(DuplicatedConcertError(id))
+      case cancelRequest: CancelConcertRequest =>
         // キャンセル処理を実行する
         val event = ConcertCancelled(id, ZonedDateTime.now)
         persist(event) { _ =>
           updateState(event)
           saveSnapshot()
-          sender() ! CancelConcertSucceeded(tickets.size)
+          cancelRequest.replyTo ! CancelConcertSucceeded(tickets.size)
         }
       case buyTicketsRequest: BuyConcertTicketsRequest =>
         // チケット購入処理
         if (buyTicketsRequest.numberOfTickets <= 0) {
           // チケット枚数がゼロ以下なのでエラー
           val error = InvalidConcertOperationError("Cannot a buy non positive number of tickets.")
-          sender() ! BuyConcertTicketsFailed(error)
+          buyTicketsRequest.replyTo ! BuyConcertTicketsFailed(error)
         } else if (buyTicketsRequest.numberOfTickets > tickets.size) {
           // 残チケット枚数が不足しているのでエラー
           val error = InvalidConcertOperationError("Not enough tickets available.")
-          sender() ! BuyConcertTicketsFailed(error)
+          buyTicketsRequest.replyTo ! BuyConcertTicketsFailed(error)
         } else {
           val boughtTickets = tickets.take(buyTicketsRequest.numberOfTickets)
           val event         = ConcertTicketsBought(id, boughtTickets, ZonedDateTime.now)
           persist(event) { _ =>
             updateState(event)
-            sender() ! BuyConcertTicketsSucceeded(event.tickets)
+            buyTicketsRequest.replyTo ! BuyConcertTicketsSucceeded(event.tickets)
           }
         }
     }
@@ -123,20 +123,20 @@ final class DefaultConcertActor extends ConcertActorBase[DefaultConcertActor.Sta
     override def toDataModel: ConcertStateData = CancelledConcertStateData(tickets)
     override def updated: EventHandler         = PartialFunction.empty
     override def receiveCommand: Receive = {
-      case _: GetConcertRequest =>
+      case getRequest: GetConcertRequest =>
         // 取得処理は成功する
-        sender() ! GetConcertSucceeded(id, tickets, true)
-      case _: CreateConcertRequest =>
+        getRequest.replyTo ! GetConcertSucceeded(id, tickets, true)
+      case createRequest: CreateConcertRequest =>
         // すでにコンサートが存在するのでエラー
-        sender() ! CreateConcertFailed(DuplicatedConcertError(id))
-      case _: CancelConcertRequest =>
+        createRequest.replyTo ! CreateConcertFailed(DuplicatedConcertError(id))
+      case cancelRequest: CancelConcertRequest =>
         // すでにキャンセル済みなのでエラー
         val error = InvalidConcertOperationError("Concert is already cancelled.")
-        sender() ! CancelConcertFailed(error)
-      case _: BuyConcertTicketsRequest =>
+        cancelRequest.replyTo ! CancelConcertFailed(error)
+      case buyTicketsRequest: BuyConcertTicketsRequest =>
         // すでにキャンセル済みなのでエラー
         val error = InvalidConcertOperationError("Concert is already cancelled.")
-        sender() ! BuyConcertTicketsFailed(error)
+        buyTicketsRequest.replyTo ! BuyConcertTicketsFailed(error)
     }
   }
 

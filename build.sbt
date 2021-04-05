@@ -51,7 +51,7 @@ lazy val ExerciseAkkaBasic = (project in file("exercise-akka-basic"))
       Dependencies.ScalaTest.wordspec       % Test,
       Dependencies.ScalaTest.shouldmatchers % Test,
       Dependencies.Akka.actor,
-      Dependencies.Akka.testKit % Test,
+      Dependencies.Akka.actorTestKit % Test,
     ),
   )
 
@@ -99,14 +99,12 @@ lazy val SampleApp = (project in file("sample-app"))
       Dependencies.ScalaTest.wordspec       % Test,
       Dependencies.ScalaTest.shouldmatchers % Test,
       Dependencies.Akka.actor,
-      Dependencies.Akka.stream,
-      Dependencies.Akka.slf4j,
+      Dependencies.Akka.actorTestKit % Test,
       Dependencies.Akka.cluster,
-      Dependencies.Akka.clusterTools,
       Dependencies.Akka.clusterSharding,
       Dependencies.Akka.persistence,
       Dependencies.Akka.persistenceQuery,
-      Dependencies.Akka.testKit       % Test,
+      Dependencies.Akka.stream,
       Dependencies.Akka.streamTestKit % Test,
       Dependencies.AkkaHttp.http,
       Dependencies.AkkaHttp.sprayJson,
@@ -135,7 +133,7 @@ lazy val LernaLibrary = (project in file("lerna-library"))
     name := "lerna-library",
     libraryDependencies ++= Seq(
       Dependencies.Akka.actor,
-      Dependencies.Akka.testKit % Test,
+      Dependencies.Akka.actorTestKit % Test,
     ),
   ).dependsOn(
     LernaTestKit % Test,

@@ -11,7 +11,7 @@ final class DefaultBoxOfficeServiceSpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design
-      .bind[ActorSystem].toInstance(system)
+      .bind[ActorSystem].toInstance(system.classicSystem)
       .bind[DefaultBoxOfficeService]
       .toInstanceProvider[ActorSystem, ConcertActorClusterShardingFactory] { (system, factory) =>
         new DefaultBoxOfficeService(system, factory)

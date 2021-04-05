@@ -11,7 +11,7 @@ final class DefaultConcertRepositorySpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     DefaultReadModelDiDesign.design
-      .bind[ActorSystem].toInstance(system)
+      .bind[ActorSystem].toInstance(system.classicSystem)
       .bind[DefaultConcertDatabaseServiceConfig].toInstance(
         new DefaultConcertDatabaseServiceConfig(databaseConfig),
       )

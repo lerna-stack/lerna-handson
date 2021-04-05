@@ -1,5 +1,6 @@
 package example.model.concert.service
 
+import example.model.concert.ConcertId
 import example.model.concert.actor.ConcertActorProtocol._
 
 import scala.concurrent.Future
@@ -8,17 +9,17 @@ trait BoxOfficeService {
 
   /** コンサートを作成する。
     */
-  def createConcert(request: CreateConcertRequest): Future[CreateConcertResponse]
+  def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse]
 
   /** コンサートを取得する。
     */
-  def getConcert(request: GetConcertRequest): Future[GetConcertResponse]
+  def getConcert(id: ConcertId): Future[GetConcertResponse]
 
   /** コンサートをキャンセルする。
     */
-  def cancelConcert(request: CancelConcertRequest): Future[CancelConcertResponse]
+  def cancelConcert(id: ConcertId): Future[CancelConcertResponse]
 
   /** コンサートのチケットを購入する。
     */
-  def buyConcertTickets(request: BuyConcertTicketsRequest): Future[BuyConcertTicketsResponse]
+  def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse]
 }
