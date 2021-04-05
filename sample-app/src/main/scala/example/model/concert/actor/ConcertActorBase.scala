@@ -7,6 +7,7 @@ import akka.actor.{ Props, ReceiveTimeout }
 import akka.cluster.sharding.ShardRegion.Passivate
 import akka.cluster.sharding.typed.ShardingEnvelope
 import akka.cluster.sharding.typed.scaladsl.{ ClusterSharding, Entity, EntityRef, EntityTypeKey }
+import akka.persistence.typed.PersistenceId
 import example.model.concert._
 import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 import jp.co.tis.lerna.util.AtLeastOnceDelivery.AtLeastOnceDeliveryRequest
@@ -43,7 +44,8 @@ object ConcertActorBase {
           .fromString(entityContext.entityId)
           .left.map(error => new IllegalStateException(error.toString))
           .toTry.get
-        createBehavior(id)
+        val persistenceId = PersistenceId(entityContext.entityTypeKey.name, id.value)
+        createBehavior(id, persistenceId)
       })
 
     def entityRefFor(id: ConcertId): EntityRef[ConcertCommandRequest] = {

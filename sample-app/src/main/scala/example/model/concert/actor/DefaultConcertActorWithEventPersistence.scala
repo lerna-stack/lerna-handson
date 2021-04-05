@@ -3,6 +3,7 @@ package example.model.concert.actor
 import java.time.ZonedDateTime
 import akka.actor._
 import akka.actor.typed.Behavior
+import akka.persistence.typed.PersistenceId
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent._
 import example.model.concert._
@@ -20,7 +21,8 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
     def toDataModel: ConcertStateData
   }
 
-  override def apply(id: ConcertId): Behavior[ConcertCommandRequest] = {
+  override def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[ConcertCommandRequest] = {
+    // TODO implement using EventSourcedBehavior and PersistenceID
     ConcertActorBase.createBehavior(props(id))
   }
 
