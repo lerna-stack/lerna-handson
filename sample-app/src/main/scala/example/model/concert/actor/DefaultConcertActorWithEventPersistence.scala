@@ -12,7 +12,6 @@ import example.model.concert.actor.ConcertActorProtocol._
 import java.time.ZonedDateTime
 
 object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFactory {
-  // TODO Implement Passivation
   def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[ConcertCommandRequest] = {
     EventSourcedBehavior
       .withEnforcedReplies[ConcertCommandRequest, ConcertEvent, State](
