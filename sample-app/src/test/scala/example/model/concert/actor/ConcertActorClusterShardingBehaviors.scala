@@ -11,7 +11,7 @@ trait ConcertActorClusterShardingBehaviors extends ConcertIdGeneratorSupport wit
 
   def shardedActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
 
-    val sharding = new ConcertActorClusterShardingFactory(DefaultConcertActor).create(system)
+    val sharding = new ConcertActorClusterShardingFactory(createBehavior).create(system)
 
     "handle ConcertCommandRequests" in {
       val id        = newConcertId()
