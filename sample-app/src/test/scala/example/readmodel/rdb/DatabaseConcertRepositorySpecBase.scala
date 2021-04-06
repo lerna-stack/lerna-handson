@@ -1,6 +1,5 @@
 package example.readmodel.rdb
 
-import akka.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import example.ActorSpecBase
 import org.scalatest.BeforeAndAfter
@@ -8,9 +7,7 @@ import org.scalatest.time.{ Milliseconds, Span }
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
-abstract class DatabaseConcertRepositorySpecBase(systemName: String)
-    extends ActorSpecBase(ActorSystem(systemName))
-    with BeforeAndAfter {
+abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with BeforeAndAfter {
   // NOTE: すべての操作が H2DB 互換であり、H2DB でテストにパスすればよいと妥協している
   protected val config: Config = ConfigFactory.parseString("""
       |h2db {
