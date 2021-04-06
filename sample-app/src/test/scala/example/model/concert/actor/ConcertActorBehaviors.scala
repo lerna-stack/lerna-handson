@@ -1,6 +1,7 @@
 package example.model.concert.actor
 
 import akka.actor.typed.ActorRef
+import akka.persistence.typed.PersistenceId
 import example.ActorSpecBase
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertIdGeneratorSupport
@@ -21,7 +22,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
   class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     def create(id: ConcertId): ActorRef[ConcertCommandRequest] = {
-      testKit.spawn(createBehavior(id))
+      testKit.spawn(createBehavior(id, PersistenceId.ofUniqueId(id.value)))
     }
   }
 

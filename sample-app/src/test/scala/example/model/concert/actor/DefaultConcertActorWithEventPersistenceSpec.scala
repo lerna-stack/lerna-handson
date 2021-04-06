@@ -13,7 +13,7 @@ final class DefaultConcertActorWithEventPersistenceSpec
 
   private def createBehavior: ConcertActorBehaviorFactory = DefaultConcertActorWithEventPersistence
 
-  classOf[DefaultConcertActorWithEventPersistence].getSimpleName should {
+  "DefaultConcertActorWithEventPersistence" should {
     behave like emptyConcertActor(new EmptyConcertActorFactory(createBehavior))
     behave like availableConcertActor(new AvailableConcertActorFactory(createBehavior))
     behave like cancelledConcertActor(new CancelledConcertActorFactory(createBehavior))
