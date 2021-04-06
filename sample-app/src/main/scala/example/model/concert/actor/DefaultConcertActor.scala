@@ -20,7 +20,9 @@ object DefaultConcertActor extends ConcertActorBehaviorFactory {
         emptyState = NoConcertState(id),
         (state, command) => state.applyCommand(command),
         (state, event) => state.applyEvent(event),
-      ).snapshotWhen {
+      )
+      .withTagger(_ => Set(ConcertEvent.tag))
+      .snapshotWhen {
         case (_, _: ConcertCancelled, _) => true
         case _                           => false
       }
