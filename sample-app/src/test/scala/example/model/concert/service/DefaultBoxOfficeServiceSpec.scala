@@ -2,6 +2,7 @@ package example.model.concert.service
 
 import akka.actor.ActorSystem
 import example.model.ModelDiDesign
+import example.model.concert.actor.ConcertActorClusterShardingFactory
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 

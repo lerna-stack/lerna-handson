@@ -1,8 +1,8 @@
 package example.model.concert.actor
 
 import java.time.ZonedDateTime
-
 import akka.actor._
+import akka.actor.typed.Behavior
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent._
 import example.model.concert._
@@ -10,14 +10,19 @@ import example.model.concert._
 import scala.annotation.nowarn
 import scala.concurrent.duration._
 
-object DefaultConcertActorWoPersistence {
-  def props: Props = Props(new DefaultConcertActorWoPersistence)
+object DefaultConcertActorWoPersistence extends ConcertActorBehaviorFactory {
+  def props(id: ConcertId): Props = Props(new DefaultConcertActorWoPersistence(id))
 
   /** DefaultConcertActorWoPersistence の State を表す。
     */
   sealed trait State extends ActorStateBase[ConcertEvent, State] {
     def toDataModel: ConcertStateData
   }
+
+  override def apply(id: ConcertId): Behavior[ConcertActorProtocol.ConcertCommandRequest] = {
+    ConcertActorBase.createBehavior(props(id))
+  }
+
 }
 
 /** 演習途中成果物として参照するとよい
@@ -26,7 +31,8 @@ object DefaultConcertActorWoPersistence {
   * nowarn付与は現在の実装方法ではunchecked警告が解決できないため
   */
 @nowarn("cat=unchecked")
-final class DefaultConcertActorWoPersistence extends ConcertActorBase[DefaultConcertActorWoPersistence.State] {
+final class DefaultConcertActorWoPersistence(id: ConcertId)
+    extends ConcertActorBase[DefaultConcertActorWoPersistence.State] {
   import DefaultConcertActorWoPersistence._
   import ConcertActorProtocol._
 

@@ -1,10 +1,14 @@
 package example.model.concert.actor
 
-import akka.actor.{ ActorSystem, Props, ReceiveTimeout }
-import akka.cluster.sharding.ShardRegion.{ HashCodeMessageExtractor, Passivate }
-import akka.cluster.sharding.{ ClusterSharding, ClusterShardingSettings }
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.scaladsl.adapter._
+import akka.actor.typed.{ ActorRef, ActorSystem, Behavior, Terminated }
+import akka.actor.{ Props, ReceiveTimeout }
+import akka.cluster.sharding.ShardRegion.Passivate
+import akka.cluster.sharding.typed.ShardingEnvelope
+import akka.cluster.sharding.typed.scaladsl.{ ClusterSharding, Entity, EntityRef, EntityTypeKey }
 import example.model.concert._
-import example.model.concert.actor.ConcertActorBase.idFor
+import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 import jp.co.tis.lerna.util.AtLeastOnceDelivery.AtLeastOnceDeliveryRequest
 
 import scala.concurrent.duration._
@@ -14,65 +18,61 @@ object ConcertActorBase {
   /** ShardedConcertActor の ClusterSharding を開始する。
     */
   def startClusterSharding(
-      system: ActorSystem,
+      system: ActorSystem[Nothing],
       config: ConcertActorConfig,
-      props: Props,
+      createBehavior: ConcertActorBehaviorFactory,
   ): ConcertActorClusterSharding = {
-    new ConcertActorClusterSharding(system, config, props)
+    new ConcertActorClusterSharding(system, config, createBehavior)
   }
 
   /** ConcertActor の ClusterSharding の情報を保持するクラス
     */
-  final class ConcertActorClusterSharding(system: ActorSystem, config: ConcertActorConfig, props: Props) {
+  final class ConcertActorClusterSharding(
+      system: ActorSystem[Nothing],
+      config: ConcertActorConfig,
+      createBehavior: ConcertActorBehaviorFactory,
+  ) {
+    private val sharding                                      = ClusterSharding(system)
+    private val TypeKey: EntityTypeKey[ConcertCommandRequest] = EntityTypeKey[ConcertCommandRequest](config.shardName)
 
     /** ShardRegion を返す
       */
-    val shardRegion = ClusterSharding(system).start(
-      config.shardName,
-      props,
-      ClusterShardingSettings(system),
-      new MessageExtractor(config.shardCount),
-    )
+    val shardRegion: ActorRef[ShardingEnvelope[ConcertCommandRequest]] =
+      sharding.init(Entity(TypeKey) { entityContext =>
+        val id = ConcertId
+          .fromString(entityContext.entityId)
+          .left.map(error => new IllegalStateException(error.toString))
+          .toTry.get
+        createBehavior(id)
+      })
+
+    def entityRefFor(id: ConcertId): EntityRef[ConcertCommandRequest] = {
+      sharding.entityRefFor(TypeKey, id.value)
+    }
+
   }
 
-  /** メッセージからシャード名,エンティティIDを抽出するクラス
-    * entityId のハッシュコードに基づいてシャーディングされる。
-    * @param shardCount シャード数
-    */
-  private final class MessageExtractor(shardCount: Int) extends HashCodeMessageExtractor(shardCount) {
-    override def entityId(message: Any): String = message match {
-      case command: ConcertActorProtocol.ConcertCommandRequest =>
-        command.concertId.value
-      case AtLeastOnceDeliveryRequest(message: ConcertActorProtocol.ConcertCommandRequest) =>
-        message.concertId.value
+  // [暫定] 外部からは Typed に見えるようにする
+  def createBehavior(props: Props): Behavior[ConcertCommandRequest] = {
+    Behaviors.setup { context =>
+      val classic = context.actorOf(props)
+      context.watch(classic)
+      Behaviors
+        .receiveMessage[ConcertCommandRequest] { request =>
+          classic.tell(request, context.self.toClassic)
+          Behaviors.same
+        }.receiveSignal {
+          case (_, Terminated(value)) =>
+            Behaviors.stopped
+        }
     }
   }
 
-  /** ActorName に対応する ID を取得する。
-    * @param actorName
-    * @return ID
-    */
-  def idFor(actorName: String): Either[ConcertError, ConcertId] = {
-    ConcertId.fromString(actorName)
-  }
-
-  /** ID に対応する ActorName を取得する。
-    * @param id
-    * @return ActorName
-    */
-  def actorNameFor(id: ConcertId): String = id.value
 }
 
 abstract class ConcertActorBase[State <: ActorStateBase[ConcertEvent, State]]
     extends EventSourcedActorBase[ConcertEvent, State, ConcertStateData] {
   import ConcertActorBaseProtocol._
-
-  /** グローバルで一意なID
-    */
-  protected val id: ConcertId = {
-    // path を ID として復元できない場合は、アプリケーションが不正な状態になっている。
-    idFor(self.path.name).left.map(error => new IllegalStateException(error.toString)).toTry.get
-  }
 
   // 初期値では passivate しないようにしておく (演習を通してサブクラスでオーバライドする)
   protected def passivateTimeout: Duration = Duration.Undefined
