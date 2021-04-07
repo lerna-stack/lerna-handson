@@ -6,26 +6,46 @@ import akka.persistence.query.Offset
 import akka.stream._
 import akka.stream.scaladsl._
 import akka.Done
+import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.scaladsl.adapter._
 import example.readmodel.ConcertRepository
 
 import scala.concurrent._
 
 object ConcertDatabaseReadModelUpdater {
-  def props(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Props = {
+  sealed trait Command
+  case object Terminate extends Command
+
+  def apply(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Behavior[Command] = {
+    // TODO AKka Typed のみを使って実装する
+    Behaviors.setup { context =>
+      val classic = context.actorOf(props(sourceFactory, repository))
+      context.watch(classic)
+      Behaviors
+        .receiveMessage[Command] { message =>
+          classic.tell(message, context.self.toClassic)
+          Behaviors.same
+        }.receiveSignal {
+          case (_, akka.actor.typed.Terminated(_)) =>
+            Behaviors.stopped
+        }
+    }
+  }
+
+  // TODO 削除する
+  private def props(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Props = {
     Props(new ConcertDatabaseReadModelUpdater(sourceFactory, repository))
   }
 
-  object Protocol {
-    // 終了リクエスト
-    case object Terminate
-  }
-
+  // Internal Commands
   // 更新処理が開始した
   private final case class UpdateGraphStarted(killSwitch: KillSwitch)
   // 更新処理が完了した
   private case object UpdateGraphStopped
 }
 
+// TODO implement using akka typed
 final class ConcertDatabaseReadModelUpdater(
     sourceFactory: ConcertEventSourceFactory,
     repository: ConcertRepository,
@@ -58,7 +78,7 @@ final class ConcertDatabaseReadModelUpdater(
     case failure: Status.Failure =>
       // Supervisor で処理してもらう
       throw failure.cause
-    case Protocol.Terminate =>
+    case Terminate =>
       log.info("Received termination request.")
       killSwitch.shutdown()
     case UpdateGraphStopped =>
