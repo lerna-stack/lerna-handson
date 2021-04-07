@@ -1,6 +1,8 @@
 package example
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.adapter.ClassicActorSystemOps
+import akka.{ actor => classic }
 import example.readmodel.DefaultReadModelDiDesign
 import example.application.http.MainHttpApiServerDiDesign
 import example.application.rmu.DefaultReadModelUpdaterDiDesign
@@ -11,12 +13,13 @@ import wvlet.airframe.Design
 import scala.concurrent.ExecutionContext
 
 object MainDiDesign {
-  def design(system: ActorSystem): Design = {
+  def design(system: classic.ActorSystem): Design = {
     Design.newDesign.withProductionMode
-      .bind[ActorSystem].toInstance(system)
-      .bind[ExecutionContext].toSingletonProvider[ActorSystem] { system =>
+      .bind[classic.ActorSystem].toInstance(system)
+      .bind[ActorSystem[Nothing]].toInstance(system.toTyped)
+      .bind[ExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
         // デフォルトでは system.dispatcher を使うようにする。
-        system.dispatcher
+        system.executionContext
       }
       .add(ModelDiDesign.design)
       .add(DefaultUseCaseDiDesign.design)
