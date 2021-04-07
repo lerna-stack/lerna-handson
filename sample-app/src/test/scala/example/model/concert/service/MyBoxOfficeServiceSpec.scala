@@ -1,6 +1,6 @@
 package example.model.concert.service
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import example.model.ModelDiDesign
 import example.model.concert.actor.ConcertActorClusterShardingFactory
 import example.testing.tags.ExerciseTest
@@ -14,9 +14,9 @@ final class MyBoxOfficeServiceSpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design
-      .bind[ActorSystem].toInstance(system.classicSystem)
+      .bind[ActorSystem[Nothing]].toInstance(system)
       .bind[MyBoxOfficeService]
-      .toInstanceProvider[ActorSystem, ConcertActorClusterShardingFactory] { (system, factory) =>
+      .toInstanceProvider[ActorSystem[Nothing], ConcertActorClusterShardingFactory] { (system, factory) =>
         new MyBoxOfficeService(system, factory)
       }
 
