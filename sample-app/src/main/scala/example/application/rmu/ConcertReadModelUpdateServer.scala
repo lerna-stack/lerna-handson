@@ -1,10 +1,8 @@
 package example.application.rmu
 
-import akka.actor.typed.SupervisorStrategy
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.scaladsl.adapter._
+import akka.actor.typed.{ ActorSystem, SupervisorStrategy }
 import akka.cluster.typed.{ ClusterSingleton, SingletonActor }
-import akka.{ actor => classic }
 import example.readmodel.ConcertRepository
 
 import scala.concurrent.duration._
@@ -13,9 +11,9 @@ final class ConcertReadModelUpdateServer(
     factory: ConcertEventSourceFactory,
     repository: ConcertRepository,
 )(implicit
-    system: classic.ActorSystem,
+    system: ActorSystem[Nothing],
 ) {
-  private val singletonManager = ClusterSingleton(system.toTyped)
+  private val singletonManager = ClusterSingleton(system)
 
   def start(): Unit = {
     val rmuActor = SingletonActor(
