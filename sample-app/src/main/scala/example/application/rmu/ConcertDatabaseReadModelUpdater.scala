@@ -20,8 +20,7 @@ object ConcertDatabaseReadModelUpdater {
 
   def apply(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Behavior[Command] = {
     Behaviors.setup { context =>
-      val updater = new ConcertDatabaseReadModelUpdater(context, sourceFactory, repository)
-      updater.receiveInStarting()
+      new ConcertDatabaseReadModelUpdater(context, sourceFactory, repository).behavior()
     }
   }
 
@@ -40,9 +39,12 @@ final class ConcertDatabaseReadModelUpdater private (
   private implicit val executionContext: ExecutionContext = context.system.executionContext
   private implicit val materializer: Materializer         = Materializer(context)
 
-  runUpdateGraph()
+  private def behavior(): Behavior[Command] = {
+    runUpdateGraph()
+    receiveInStarting()
+  }
 
-  private def receiveInStarting(): Behavior[Command] = {
+  private[this] def receiveInStarting(): Behavior[Command] = {
     Behaviors.withStash(StashBufferCapacity) { stashBuffer =>
       Behaviors.receiveMessage[Command] {
         case UpdateGraphStarted(killSwitch) =>
@@ -59,7 +61,7 @@ final class ConcertDatabaseReadModelUpdater private (
     }
   }
 
-  private def receiveInRunning(killSwitch: KillSwitch): Behavior[Command] =
+  private[this] def receiveInRunning(killSwitch: KillSwitch): Behavior[Command] =
     Behaviors.receiveMessage[Command] {
       case Terminate =>
         context.log.info("Received termination request.")
