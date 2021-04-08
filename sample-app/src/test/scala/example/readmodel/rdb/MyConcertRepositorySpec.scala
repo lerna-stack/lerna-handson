@@ -8,7 +8,7 @@ import wvlet.airframe.Design
 
 @ExerciseTest
 final class MyConcertRepositorySpec
-    extends DatabaseConcertRepositorySpecBase("my-concert-repository-spec")
+    extends DatabaseConcertRepositorySpecBase()
     with DatabaseConcertRepositoryBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =

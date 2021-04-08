@@ -10,7 +10,7 @@ import wvlet.airframe._
 
 @ExerciseTest
 final class MyBoxOfficeServiceBindSpec
-    extends ActorSpecBase(ActorSystem("my-box-office-service-bind-spec", ConfigFactory.load("test-akka-cluster")))
+    extends ActorSpecBase(ConfigFactory.load("test-akka-cluster"))
     with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design

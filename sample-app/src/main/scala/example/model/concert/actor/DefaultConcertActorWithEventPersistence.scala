@@ -12,7 +12,6 @@ import example.model.concert.actor.ConcertActorProtocol._
 import java.time.ZonedDateTime
 
 object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFactory {
-  // TODO Implement Passivation
   def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[ConcertCommandRequest] = {
     EventSourcedBehavior
       .withEnforcedReplies[ConcertCommandRequest, ConcertEvent, State](
@@ -21,6 +20,7 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
         (state, command) => state.applyCommand(command),
         (state, event) => state.applyEvent(event),
       )
+      .withTagger(_ => Set(ConcertEvent.tag))
   }
 
   type ReplyEffect = akka.persistence.typed.scaladsl.ReplyEffect[ConcertEvent, State]

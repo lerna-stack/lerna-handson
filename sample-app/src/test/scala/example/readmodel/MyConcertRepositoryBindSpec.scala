@@ -8,9 +8,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe._
 
 @ExerciseTest
-final class MyConcertRepositoryBindSpec
-    extends ActorSpecBase(ActorSystem("my-concert-repository-bind-spec"))
-    with AirframeDiSessionSupport {
+final class MyConcertRepositoryBindSpec extends ActorSpecBase() with AirframeDiSessionSupport {
   override protected val design: Design =
     DefaultReadModelDiDesign.design
       .bind[ActorSystem].toInstance(system.classicSystem)

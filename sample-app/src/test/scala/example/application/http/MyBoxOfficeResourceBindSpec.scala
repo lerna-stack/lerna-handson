@@ -10,10 +10,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 
 @ExerciseTest
-final class MyBoxOfficeResourceBindSpec
-    extends ActorSpecBase(ActorSystem("my-box-office-resource-bind-spec"))
-    with AirframeDiSessionSupport
-    with MockitoSugar {
+final class MyBoxOfficeResourceBindSpec extends ActorSpecBase() with AirframeDiSessionSupport with MockitoSugar {
   // TODO ActorSystem も受け取らないようにする
 
   override protected val design: Design =
