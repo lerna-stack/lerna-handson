@@ -1,34 +1,30 @@
 package example.application.rmu
 
-import akka.actor._
-import akka.cluster.singleton._
-import akka.pattern.{ BackoffOpts, BackoffSupervisor }
+import akka.actor.typed.SupervisorStrategy
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.scaladsl.adapter._
+import akka.cluster.typed.{ ClusterSingleton, SingletonActor }
+import akka.{ actor => classic }
 import example.readmodel.ConcertRepository
 
 import scala.concurrent.duration._
-import scala.language.postfixOps
 
 final class ConcertReadModelUpdateServer(
     factory: ConcertEventSourceFactory,
     repository: ConcertRepository,
 )(implicit
-    system: ActorSystem,
+    system: classic.ActorSystem,
 ) {
-  private val singletonManagerProps: Props = ClusterSingletonManager.props(
-    singletonProps = BackoffSupervisor.props(
-      BackoffOpts.onFailure(
-        ConcertDatabaseReadModelUpdater.props(factory, repository),
-        childName = "RMU-instance",
-        minBackoff = 3 seconds,
-        maxBackoff = 30 seconds,
-        randomFactor = 0.2,
-      ),
-    ),
-    terminationMessage = ConcertDatabaseReadModelUpdater.Protocol.Terminate,
-    settings = ClusterSingletonManagerSettings(system),
-  )
+  private val singletonManager = ClusterSingleton(system.toTyped)
 
   def start(): Unit = {
-    system.actorOf(singletonManagerProps, "RMU")
+    val rmuActor = SingletonActor(
+      Behaviors
+        .supervise(ConcertDatabaseReadModelUpdater(factory, repository))
+        .onFailure(SupervisorStrategy.restartWithBackoff(3.seconds, 30.seconds, 0.2)),
+      "RMU",
+    ).withStopMessage(ConcertDatabaseReadModelUpdater.Terminate)
+    singletonManager.init(rmuActor)
   }
+
 }

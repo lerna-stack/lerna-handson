@@ -1,85 +1,102 @@
 package example.application.rmu
 
-import akka.actor._
-import akka.pattern.pipe
+import akka.Done
+import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.{ ActorContext, Behaviors }
 import akka.persistence.query.Offset
 import akka.stream._
 import akka.stream.scaladsl._
-import akka.Done
 import example.readmodel.ConcertRepository
 
 import scala.concurrent._
+import scala.util.{ Failure, Success }
 
 object ConcertDatabaseReadModelUpdater {
-  def props(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Props = {
-    Props(new ConcertDatabaseReadModelUpdater(sourceFactory, repository))
+  sealed trait Command
+  case object Terminate                                               extends Command
+  private final case class UpdateGraphStarted(killSwitch: KillSwitch) extends Command
+  private case object UpdateGraphStopped                              extends Command
+  private final case class UpdateGraphFailed(cause: Throwable)        extends Command
+
+  def apply(sourceFactory: ConcertEventSourceFactory, repository: ConcertRepository): Behavior[Command] = {
+    Behaviors.setup { context =>
+      new ConcertDatabaseReadModelUpdater(context, sourceFactory, repository).behavior()
+    }
   }
 
-  object Protocol {
-    // 終了リクエスト
-    case object Terminate
-  }
-
-  // 更新処理が開始した
-  private final case class UpdateGraphStarted(killSwitch: KillSwitch)
-  // 更新処理が完了した
-  private case object UpdateGraphStopped
 }
 
-final class ConcertDatabaseReadModelUpdater(
+final class ConcertDatabaseReadModelUpdater private (
+    context: ActorContext[ConcertDatabaseReadModelUpdater.Command],
     sourceFactory: ConcertEventSourceFactory,
     repository: ConcertRepository,
-) extends Actor
-    with ActorLogging
-    with Stash {
+) {
   import ConcertDatabaseReadModelUpdater._
 
-  import context.dispatcher
-  implicit private val materializer: Materializer = Materializer(context)
-  private val LogName: String                     = "RMU"
+  private val LogName: String          = "RMU"
+  private val StashBufferCapacity: Int = 1000
 
-  runUpdateGraph()
+  private implicit val executionContext: ExecutionContext = context.system.executionContext
+  private implicit val materializer: Materializer         = Materializer(context)
 
-  override def receive: Receive = receiveInStarting
-
-  private def receiveInStarting: Receive = {
-    case started: UpdateGraphStarted =>
-      log.info("Update Graph started with {}.", started.killSwitch)
-      context.become(receiveInRunning(started.killSwitch))
-      unstashAll()
-    case failure: Status.Failure =>
-      // Supervisor で処理してもらう
-      throw failure.cause
-    case _ =>
-      stash()
+  private def behavior(): Behavior[Command] = {
+    runUpdateGraph()
+    receiveInStarting()
   }
 
-  private def receiveInRunning(killSwitch: KillSwitch): Receive = {
-    case failure: Status.Failure =>
-      // Supervisor で処理してもらう
-      throw failure.cause
-    case Protocol.Terminate =>
-      log.info("Received termination request.")
-      killSwitch.shutdown()
-    case UpdateGraphStopped =>
-      log.info("Update Graph stopped, and then the Actor {} stop itself.", self)
-      context.stop(self)
+  private[this] def receiveInStarting(): Behavior[Command] = {
+    Behaviors.withStash(StashBufferCapacity) { stashBuffer =>
+      Behaviors.receiveMessage[Command] {
+        case UpdateGraphStarted(killSwitch) =>
+          context.log.info("Update Graph started with {}.", killSwitch)
+          stashBuffer.unstashAll(receiveInRunning(killSwitch))
+        case UpdateGraphFailed(cause) =>
+          // supervisor に復旧を任せる
+          throw cause
+        case other =>
+          // stash が full の場合は、StashOverflowException が発生するが、 supervisor に復旧を任せる
+          stashBuffer.stash(other)
+          Behaviors.same
+      }
+    }
   }
 
-  private def runUpdateGraph(): Unit = {
-    repository
+  private[this] def receiveInRunning(killSwitch: KillSwitch): Behavior[Command] =
+    Behaviors.receiveMessage[Command] {
+      case Terminate =>
+        context.log.info("Received termination request.")
+        killSwitch.shutdown()
+        Behaviors.same
+      case UpdateGraphStopped =>
+        Behaviors.stopped
+      case UpdateGraphFailed(cause) =>
+        // supervisor に復旧を任せる
+        throw cause
+      case unexpectedStarted: UpdateGraphStarted =>
+        // 予期していないメッセージのため、動いているかもしれない Streams は停止する
+        killSwitch.shutdown()
+        unexpectedStarted.killSwitch.shutdown()
+        // supervisor に復旧は任せる
+        throw new IllegalStateException("Got unexpected UpdateGraphStarted.")
+    }
+
+  private[this] def runUpdateGraph(): Unit = {
+    val rmuRunning = repository
       .fetchConcertEventOffset()
       .map(createUpdateRunnableGraph)
       .flatMap(updateGraph => {
         val (killSwitch, running) = updateGraph.run()
-        self ! UpdateGraphStarted(killSwitch)
+        context.self ! UpdateGraphStarted(killSwitch)
         running
       })
-      .map(_ => UpdateGraphStopped)
-      .pipeTo(self)
+    context.pipeToSelf(rmuRunning) {
+      case Success(_)     => UpdateGraphStopped
+      case Failure(cause) => UpdateGraphFailed(cause)
+    }
   }
 
-  private def createUpdateRunnableGraph(offset: Offset): RunnableGraph[(KillSwitch, Future[Done])] = {
+  private[this] def createUpdateRunnableGraph(offset: Offset): RunnableGraph[(KillSwitch, Future[Done])] = {
+    val updateParallelism = 1
     sourceFactory
       .createEventStream(offset)
       .viaMat(KillSwitches.single)(Keep.right)
@@ -90,9 +107,10 @@ final class ConcertDatabaseReadModelUpdater(
           onElement = Attributes.LogLevels.Info,
         ),
       )
-      .mapAsync(1) { eventEnvelope =>
+      .mapAsync(updateParallelism) { eventEnvelope =>
         repository.updateByConcertEvent(eventEnvelope.event, eventEnvelope.offset)
       }
       .toMat(Sink.ignore)(Keep.both)
   }
+
 }
