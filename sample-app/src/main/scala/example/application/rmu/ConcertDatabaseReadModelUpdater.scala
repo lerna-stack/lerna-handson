@@ -94,6 +94,7 @@ final class ConcertDatabaseReadModelUpdater private (
   }
 
   private[this] def createUpdateRunnableGraph(offset: Offset): RunnableGraph[(KillSwitch, Future[Done])] = {
+    val updateParallelism = 1
     sourceFactory
       .createEventStream(offset)
       .viaMat(KillSwitches.single)(Keep.right)
@@ -104,9 +105,10 @@ final class ConcertDatabaseReadModelUpdater private (
           onElement = Attributes.LogLevels.Info,
         ),
       )
-      .mapAsync(1) { eventEnvelope =>
+      .mapAsync(updateParallelism) { eventEnvelope =>
         repository.updateByConcertEvent(eventEnvelope.event, eventEnvelope.offset)
       }
       .toMat(Sink.ignore)(Keep.both)
   }
+
 }
