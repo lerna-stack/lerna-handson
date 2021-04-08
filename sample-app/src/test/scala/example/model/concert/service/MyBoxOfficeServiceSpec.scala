@@ -9,7 +9,7 @@ import wvlet.airframe.Design
 
 @ExerciseTest
 final class MyBoxOfficeServiceSpec
-    extends BoxOfficeServiceSpecBase("my-box-office-service-spec")
+    extends BoxOfficeServiceSpecBase()
     with BoxOfficeServiceBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =

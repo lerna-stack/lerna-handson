@@ -7,7 +7,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 
 final class DefaultBoxOfficeServiceSpec
-    extends BoxOfficeServiceSpecBase("default-box-office-service-spec")
+    extends BoxOfficeServiceSpecBase()
     with BoxOfficeServiceBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =

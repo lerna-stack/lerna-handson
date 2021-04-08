@@ -6,7 +6,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 
 final class DefaultConcertRepositorySpec
-    extends DatabaseConcertRepositorySpecBase("default-concert-repository-spec")
+    extends DatabaseConcertRepositorySpecBase()
     with DatabaseConcertRepositoryBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =
