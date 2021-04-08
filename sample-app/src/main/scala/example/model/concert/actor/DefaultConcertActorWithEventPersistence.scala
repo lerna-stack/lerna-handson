@@ -44,7 +44,7 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
             Effect.reply(createRequest.replyTo)(CreateConcertFailed(error))
           } else {
             // 作成成功
-            val event = ConcertCreated(createRequest.concertId, createRequest.numTickets, ZonedDateTime.now)
+            val event = ConcertCreated(id, createRequest.numTickets, ZonedDateTime.now)
             Effect.persist(event).thenReply(createRequest.replyTo)(_ => CreateConcertSucceeded(event.numOfTickets))
           }
         case cancelRequest: CancelConcertRequest =>
