@@ -7,6 +7,17 @@ import akka.persistence.typed.PersistenceId
 import example.model.concert.ConcertId
 import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 
+object ConcertActorClusterSharding {
+
+  /** ShardedConcertActor の ClusterSharding を開始する。
+    */
+  def init(system: ActorSystem[Nothing], behaviorFactory: ConcertActorBehaviorFactory): ConcertActorClusterSharding = {
+    val concertActorConfig = ConcertActorConfig(system)
+    new ConcertActorClusterSharding(system, concertActorConfig, behaviorFactory)
+  }
+
+}
+
 /** ConcertActor の ClusterSharding の情報を保持するクラス
   */
 final class ConcertActorClusterSharding(

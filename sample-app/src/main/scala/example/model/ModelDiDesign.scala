@@ -9,7 +9,6 @@ object ModelDiDesign {
   lazy val design: Design =
     newDesign
       .bind[BoxOfficeService].to[DefaultBoxOfficeService]
-      .bind[ConcertActorClusterShardingFactory].toSingleton
       .bind[ConcertActorBehaviorFactory].toInstance(DefaultConcertActor)
       // MyConcertActor実装時にコメントアウトを外す (この行はそのまま)
       // .bind[ConcertActorBehaviorFactory].toInstance(MyConcertActor)
