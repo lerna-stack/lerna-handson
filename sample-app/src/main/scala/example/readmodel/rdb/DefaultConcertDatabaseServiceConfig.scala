@@ -1,6 +1,6 @@
 package example.readmodel.rdb
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -12,7 +12,7 @@ final class DefaultConcertDatabaseServiceConfig(
 )
 
 object DefaultConcertDatabaseServiceConfig {
-  def apply(system: ActorSystem): DefaultConcertDatabaseServiceConfig = {
+  def apply(system: ActorSystem[Nothing]): DefaultConcertDatabaseServiceConfig = {
     val config = DatabaseConfig.forConfig[JdbcProfile]("example.database.concert", system.settings.config)
     new DefaultConcertDatabaseServiceConfig(config)
   }

@@ -1,6 +1,6 @@
 package example.model
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import com.typesafe.config.ConfigFactory
 import example.ActorSpecBase
 import example.model.concert.service.{ BoxOfficeService, MyBoxOfficeService }
@@ -14,7 +14,7 @@ final class MyBoxOfficeServiceBindSpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design
-      .bind[ActorSystem].toInstance(system.classicSystem)
+      .bind[ActorSystem[Nothing]].toInstance(system)
 
   // 演習で bind 成功を確認するために使用する
   // MyBoxOfficeService のバインドに成功したら success になる

@@ -1,11 +1,11 @@
 package example.application.http
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 
 import scala.concurrent.duration._
 
 object MainHttpApiServerConfig {
-  def apply(system: ActorSystem): MainHttpApiServerConfig = {
+  def apply(system: ActorSystem[Nothing]): MainHttpApiServerConfig = {
     val config = system.settings.config.getConfig("example.http-api-server")
     new MainHttpApiServerConfig(
       config.getString("host"),

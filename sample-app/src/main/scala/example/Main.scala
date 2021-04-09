@@ -1,7 +1,9 @@
 package example
 
 import akka.Done
-import akka.actor.{ ActorSystem, CoordinatedShutdown }
+import akka.actor.CoordinatedShutdown
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ ActorSystem, Behavior }
 import akka.cluster.Cluster
 import example.application.http._
 import example.application.rmu._
@@ -11,9 +13,12 @@ import scala.concurrent._
 import scala.util.Failure
 
 object Main extends App {
+  object Guardian {
+    def apply(): Behavior[Nothing] = Behaviors.empty
+  }
   val logger          = LoggerFactory.getLogger(this.getClass)
-  implicit val system = ActorSystem("concerts")
-  import system.dispatcher
+  implicit val system = ActorSystem[Nothing](Guardian(), "concerts")
+  import system.executionContext
 
   // DIデザインを作成する。
   val design = MainDiDesign.design(system)

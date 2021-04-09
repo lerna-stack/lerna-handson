@@ -1,8 +1,7 @@
 package example.model
 
-import akka.actor.typed.scaladsl.adapter._
-import akka.cluster.Cluster
-import akka.cluster.ClusterEvent.{ CurrentClusterState, MemberUp }
+import akka.cluster.ClusterEvent.MemberUp
+import akka.cluster.typed.{ Cluster, Join, Subscribe, Unsubscribe }
 import example.ActorSpecBase
 import org.scalatest.BeforeAndAfterAll
 
@@ -14,22 +13,20 @@ trait ClusterShardingSpecLike extends BeforeAndAfterAll { this: ActorSpecBase =>
   }
 
   def waitToInitializeClusterSharding(): Unit = {
-    // TODO Use Typed Cluster
     // TODO There may be better way to complete this purpose.
-    val probe   = testKit.createTestProbe[Any]()
+    val probe   = testKit.createTestProbe[MemberUp]()
     val cluster = Cluster(system)
-    cluster.subscribe(probe.ref.toClassic, classOf[MemberUp])
-    probe.expectMessageType[CurrentClusterState]
+    cluster.subscriptions ! Subscribe(probe.ref, classOf[MemberUp])
 
-    cluster.join(cluster.selfAddress)
+    cluster.manager ! Join(cluster.selfMember.address)
     probe
       .receiveMessages(1)
       .collect({
-        case MemberUp(member) if member.address == cluster.selfAddress => member
+        case MemberUp(member) if member.address == cluster.selfMember.address => member
       }).size shouldBe 1
 
     println(s"[DONE] ${cluster.selfMember} join to cluster.")
-    cluster.unsubscribe(probe.ref.toClassic)
+    cluster.subscriptions ! Unsubscribe[MemberUp](probe.ref)
 
     // Cluster Sharding のセットアップが終わるまでしばらく待つ
     Thread.sleep(5000)

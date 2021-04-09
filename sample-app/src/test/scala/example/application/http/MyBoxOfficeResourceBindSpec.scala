@@ -1,6 +1,6 @@
 package example.application.http
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
 import example.application.http.controller.MyBoxOfficeResource
 import example.testing.tags.ExerciseTest
@@ -15,7 +15,7 @@ final class MyBoxOfficeResourceBindSpec extends ActorSpecBase() with AirframeDiS
 
   override protected val design: Design =
     MainHttpApiServerDiDesign.design
-      .bind[ActorSystem].toInstance(system.classicSystem)
+      .bind[ActorSystem[Nothing]].toInstance(system)
       .bind[BoxOfficeUseCase].toInstance(mock[BoxOfficeUseCase])
       .bind[BoxOfficeReadModelUseCase].toInstance(mock[BoxOfficeReadModelUseCase])
 

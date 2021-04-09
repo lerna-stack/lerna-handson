@@ -1,6 +1,6 @@
 package example.readmodel.rdb
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import example.readmodel.{ ConcertRepository, DefaultReadModelDiDesign }
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
@@ -11,7 +11,7 @@ final class DefaultConcertRepositorySpec
     with AirframeDiSessionSupport {
   override protected val design: Design =
     DefaultReadModelDiDesign.design
-      .bind[ActorSystem].toInstance(system.classicSystem)
+      .bind[ActorSystem[Nothing]].toInstance(system)
       .bind[DefaultConcertDatabaseServiceConfig].toInstance(
         new DefaultConcertDatabaseServiceConfig(databaseConfig),
       )

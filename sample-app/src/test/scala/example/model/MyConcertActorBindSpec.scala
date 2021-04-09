@@ -1,6 +1,6 @@
 package example.model
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
 import example.model.concert.actor.{ ConcertActorBehaviorFactory, _ }
 import example.testing.tags.ExerciseTest
@@ -11,7 +11,7 @@ import wvlet.airframe.Design
 final class MyConcertActorBindSpec extends ActorSpecBase() with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design
-      .bind[ActorSystem].toInstance(system.classicSystem)
+      .bind[ActorSystem[Nothing]].toInstance(system)
 
   // 演習で bind 成功を確認するために使用する
   // MyConcertActor.props のバインドに成功したら success になる

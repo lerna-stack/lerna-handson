@@ -1,15 +1,14 @@
 package example.model.concert.service
 
-import akka.actor.typed.scaladsl.adapter._
+import akka.actor.typed.ActorSystem
 import akka.util.Timeout
-import akka.{ actor => classic }
 import example.model.concert.ConcertId
 import example.model.concert.actor.ConcertActorClusterShardingFactory
 
 import scala.concurrent.Future
 
 final class DefaultBoxOfficeService(
-    system: classic.ActorSystem,
+    system: ActorSystem[Nothing],
     factory: ConcertActorClusterShardingFactory,
 ) extends BoxOfficeService {
   import example.model.concert.actor.ConcertActorProtocol._
@@ -18,7 +17,7 @@ final class DefaultBoxOfficeService(
   private val config                            = BoxOfficeServiceConfig(system)
   private implicit val responseTimeout: Timeout = config.responseTimeout
 
-  private val sharding = factory.create(system.toTyped)
+  private val sharding = factory.create(system)
 
   override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
     val entityRef = sharding.entityRefFor(id)

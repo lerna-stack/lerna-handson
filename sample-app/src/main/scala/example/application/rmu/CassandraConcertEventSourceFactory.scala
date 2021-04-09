@@ -1,7 +1,7 @@
 package example.application.rmu
 
 import akka.NotUsed
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
 import akka.persistence.query.{ Offset, PersistenceQuery }
 import akka.stream.scaladsl.Source
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 /** Cassandra からイベントを読み込むストリームを生成する
   * @param system
   */
-final class CassandraConcertEventSourceFactory(system: ActorSystem) extends ConcertEventSourceFactory {
+final class CassandraConcertEventSourceFactory(system: ActorSystem[Nothing]) extends ConcertEventSourceFactory {
   private val logger  = LoggerFactory.getLogger(this.getClass)
   private val queries = PersistenceQuery(system).readJournalFor[CassandraReadJournal](CassandraReadJournal.Identifier)
 
