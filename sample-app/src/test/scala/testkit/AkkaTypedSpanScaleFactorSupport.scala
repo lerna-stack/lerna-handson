@@ -4,16 +4,14 @@ import akka.actor.typed.ActorSystem
 import akka.testkit.TestKitExtension
 import org.scalatest.concurrent.ScaledTimeSpans
 
-/** A trait that provides time scale factor integration of Akka TestKit and ScalaTest
+/** A trait that provides time scale factor integration of ActorTestKit and ScalaTest
   *
   * ==Overview==
-  * The trait can be used with [[akka.testkit.TestKit]] or other Akka classic test kits such as
-  * [[https://doc.akka.io/api/akka-http/current/akka/http/scaladsl/testkit/ScalatestRouteTest.html ScalaTestRouteTest]]
+  * The trait can be used with [[akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit]].
   *
   * The time scale factor can be configured by `akka.test.timefactor` in a configuration file.
   */
 trait AkkaTypedSpanScaleFactorSupport extends ScaledTimeSpans {
-  // No trait provides the ActorSystem in both TestKit and RouteTest
   implicit def system: ActorSystem[Nothing]
 
   /** Configure the ScalaTest time factor from Akka TestKit's test time factor.
