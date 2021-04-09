@@ -72,7 +72,7 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
     override def applyCommand(command: ConcertCommandRequest): ReplyEffect = {
       command match {
         case getRequest: GetConcertRequest =>
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(id, tickets, cancelled = false))
+          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = false))
         case createRequest: CreateConcertRequest =>
           // 既に作成済みなのでエラー
           Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))
@@ -119,7 +119,7 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
       command match {
         case getRequest: GetConcertRequest =>
           // 取得処理は成功する
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(id, tickets, cancelled = true))
+          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = true))
         case createRequest: CreateConcertRequest =>
           // すでにコンサートが存在するのでエラー
           Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))

@@ -28,11 +28,10 @@ object ConcertActorProtocol {
 
   // --
 
-  case class GetConcertRequest(replyTo: ActorRef[GetConcertResponse]) extends ConcertCommandRequest
-  sealed trait GetConcertResponse                                     extends ConcertCommandResponse
-  case class GetConcertSucceeded(id: ConcertId, tickets: Vector[ConcertTicketId], cancelled: Boolean)
-      extends GetConcertResponse
-  case class GetConcertFailed(error: ConcertError) extends GetConcertResponse
+  case class GetConcertRequest(replyTo: ActorRef[GetConcertResponse])                  extends ConcertCommandRequest
+  sealed trait GetConcertResponse                                                      extends ConcertCommandResponse
+  case class GetConcertSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetConcertResponse
+  case class GetConcertFailed(error: ConcertError)                                     extends GetConcertResponse
 
   // --
 

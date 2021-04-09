@@ -102,7 +102,6 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
       val probe = testKit.createTestProbe[GetConcertResponse]()
       actor ! GetConcertRequest(probe.ref)
       val resp = probe.expectMessageType[GetConcertSucceeded]
-      resp.id shouldBe id
       resp.tickets.size shouldBe 3
     }
 

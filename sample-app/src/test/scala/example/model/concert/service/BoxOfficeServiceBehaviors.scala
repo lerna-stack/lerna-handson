@@ -32,7 +32,7 @@ trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
 
       val getResponseFuture = service.getConcert(id)
       getResponseFuture.futureValue shouldBe
-      GetConcertSucceeded(id, (1 to 10).map(ConcertTicketId).toVector, cancelled = false)
+      GetConcertSucceeded((1 to 10).map(ConcertTicketId).toVector, cancelled = false)
     }
 
     "buy concert tickets" in {
