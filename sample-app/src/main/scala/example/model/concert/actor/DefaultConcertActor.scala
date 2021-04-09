@@ -48,7 +48,7 @@ object DefaultConcertActor extends ConcertActorBehaviorFactory {
             Effect.reply(createRequest.replyTo)(CreateConcertFailed(error))
           } else {
             // 作成成功
-            val event = ConcertCreated(createRequest.concertId, createRequest.numTickets, ZonedDateTime.now)
+            val event = ConcertCreated(id, createRequest.numTickets, ZonedDateTime.now)
             Effect.persist(event).thenReply(createRequest.replyTo)(_ => CreateConcertSucceeded(event.numOfTickets))
           }
         case cancelRequest: CancelConcertRequest =>
@@ -76,7 +76,7 @@ object DefaultConcertActor extends ConcertActorBehaviorFactory {
     override def applyCommand(command: ConcertCommandRequest): ReplyEffect = {
       command match {
         case getRequest: GetConcertRequest =>
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(id, tickets, cancelled = false))
+          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = false))
         case createRequest: CreateConcertRequest =>
           // 既に作成済みなのでエラー
           Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))
@@ -123,7 +123,7 @@ object DefaultConcertActor extends ConcertActorBehaviorFactory {
       command match {
         case getRequest: GetConcertRequest =>
           // 取得処理は成功する
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(id, tickets, cancelled = true))
+          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = true))
         case createRequest: CreateConcertRequest =>
           // すでにコンサートが存在するのでエラー
           Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))
