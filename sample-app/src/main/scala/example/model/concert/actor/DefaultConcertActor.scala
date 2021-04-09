@@ -7,7 +7,7 @@ import example.model.KryoSerializable
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent.{ ConcertCancelled, ConcertCreated, ConcertTicketsBought }
 import example.model.concert._
-import example.model.concert.actor.ConcertActorProtocol._
+import example.model.concert.actor.ConcertActor._
 
 import java.time.ZonedDateTime
 

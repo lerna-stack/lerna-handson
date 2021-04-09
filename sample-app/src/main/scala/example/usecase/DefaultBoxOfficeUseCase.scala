@@ -1,6 +1,6 @@
 package example.usecase
 
-import example.model.concert.actor.ConcertActorProtocol._
+import example.model.concert.actor.ConcertActor._
 import example.model.concert.ConcertId
 import example.model.concert.service.BoxOfficeService
 

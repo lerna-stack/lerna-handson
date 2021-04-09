@@ -5,7 +5,7 @@ import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
 import example.model.KryoSerializable
 import example.model.concert._
-import example.model.concert.actor.ConcertActorProtocol._
+import example.model.concert.actor.ConcertActor._
 
 object MyConcertActor extends ConcertActorBehaviorFactory {
   def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[ConcertCommandRequest] = {

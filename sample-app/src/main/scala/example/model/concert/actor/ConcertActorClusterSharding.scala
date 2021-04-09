@@ -4,7 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.scaladsl.{ ClusterSharding, Entity, EntityRef, EntityTypeKey }
 import akka.persistence.typed.PersistenceId
 import example.model.concert.ConcertId
-import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
+import example.model.concert.actor.ConcertActor.ConcertCommandRequest
 
 /** ConcertActor の ClusterSharding を管理する
   */

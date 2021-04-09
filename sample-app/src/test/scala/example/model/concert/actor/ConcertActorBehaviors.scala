@@ -18,7 +18,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
   this: ActorSpecBase =>
 
   import example.model.concert._
-  import example.model.concert.actor.ConcertActorProtocol._
+  import example.model.concert.actor.ConcertActor._
 
   class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     def create(id: ConcertId): ActorRef[ConcertCommandRequest] = {

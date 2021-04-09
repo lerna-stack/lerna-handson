@@ -11,7 +11,7 @@ final class DefaultBoxOfficeService(
     system: ActorSystem[Nothing],
     behaviorFactory: ConcertActorBehaviorFactory,
 ) extends BoxOfficeService {
-  import example.model.concert.actor.ConcertActorProtocol._
+  import example.model.concert.actor.ConcertActor._
 
   // 設定を読み込む
   private val config                            = BoxOfficeServiceConfig(system)

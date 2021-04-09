@@ -4,9 +4,21 @@ import akka.actor.typed.ActorRef
 import example.model.KryoSerializable
 import example.model.concert._
 
-/** ConcertActor の入出力を定義する
+/** このサンプルアプリでは、テストコードの共通化などを目的として、
+  * 次の3つの Behavior のプロトコルを [[ConcertActor]] にて共通で定義している。
+  *  - [[DefaultConcertActor]]
+  *  - [[MyConcertActor]]
+  *  - [[DefaultConcertActorWithEventPersistence]]
+  *
+  * この方法は一般的な方法ではなく、特殊な方法になっていることに注意すること。
+  *
+  * 一般的な方法に従うと、Behavior の定義と一緒に入力プロトコルを定義することになる。
+  * 例えば次のようになる。
+  *   - `DefaultConcertActor.Command`
+  *   - `MyConcertActor.Command`
+  *   - `DefaultConcertActorWithEventPersistence.Command`
   */
-object ConcertActorProtocol {
+object ConcertActor {
 
   /** ConcertActor へのリクエストメッセージ
     * シリアライズされる

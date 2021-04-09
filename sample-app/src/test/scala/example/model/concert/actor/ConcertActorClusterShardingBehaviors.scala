@@ -7,7 +7,7 @@ import example.model.concert.ConcertIdGeneratorSupport
 trait ConcertActorClusterShardingBehaviors extends ConcertIdGeneratorSupport with ClusterShardingSpecLike {
   this: ActorSpecBase =>
 
-  import example.model.concert.actor.ConcertActorProtocol._
+  import example.model.concert.actor.ConcertActor._
 
   def shardedActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
 

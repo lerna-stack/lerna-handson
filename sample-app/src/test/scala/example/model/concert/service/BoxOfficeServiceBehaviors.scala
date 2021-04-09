@@ -11,7 +11,7 @@ import example.model.concert.{ ConcertIdGenerator, ConcertTicketId }
   * を参照すること
   */
 trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
-  import example.model.concert.actor.ConcertActorProtocol._
+  import example.model.concert.actor.ConcertActor._
 
   val idGenerator = new ConcertIdGenerator()
 
