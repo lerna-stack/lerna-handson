@@ -9,16 +9,6 @@ import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 
 object ConcertActorBase {
 
-  /** ShardedConcertActor の ClusterSharding を開始する。
-    */
-  def startClusterSharding(
-      system: ActorSystem[Nothing],
-      config: ConcertActorConfig,
-      createBehavior: ConcertActorBehaviorFactory,
-  ): ConcertActorClusterSharding = {
-    new ConcertActorClusterSharding(system, config, createBehavior)
-  }
-
   /** ConcertActor の ClusterSharding の情報を保持するクラス
     */
   final class ConcertActorClusterSharding(
