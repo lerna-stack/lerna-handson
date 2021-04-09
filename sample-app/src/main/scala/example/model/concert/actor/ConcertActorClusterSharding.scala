@@ -24,8 +24,9 @@ final class ConcertActorClusterSharding(
     settings: ConcertActorClusterShardingSettings,
     createBehavior: ConcertActorBehaviorFactory,
 ) {
-  private val sharding                                      = ClusterSharding(system)
-  private val TypeKey: EntityTypeKey[ConcertCommandRequest] = EntityTypeKey[ConcertCommandRequest](settings.shardName)
+  private val sharding = ClusterSharding(system)
+  private val TypeKey: EntityTypeKey[ConcertCommandRequest] =
+    EntityTypeKey[ConcertCommandRequest](settings.entityTypeKeyName)
 
   sharding.init(Entity(TypeKey) { entityContext =>
     val id = ConcertId

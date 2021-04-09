@@ -6,7 +6,7 @@ object ConcertActorClusterShardingSettings {
   def apply(system: ActorSystem[Nothing]): ConcertActorClusterShardingSettings = {
     val config = system.settings.config.getConfig("example.concert-actor-cluster-sharding")
     new ConcertActorClusterShardingSettings(
-      config.getString("shard-name"),
+      config.getString("entity-type-key-name"),
     )
   }
 }
@@ -14,7 +14,5 @@ object ConcertActorClusterShardingSettings {
 /** ConcertActorClusterSharding の設定
   */
 final class ConcertActorClusterShardingSettings(
-    /** シャード名
-      */
-    val shardName: String,
+    val entityTypeKeyName: String,
 )
