@@ -34,30 +34,30 @@ object ConcertActor {
 
   // --
 
-  case class Create(numTickets: Int, replyTo: ActorRef[CreateResponse]) extends Command
-  sealed trait CreateResponse                                           extends Response
-  case class CreateSucceeded(numTickets: Int)                           extends CreateResponse
-  case class CreateFailed(error: ConcertError)                          extends CreateResponse
+  final case class Create(numTickets: Int, replyTo: ActorRef[CreateResponse]) extends Command
+  sealed trait CreateResponse                                                 extends Response
+  final case class CreateSucceeded(numTickets: Int)                           extends CreateResponse
+  final case class CreateFailed(error: ConcertError)                          extends CreateResponse
 
   // --
 
-  case class Get(replyTo: ActorRef[GetResponse])                                extends Command
-  sealed trait GetResponse                                                      extends Response
-  case class GetSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetResponse
-  case class GetFailed(error: ConcertError)                                     extends GetResponse
+  final case class Get(replyTo: ActorRef[GetResponse])                                extends Command
+  sealed trait GetResponse                                                            extends Response
+  final case class GetSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetResponse
+  final case class GetFailed(error: ConcertError)                                     extends GetResponse
 
   // --
 
-  case class Cancel(replyTo: ActorRef[CancelResponse]) extends Command
-  sealed trait CancelResponse                          extends Response
-  case class CancelSucceeded(numberOfTickets: Int)     extends CancelResponse
-  case class CancelFailed(error: ConcertError)         extends CancelResponse
+  final case class Cancel(replyTo: ActorRef[CancelResponse]) extends Command
+  sealed trait CancelResponse                                extends Response
+  final case class CancelSucceeded(numberOfTickets: Int)     extends CancelResponse
+  final case class CancelFailed(error: ConcertError)         extends CancelResponse
 
   // --
 
-  case class BuyTickets(numberOfTickets: Int, replyTo: ActorRef[BuyTicketsResponse]) extends Command
-  sealed trait BuyTicketsResponse                                                    extends Response
-  case class BuyTicketsSucceeded(tickets: Vector[ConcertTicketId])                   extends BuyTicketsResponse
-  case class BuyTicketsFailed(error: ConcertError)                                   extends BuyTicketsResponse
+  final case class BuyTickets(numberOfTickets: Int, replyTo: ActorRef[BuyTicketsResponse]) extends Command
+  sealed trait BuyTicketsResponse                                                          extends Response
+  final case class BuyTicketsSucceeded(tickets: Vector[ConcertTicketId])                   extends BuyTicketsResponse
+  final case class BuyTicketsFailed(error: ConcertError)                                   extends BuyTicketsResponse
 
 }
