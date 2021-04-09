@@ -13,7 +13,7 @@ trait ConcertActorClusterShardingBehaviors extends ConcertIdGeneratorSupport wit
 
     val sharding = new ConcertActorClusterSharding(system, createBehavior)
 
-    "handle ConcertCommandRequests" in {
+    "handle ConcertActor's commands" in {
       val id        = newConcertId()
       val probe     = testKit.createTestProbe[Response]()
       val entityRef = sharding.entityRefFor(id)
