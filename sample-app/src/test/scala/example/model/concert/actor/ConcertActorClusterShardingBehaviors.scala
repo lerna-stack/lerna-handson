@@ -15,20 +15,20 @@ trait ConcertActorClusterShardingBehaviors extends ConcertIdGeneratorSupport wit
 
     "handle ConcertCommandRequests" in {
       val id        = newConcertId()
-      val probe     = testKit.createTestProbe[ConcertCommandResponse]()
+      val probe     = testKit.createTestProbe[Response]()
       val entityRef = sharding.entityRefFor(id)
 
       entityRef ! Create(2, probe.ref)
-      probe.expectMessageType[CreateConcertSucceeded]
+      probe.expectMessageType[CreateSucceeded]
 
       entityRef ! Get(probe.ref)
-      probe.expectMessageType[GetConcertSucceeded]
+      probe.expectMessageType[GetSucceeded]
 
       entityRef ! BuyTickets(1, probe.ref)
-      probe.expectMessageType[BuyConcertTicketsSucceeded]
+      probe.expectMessageType[BuyTicketsSucceeded]
 
       entityRef ! Cancel(probe.ref)
-      probe.expectMessageType[CancelConcertSucceeded]
+      probe.expectMessageType[CancelSucceeded]
     }
 
   }

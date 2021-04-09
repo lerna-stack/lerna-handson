@@ -20,9 +20,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .createConcert(id, numberOfTickets)
       .map {
-        case succeeded: CreateConcertSucceeded =>
+        case succeeded: CreateSucceeded =>
           CreateConcertResponse(succeeded.numTickets)
-        case failed: CreateConcertFailed =>
+        case failed: CreateFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -31,9 +31,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .getConcert(id)
       .map {
-        case succeeded: GetConcertSucceeded =>
+        case succeeded: GetSucceeded =>
           GetConcertResponse(succeeded.tickets, succeeded.cancelled)
-        case failed: GetConcertFailed =>
+        case failed: GetFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -42,9 +42,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .cancelConcert(id)
       .map {
-        case succeeded: CancelConcertSucceeded =>
+        case succeeded: CancelSucceeded =>
           CancelConcertResponse(succeeded.numberOfTickets)
-        case failed: CancelConcertFailed =>
+        case failed: CancelFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -53,9 +53,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .buyConcertTickets(id, numberOfTickets)
       .map {
-        case succeeded: BuyConcertTicketsSucceeded =>
+        case succeeded: BuyTicketsSucceeded =>
           BuyConcertTicketsResponse(succeeded.tickets)
-        case failed: BuyConcertTicketsFailed =>
+        case failed: BuyTicketsFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }

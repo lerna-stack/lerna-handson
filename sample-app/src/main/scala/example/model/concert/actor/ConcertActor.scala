@@ -26,36 +26,38 @@ object ConcertActor {
     */
   sealed trait Command extends KryoSerializable
 
-  /** ConcertActor からのレスポンスメッセージ
+  /** ConcertActor からのレスポンス
+    *
     * シリアライズされる
     */
-  sealed trait ConcertCommandResponse extends KryoSerializable
+  sealed trait Response extends KryoSerializable
 
   // --
 
-  case class Create(numTickets: Int, replyTo: ActorRef[CreateConcertResponse]) extends Command
-  sealed trait CreateConcertResponse                                           extends ConcertCommandResponse
-  case class CreateConcertSucceeded(numTickets: Int)                           extends CreateConcertResponse
-  case class CreateConcertFailed(error: ConcertError)                          extends CreateConcertResponse
+  case class Create(numTickets: Int, replyTo: ActorRef[CreateResponse]) extends Command
+  sealed trait CreateResponse                                           extends Response
+  case class CreateSucceeded(numTickets: Int)                           extends CreateResponse
+  case class CreateFailed(error: ConcertError)                          extends CreateResponse
 
   // --
 
-  case class Get(replyTo: ActorRef[GetConcertResponse])                                extends Command
-  sealed trait GetConcertResponse                                                      extends ConcertCommandResponse
-  case class GetConcertSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetConcertResponse
-  case class GetConcertFailed(error: ConcertError)                                     extends GetConcertResponse
+  case class Get(replyTo: ActorRef[GetResponse])                                extends Command
+  sealed trait GetResponse                                                      extends Response
+  case class GetSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetResponse
+  case class GetFailed(error: ConcertError)                                     extends GetResponse
 
   // --
 
-  case class Cancel(replyTo: ActorRef[CancelConcertResponse]) extends Command
-  sealed trait CancelConcertResponse                          extends ConcertCommandResponse
-  case class CancelConcertSucceeded(numberOfTickets: Int)     extends CancelConcertResponse
-  case class CancelConcertFailed(error: ConcertError)         extends CancelConcertResponse
+  case class Cancel(replyTo: ActorRef[CancelResponse]) extends Command
+  sealed trait CancelResponse                          extends Response
+  case class CancelSucceeded(numberOfTickets: Int)     extends CancelResponse
+  case class CancelFailed(error: ConcertError)         extends CancelResponse
 
   // --
 
-  case class BuyTickets(numberOfTickets: Int, replyTo: ActorRef[BuyConcertTicketsResponse]) extends Command
-  sealed trait BuyConcertTicketsResponse                                                    extends ConcertCommandResponse
-  case class BuyConcertTicketsSucceeded(tickets: Vector[ConcertTicketId])                   extends BuyConcertTicketsResponse
-  case class BuyConcertTicketsFailed(error: ConcertError)                                   extends BuyConcertTicketsResponse
+  case class BuyTickets(numberOfTickets: Int, replyTo: ActorRef[BuyTicketsResponse]) extends Command
+  sealed trait BuyTicketsResponse                                                    extends Response
+  case class BuyTicketsSucceeded(tickets: Vector[ConcertTicketId])                   extends BuyTicketsResponse
+  case class BuyTicketsFailed(error: ConcertError)                                   extends BuyTicketsResponse
+
 }

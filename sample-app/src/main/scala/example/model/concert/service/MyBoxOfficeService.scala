@@ -22,19 +22,19 @@ final class MyBoxOfficeService(
 
   private val sharding = new ConcertActorClusterSharding(system, behaviorFactory)
 
-  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
+  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateResponse] = {
     ???
   }
 
-  override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
+  override def getConcert(id: ConcertId): Future[GetResponse] = {
     ???
   }
 
-  override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
+  override def cancelConcert(id: ConcertId): Future[CancelResponse] = {
     ???
   }
 
-  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse] = {
+  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyTicketsResponse] = {
     ???
   }
 }

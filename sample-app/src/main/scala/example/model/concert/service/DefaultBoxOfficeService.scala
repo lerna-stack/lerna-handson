@@ -19,12 +19,12 @@ final class DefaultBoxOfficeService(
 
   private val sharding = new ConcertActorClusterSharding(system, behaviorFactory)
 
-  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
+  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateResponse] = {
     val entityRef = sharding.entityRefFor(id)
     entityRef.ask(replyTo => Create(numberOfTickets, replyTo))
   }
 
-  override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
+  override def getConcert(id: ConcertId): Future[GetResponse] = {
     // Ask先から一定時間返答がない場合に再送処理が行われる
     // 永続化等はしていないので、Ask元がクラッシュした場合にはリクエストは失われることに注意すること
     // リクエストが複数回　Ask先に到達して処理される可能性があるので、冪等な処理にのみ使える。
@@ -33,12 +33,12 @@ final class DefaultBoxOfficeService(
     entityRef.ask(replyTo => Get(replyTo))
   }
 
-  override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
+  override def cancelConcert(id: ConcertId): Future[CancelResponse] = {
     val entityRef = sharding.entityRefFor(id)
     entityRef.ask(replyTo => Cancel(replyTo))
   }
 
-  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse] = {
+  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyTicketsResponse] = {
     val entityRef = sharding.entityRefFor(id)
     entityRef.ask(replyTo => BuyTickets(numberOfTickets, replyTo))
   }
