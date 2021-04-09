@@ -1,7 +1,6 @@
 package example.model.concert.actor
 
 import akka.actor.typed.ActorSystem
-import example.model.concert.actor.ConcertActorBase.ConcertActorClusterSharding
 
 final class ConcertActorClusterShardingFactory(
     behaviorFactory: ConcertActorBehaviorFactory,
@@ -9,7 +8,7 @@ final class ConcertActorClusterShardingFactory(
 
   /** ShardedConcertActor の ClusterSharding を開始する。
     */
-  def create(system: ActorSystem[Nothing]): ConcertActorBase.ConcertActorClusterSharding = {
+  def create(system: ActorSystem[Nothing]): ConcertActorClusterSharding = {
     val concertActorConfig = ConcertActorConfig(system)
     new ConcertActorClusterSharding(system, concertActorConfig, behaviorFactory)
   }
