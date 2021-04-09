@@ -20,10 +20,11 @@ import example.model.concert._
   */
 object ConcertActor {
 
-  /** ConcertActor へのリクエストメッセージ
+  /** ConcertActor へのリクエスト(コマンド)
+    *
     * シリアライズされる
     */
-  sealed trait ConcertCommandRequest extends KryoSerializable
+  sealed trait Command extends KryoSerializable
 
   /** ConcertActor からのレスポンスメッセージ
     * シリアライズされる
@@ -32,31 +33,29 @@ object ConcertActor {
 
   // --
 
-  case class CreateConcertRequest(numTickets: Int, replyTo: ActorRef[CreateConcertResponse])
-      extends ConcertCommandRequest
-  sealed trait CreateConcertResponse                  extends ConcertCommandResponse
-  case class CreateConcertSucceeded(numTickets: Int)  extends CreateConcertResponse
-  case class CreateConcertFailed(error: ConcertError) extends CreateConcertResponse
+  case class Create(numTickets: Int, replyTo: ActorRef[CreateConcertResponse]) extends Command
+  sealed trait CreateConcertResponse                                           extends ConcertCommandResponse
+  case class CreateConcertSucceeded(numTickets: Int)                           extends CreateConcertResponse
+  case class CreateConcertFailed(error: ConcertError)                          extends CreateConcertResponse
 
   // --
 
-  case class GetConcertRequest(replyTo: ActorRef[GetConcertResponse])                  extends ConcertCommandRequest
+  case class Get(replyTo: ActorRef[GetConcertResponse])                                extends Command
   sealed trait GetConcertResponse                                                      extends ConcertCommandResponse
   case class GetConcertSucceeded(tickets: Vector[ConcertTicketId], cancelled: Boolean) extends GetConcertResponse
   case class GetConcertFailed(error: ConcertError)                                     extends GetConcertResponse
 
   // --
 
-  case class CancelConcertRequest(replyTo: ActorRef[CancelConcertResponse]) extends ConcertCommandRequest
-  sealed trait CancelConcertResponse                                        extends ConcertCommandResponse
-  case class CancelConcertSucceeded(numberOfTickets: Int)                   extends CancelConcertResponse
-  case class CancelConcertFailed(error: ConcertError)                       extends CancelConcertResponse
+  case class Cancel(replyTo: ActorRef[CancelConcertResponse]) extends Command
+  sealed trait CancelConcertResponse                          extends ConcertCommandResponse
+  case class CancelConcertSucceeded(numberOfTickets: Int)     extends CancelConcertResponse
+  case class CancelConcertFailed(error: ConcertError)         extends CancelConcertResponse
 
   // --
 
-  case class BuyConcertTicketsRequest(numberOfTickets: Int, replyTo: ActorRef[BuyConcertTicketsResponse])
-      extends ConcertCommandRequest
-  sealed trait BuyConcertTicketsResponse                                  extends ConcertCommandResponse
-  case class BuyConcertTicketsSucceeded(tickets: Vector[ConcertTicketId]) extends BuyConcertTicketsResponse
-  case class BuyConcertTicketsFailed(error: ConcertError)                 extends BuyConcertTicketsResponse
+  case class BuyTickets(numberOfTickets: Int, replyTo: ActorRef[BuyConcertTicketsResponse]) extends Command
+  sealed trait BuyConcertTicketsResponse                                                    extends ConcertCommandResponse
+  case class BuyConcertTicketsSucceeded(tickets: Vector[ConcertTicketId])                   extends BuyConcertTicketsResponse
+  case class BuyConcertTicketsFailed(error: ConcertError)                                   extends BuyConcertTicketsResponse
 }

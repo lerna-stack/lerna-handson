@@ -4,7 +4,7 @@ import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.scaladsl.{ ClusterSharding, Entity, EntityRef, EntityTypeKey }
 import akka.persistence.typed.PersistenceId
 import example.model.concert.ConcertId
-import example.model.concert.actor.ConcertActor.ConcertCommandRequest
+import example.model.concert.actor.ConcertActor.Command
 
 /** ConcertActor の ClusterSharding を管理する
   */
@@ -13,8 +13,8 @@ final class ConcertActorClusterSharding(
     createBehavior: ConcertActorBehaviorFactory,
 ) {
   private val sharding = ClusterSharding(system)
-  private val TypeKey: EntityTypeKey[ConcertCommandRequest] =
-    EntityTypeKey[ConcertCommandRequest]("concerts")
+  private val TypeKey: EntityTypeKey[Command] =
+    EntityTypeKey[Command]("concerts")
 
   sharding.init(Entity(TypeKey) { entityContext =>
     val id = ConcertId
@@ -25,7 +25,7 @@ final class ConcertActorClusterSharding(
     createBehavior(id, persistenceId)
   })
 
-  def entityRefFor(id: ConcertId): EntityRef[ConcertCommandRequest] = {
+  def entityRefFor(id: ConcertId): EntityRef[Command] = {
     sharding.entityRefFor(TypeKey, id.value)
   }
 }

@@ -21,7 +21,7 @@ final class DefaultBoxOfficeService(
 
   override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
     val entityRef = sharding.entityRefFor(id)
-    entityRef.ask(replyTo => CreateConcertRequest(numberOfTickets, replyTo))
+    entityRef.ask(replyTo => Create(numberOfTickets, replyTo))
   }
 
   override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
@@ -30,17 +30,17 @@ final class DefaultBoxOfficeService(
     // リクエストが複数回　Ask先に到達して処理される可能性があるので、冪等な処理にのみ使える。
     // TODO Use AtLeastOnceDelivery
     val entityRef = sharding.entityRefFor(id)
-    entityRef.ask(replyTo => GetConcertRequest(replyTo))
+    entityRef.ask(replyTo => Get(replyTo))
   }
 
   override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
     val entityRef = sharding.entityRefFor(id)
-    entityRef.ask(replyTo => CancelConcertRequest(replyTo))
+    entityRef.ask(replyTo => Cancel(replyTo))
   }
 
   override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyConcertTicketsResponse] = {
     val entityRef = sharding.entityRefFor(id)
-    entityRef.ask(replyTo => BuyConcertTicketsRequest(numberOfTickets, replyTo))
+    entityRef.ask(replyTo => BuyTickets(numberOfTickets, replyTo))
   }
 
 }
