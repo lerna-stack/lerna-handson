@@ -10,7 +10,7 @@ object ConcertActorClusterSharding {
 
   /** ShardedConcertActor の ClusterSharding を開始する。
     */
-  def init(system: ActorSystem[Nothing], behaviorFactory: ConcertActorBehaviorFactory): ConcertActorClusterSharding = {
+  def apply(system: ActorSystem[Nothing], behaviorFactory: ConcertActorBehaviorFactory): ConcertActorClusterSharding = {
     val concertActorConfig = ConcertActorConfig(system)
     new ConcertActorClusterSharding(system, concertActorConfig, behaviorFactory)
   }
