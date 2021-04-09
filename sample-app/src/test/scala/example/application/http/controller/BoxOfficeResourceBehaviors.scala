@@ -4,7 +4,8 @@ import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, StatusCodes }
 import example.RouteSpecBase
 import example.application.http.MainHttpApiServerResource
 import example.model.concert.{ ConcertIdGenerator, ConcertTicketId }
-import example.usecase.{ BoxOfficeReadModelUseCase, BoxOfficeUseCase }
+import example.readmodel.{ ConcertItem, ConcertRepository }
+import example.usecase.BoxOfficeUseCase
 
 import scala.concurrent.Future
 
@@ -20,19 +21,18 @@ trait BoxOfficeResourceBehaviors {
   this: RouteSpecBase =>
 
   import example.application.http.protocol._
-  import example.usecase.BoxOfficeReadModelUseCaseProtocol._
   import example.usecase.BoxOfficeUseCaseProtocol._
 
   val idGenerator = new ConcertIdGenerator()
 
   def boxOfficeResource(
-      newResource: (BoxOfficeUseCase, BoxOfficeReadModelUseCase) => MainHttpApiServerResource,
+      newResource: (BoxOfficeUseCase, ConcertRepository) => MainHttpApiServerResource,
   ): Unit = {
 
     "create the concert" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val id           = idGenerator.nextId()
       val numOfTickets = 3
@@ -59,9 +59,9 @@ trait BoxOfficeResourceBehaviors {
     }
 
     "get the concert" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val id      = idGenerator.nextId()
       val request = Get(s"/concerts/${id.value}")
@@ -82,9 +82,9 @@ trait BoxOfficeResourceBehaviors {
     }
 
     "cancel the concert" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val id      = idGenerator.nextId()
       val request = Post(s"/concerts/${id.value}/cancel")
@@ -104,9 +104,9 @@ trait BoxOfficeResourceBehaviors {
     }
 
     "buy tickets" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val id           = idGenerator.nextId()
       val numOfTickets = 3
@@ -137,22 +137,20 @@ trait BoxOfficeResourceBehaviors {
     }
 
     "get all concerts" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val request = Get("/concerts")
 
       val id1 = idGenerator.nextId()
       val id2 = idGenerator.nextId()
 
-      rmUseCase.getConcertList(excludeCancelled = false) returns
+      repository.fetchConcertList(excludeCancelled = false) returns
       Future.successful(
-        GetConcertListResponse(
-          Seq(
-            GetConcertItemResponse(id1, numberOfTickets = 12, cancelled = false),
-            GetConcertItemResponse(id2, numberOfTickets = 1, cancelled = true),
-          ),
+        Seq(
+          ConcertItem(id1, numberOfTickets = 12, cancelled = false),
+          ConcertItem(id2, numberOfTickets = 1, cancelled = true),
         ),
       )
 
@@ -165,25 +163,23 @@ trait BoxOfficeResourceBehaviors {
           GetConcertsResponseBodyItem(id2, tickets = 1, cancelled = true),
         )
 
-        rmUseCase.getConcertList(excludeCancelled = false) was called
+        repository.fetchConcertList(excludeCancelled = false) was called
       }
     }
 
     "get all available concerts" in {
-      val useCase   = mock[BoxOfficeUseCase]
-      val rmUseCase = mock[BoxOfficeReadModelUseCase]
-      val routes    = newResource(useCase, rmUseCase).routes
+      val useCase    = mock[BoxOfficeUseCase]
+      val repository = mock[ConcertRepository]
+      val routes     = newResource(useCase, repository).routes
 
       val request = Get("/concerts?excludeCancelled=true")
 
       val id1 = idGenerator.nextId()
 
-      rmUseCase.getConcertList(excludeCancelled = true) returns
+      repository.fetchConcertList(excludeCancelled = true) returns
       Future.successful(
-        GetConcertListResponse(
-          Seq(
-            GetConcertItemResponse(id1, numberOfTickets = 3, cancelled = false),
-          ),
+        Seq(
+          ConcertItem(id1, numberOfTickets = 3, cancelled = false),
         ),
       )
 
@@ -195,7 +191,7 @@ trait BoxOfficeResourceBehaviors {
           GetConcertsResponseBodyItem(id1, tickets = 3, cancelled = false),
         )
 
-        rmUseCase.getConcertList(excludeCancelled = true) was called
+        repository.fetchConcertList(excludeCancelled = true) was called
       }
     }
 

@@ -12,9 +12,4 @@ object DefaultUseCaseDiDesign {
       .bind[DefaultBoxOfficeUseCase.UseCaseExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
         system.executionContext // TODO UseCase用の ExecutionContext を提供する。
       }
-      .bind[BoxOfficeReadModelUseCase].to[DefaultBoxOfficeReadModelUseCase]
-      .bind[DefaultBoxOfficeReadModelUseCase.UseCaseExecutionContext].toSingletonProvider[ActorSystem[Nothing]] {
-        system =>
-          system.executionContext // TODO UseCase用の ExecutionContext を提供する。
-      }
 }

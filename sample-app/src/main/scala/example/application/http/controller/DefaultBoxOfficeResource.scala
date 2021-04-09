@@ -7,6 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ ExceptionHandler, Route }
 import example.application.http._
 import example.application.http.protocol._
+import example.readmodel.{ ConcertItem, ConcertRepository }
 import example.usecase._
 
 import scala.concurrent._
@@ -15,13 +16,12 @@ import scala.concurrent._
   */
 final class DefaultBoxOfficeResource(
     boxOfficeUseCase: BoxOfficeUseCase,
-    boxOfficeReadModelUseCase: BoxOfficeReadModelUseCase,
+    concertRepository: ConcertRepository,
 )(implicit
     executionContext: ResourceExecutionContext,
 ) extends MainHttpApiServerResource {
   import SprayJsonSupport._
   import example.application.http.dsl.ConcertPathMatchers._
-  import example.usecase.BoxOfficeReadModelUseCaseProtocol._
   import example.usecase.BoxOfficeUseCaseProtocol._
 
   // ExceptionHandler を定義する
@@ -126,10 +126,10 @@ final class DefaultBoxOfficeResource(
     path("concerts") {
       get {
         parameters("excludeCancelled".as[Boolean] ? false) { excludeCancelled =>
-          val useCaseGetListResponseFuture: Future[GetConcertListResponse] =
-            boxOfficeReadModelUseCase.getConcertList(excludeCancelled)
+          val repositoryResponseFuture: Future[Seq[ConcertItem]] =
+            concertRepository.fetchConcertList(excludeCancelled)
           val responseFuture: Future[GetConcertsResponseBody] =
-            useCaseGetListResponseFuture.map(GetConcertsResponseBody.from)
+            repositoryResponseFuture.map(GetConcertsResponseBody.from)
           onSuccess(responseFuture) { response =>
             complete(StatusCodes.OK -> response)
           }
