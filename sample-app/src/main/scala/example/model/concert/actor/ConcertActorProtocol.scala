@@ -43,7 +43,7 @@ object ConcertActorProtocol {
 
   // --
 
-  case class BuyConcertTicketsRequest(numberOfTickets: Int, val replyTo: ActorRef[BuyConcertTicketsResponse])
+  case class BuyConcertTicketsRequest(numberOfTickets: Int, replyTo: ActorRef[BuyConcertTicketsResponse])
       extends ConcertCommandRequest
   sealed trait BuyConcertTicketsResponse                                  extends ConcertCommandResponse
   case class BuyConcertTicketsSucceeded(tickets: Vector[ConcertTicketId]) extends BuyConcertTicketsResponse
