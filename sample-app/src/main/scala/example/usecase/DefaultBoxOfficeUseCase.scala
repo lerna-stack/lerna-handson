@@ -12,7 +12,7 @@ object DefaultBoxOfficeUseCase {
 final class DefaultBoxOfficeUseCase(
     boxOfficeService: BoxOfficeService,
 )(implicit
-    dispatcher: DefaultBoxOfficeUseCase.UseCaseExecutionContext,
+    executionContext: DefaultBoxOfficeUseCase.UseCaseExecutionContext,
 ) extends BoxOfficeUseCase {
   import BoxOfficeUseCaseProtocol._
 

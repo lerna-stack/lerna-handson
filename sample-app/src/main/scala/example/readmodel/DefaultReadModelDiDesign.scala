@@ -15,7 +15,7 @@ object DefaultReadModelDiDesign {
         DefaultConcertDatabaseServiceConfig(system)
       }
       .bind[RepositoryExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
-        system.executionContext // TODO RDB用のdispatcherを提供する。
+        system.executionContext // TODO RDB用の ExecutionContxt を提供する。
       }
       .bind[ConcertRepository].to[DefaultConcertRepository]
       // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)

@@ -15,7 +15,7 @@ object MainDiDesign {
     Design.newDesign.withProductionMode
       .bind[ActorSystem[Nothing]].toInstance(system)
       .bind[ExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
-        // デフォルトでは system.dispatcher を使うようにする。
+        // デフォルトでは system.executionContext を使うようにする。
         system.executionContext
       }
       .add(ModelDiDesign.design)

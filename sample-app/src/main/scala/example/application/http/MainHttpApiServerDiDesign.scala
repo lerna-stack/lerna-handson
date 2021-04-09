@@ -12,7 +12,7 @@ object MainHttpApiServerDiDesign {
         MainHttpApiServerConfig(system)
       }
       .bind[ResourceExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
-        system.executionContext // TODO akka.http のルーティングで使用するdispatcherを準備する。
+        system.executionContext // TODO akka.http のルーティングで使用する ExecutionContext を準備する。
       }
       .bind[MainHttpApiServerResource].to[DefaultBoxOfficeResource]
       // MyBoxOfficeResource 実装時にコメントアウトを外す (この行はそのまま)

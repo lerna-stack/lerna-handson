@@ -10,11 +10,11 @@ object DefaultUseCaseDiDesign {
     Design.newDesign
       .bind[BoxOfficeUseCase].to[DefaultBoxOfficeUseCase]
       .bind[DefaultBoxOfficeUseCase.UseCaseExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
-        system.executionContext // TODO UseCase用のdispatcherを提供する。
+        system.executionContext // TODO UseCase用の ExecutionContext を提供する。
       }
       .bind[BoxOfficeReadModelUseCase].to[DefaultBoxOfficeReadModelUseCase]
       .bind[DefaultBoxOfficeReadModelUseCase.UseCaseExecutionContext].toSingletonProvider[ActorSystem[Nothing]] {
         system =>
-          system.executionContext // TODO UseCase用のdispatcherを提供する。
+          system.executionContext // TODO UseCase用の ExecutionContext を提供する。
       }
 }
