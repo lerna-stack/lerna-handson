@@ -17,7 +17,7 @@ object ConcertActorClusterSharding {
 
 }
 
-/** ConcertActor の ClusterSharding の情報を保持するクラス
+/** ConcertActor の ClusterSharding を管理する
   */
 final class ConcertActorClusterSharding(
     system: ActorSystem[Nothing],
