@@ -1,6 +1,6 @@
 package example.usecase
 
-import example.model.concert.actor.ConcertActor._
+import example.model.concert.actor.ConcertActor
 import example.model.concert.ConcertId
 import example.model.concert.service.BoxOfficeService
 
@@ -20,9 +20,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .createConcert(id, numberOfTickets)
       .map {
-        case succeeded: CreateSucceeded =>
+        case succeeded: ConcertActor.CreateSucceeded =>
           CreateConcertResponse(succeeded.numTickets)
-        case failed: CreateFailed =>
+        case failed: ConcertActor.CreateFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -31,9 +31,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .getConcert(id)
       .map {
-        case succeeded: GetSucceeded =>
+        case succeeded: ConcertActor.GetSucceeded =>
           GetConcertResponse(succeeded.tickets, succeeded.cancelled)
-        case failed: GetFailed =>
+        case failed: ConcertActor.GetFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -42,9 +42,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .cancelConcert(id)
       .map {
-        case succeeded: CancelSucceeded =>
+        case succeeded: ConcertActor.CancelSucceeded =>
           CancelConcertResponse(succeeded.numberOfTickets)
-        case failed: CancelFailed =>
+        case failed: ConcertActor.CancelFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }
@@ -53,9 +53,9 @@ final class DefaultBoxOfficeUseCase(
     boxOfficeService
       .buyConcertTickets(id, numberOfTickets)
       .map {
-        case succeeded: BuyTicketsSucceeded =>
+        case succeeded: ConcertActor.BuyTicketsSucceeded =>
           BuyConcertTicketsResponse(succeeded.tickets)
-        case failed: BuyTicketsFailed =>
+        case failed: ConcertActor.BuyTicketsFailed =>
           throw new BoxOfficeUseCaseException(failed.error)
       }
   }

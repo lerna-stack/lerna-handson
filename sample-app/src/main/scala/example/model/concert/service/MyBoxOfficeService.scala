@@ -3,7 +3,7 @@ package example.model.concert.service
 import akka.actor.typed.ActorSystem
 import akka.util.Timeout
 import example.model.concert.ConcertId
-import example.model.concert.actor.{ ConcertActorBehaviorFactory, ConcertActorClusterSharding }
+import example.model.concert.actor.{ ConcertActor, ConcertActorBehaviorFactory, ConcertActorClusterSharding }
 
 import scala.concurrent.Future
 
@@ -14,7 +14,6 @@ final class MyBoxOfficeService(
     system: ActorSystem[Nothing],
     behaviorFactory: ConcertActorBehaviorFactory,
 ) extends BoxOfficeService {
-  import example.model.concert.actor.ConcertActor._
 
   // 設定を読み込む
   private val config                            = BoxOfficeServiceConfig(system)
@@ -22,19 +21,19 @@ final class MyBoxOfficeService(
 
   private val sharding = new ConcertActorClusterSharding(system, behaviorFactory)
 
-  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateResponse] = {
+  override def createConcert(id: ConcertId, numberOfTickets: Int): Future[ConcertActor.CreateResponse] = {
     ???
   }
 
-  override def getConcert(id: ConcertId): Future[GetResponse] = {
+  override def getConcert(id: ConcertId): Future[ConcertActor.GetResponse] = {
     ???
   }
 
-  override def cancelConcert(id: ConcertId): Future[CancelResponse] = {
+  override def cancelConcert(id: ConcertId): Future[ConcertActor.CancelResponse] = {
     ???
   }
 
-  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[BuyTicketsResponse] = {
+  override def buyConcertTickets(id: ConcertId, numberOfTickets: Int): Future[ConcertActor.BuyTicketsResponse] = {
     ???
   }
 }
