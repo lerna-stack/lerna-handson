@@ -11,8 +11,8 @@ object ConcertActorClusterSharding {
   /** ShardedConcertActor の ClusterSharding を開始する。
     */
   def apply(system: ActorSystem[Nothing], behaviorFactory: ConcertActorBehaviorFactory): ConcertActorClusterSharding = {
-    val concertActorConfig = ConcertActorConfig(system)
-    new ConcertActorClusterSharding(system, concertActorConfig, behaviorFactory)
+    val settings = ConcertActorClusterShardingSettings(system)
+    new ConcertActorClusterSharding(system, settings, behaviorFactory)
   }
 
 }
@@ -21,11 +21,11 @@ object ConcertActorClusterSharding {
   */
 final class ConcertActorClusterSharding(
     system: ActorSystem[Nothing],
-    config: ConcertActorConfig,
+    settings: ConcertActorClusterShardingSettings,
     createBehavior: ConcertActorBehaviorFactory,
 ) {
   private val sharding                                      = ClusterSharding(system)
-  private val TypeKey: EntityTypeKey[ConcertCommandRequest] = EntityTypeKey[ConcertCommandRequest](config.shardName)
+  private val TypeKey: EntityTypeKey[ConcertCommandRequest] = EntityTypeKey[ConcertCommandRequest](settings.shardName)
 
   sharding.init(Entity(TypeKey) { entityContext =>
     val id = ConcertId
