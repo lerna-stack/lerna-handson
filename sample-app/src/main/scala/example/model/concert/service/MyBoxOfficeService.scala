@@ -20,7 +20,7 @@ final class MyBoxOfficeService(
   private val config                            = BoxOfficeServiceConfig(system)
   private implicit val responseTimeout: Timeout = config.responseTimeout
 
-  private val sharding = ConcertActorClusterSharding(system, behaviorFactory)
+  private val sharding = new ConcertActorClusterSharding(system, behaviorFactory)
 
   override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
     ???

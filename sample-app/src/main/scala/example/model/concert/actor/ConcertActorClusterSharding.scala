@@ -6,27 +6,15 @@ import akka.persistence.typed.PersistenceId
 import example.model.concert.ConcertId
 import example.model.concert.actor.ConcertActorProtocol.ConcertCommandRequest
 
-object ConcertActorClusterSharding {
-
-  /** ShardedConcertActor の ClusterSharding を開始する。
-    */
-  def apply(system: ActorSystem[Nothing], behaviorFactory: ConcertActorBehaviorFactory): ConcertActorClusterSharding = {
-    val settings = ConcertActorClusterShardingSettings(system)
-    new ConcertActorClusterSharding(system, settings, behaviorFactory)
-  }
-
-}
-
 /** ConcertActor の ClusterSharding を管理する
   */
 final class ConcertActorClusterSharding(
     system: ActorSystem[Nothing],
-    settings: ConcertActorClusterShardingSettings,
     createBehavior: ConcertActorBehaviorFactory,
 ) {
   private val sharding = ClusterSharding(system)
   private val TypeKey: EntityTypeKey[ConcertCommandRequest] =
-    EntityTypeKey[ConcertCommandRequest](settings.entityTypeKeyName)
+    EntityTypeKey[ConcertCommandRequest]("concerts")
 
   sharding.init(Entity(TypeKey) { entityContext =>
     val id = ConcertId
