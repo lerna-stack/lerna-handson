@@ -1,7 +1,6 @@
 package example.application.http
 
 import akka.Done
-import akka.{ actor => classic }
 import akka.actor.CoordinatedShutdown
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.Http
@@ -13,17 +12,18 @@ import scala.concurrent._
 final class MainHttpApiServer(
     config: MainHttpApiServerConfig,
     resource: MainHttpApiServerResource,
+)(implicit
     system: ActorSystem[Nothing],
 ) {
   import system.executionContext
-  private implicit val classicSystem: classic.ActorSystem = system.classicSystem
 
   private val log = LoggerFactory.getLogger(this.getClass)
 
   def start(): Future[Done] = {
     // HTTPサーバーの起動
     Http()
-      .bindAndHandle(resource.routes, config.host, config.port)
+      .newServerAt(config.host, config.port)
+      .bind(resource.routes)
       .map(onBindSuccess)
       .map(_ => Done)
   }
