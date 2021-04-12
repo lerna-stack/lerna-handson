@@ -1,12 +1,11 @@
 package example.model.concert.actor
 
-import com.typesafe.config.ConfigFactory
 import example.ActorSpecBase
 import example.testing.tags.ExerciseTest
 
 @ExerciseTest
 final class MyConcertActorSpec
-    extends ActorSpecBase(ConfigFactory.load("test-akka-cluster"))
+    extends ActorSpecBase()
     with ConcertActorBehaviors
     with ConcertActorClusterShardingBehaviors {
 

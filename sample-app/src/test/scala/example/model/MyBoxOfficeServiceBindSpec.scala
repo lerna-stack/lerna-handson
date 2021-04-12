@@ -1,7 +1,6 @@
 package example.model
 
 import akka.actor.typed.ActorSystem
-import com.typesafe.config.ConfigFactory
 import example.ActorSpecBase
 import example.model.concert.service.{ BoxOfficeService, MyBoxOfficeService }
 import example.testing.tags.ExerciseTest
@@ -9,9 +8,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe._
 
 @ExerciseTest
-final class MyBoxOfficeServiceBindSpec
-    extends ActorSpecBase(ConfigFactory.load("test-akka-cluster"))
-    with AirframeDiSessionSupport {
+final class MyBoxOfficeServiceBindSpec extends ActorSpecBase() with AirframeDiSessionSupport {
   override protected val design: Design =
     ModelDiDesign.design
       .bind[ActorSystem[Nothing]].toInstance(system)
