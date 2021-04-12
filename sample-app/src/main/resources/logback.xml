@@ -9,8 +9,12 @@
     <!-- 演習を通して EventSourcedBehavior のログを確認したいため -->
     <logger name="akka.persistence.typed" level="debug" />
 
+    <!-- アプリケーションのログは詳細に出したいため -->
     <logger name="example" level="debug"/>
+
+    <!-- すべてを DEBUG にすると煩雑だったため -->
     <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
+
 </configuration>
