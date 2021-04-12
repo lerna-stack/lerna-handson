@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
   object Versions {
     val akka     = "2.6.8"
-    val akkaHttp = "10.1.12"
+    val akkaHttp = "10.2.4"
     // Scalactic, ScalaTest のバージョンは念のため同一にする
     val scalactic                = "3.2.2"
     val scalaTest                = "3.2.2"
