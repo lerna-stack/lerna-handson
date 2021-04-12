@@ -8,8 +8,7 @@ import akka.http.scaladsl.server.Route
 
 // curl --silent --noproxy '*' localhost:8080/example/123
 object PathMatcherExample extends App {
-  private implicit val system           = ActorSystem("path-matcher-example")
-  private implicit val executionContext = system.dispatcher
+  private implicit val system = ActorSystem("path-matcher-example")
 
   private val route: Route =
     // /example/{IntNumber} のパスを定義する。

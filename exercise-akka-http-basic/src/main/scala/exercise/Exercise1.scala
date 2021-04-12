@@ -19,8 +19,7 @@ import akka.http.scaladsl.server.Route
    curl --silent --noproxy '*' localhost:8080/my/question
  */
 object Exercise1 extends App {
-  private implicit val system           = ActorSystem("exercise1")
-  private implicit val executionContext = system.dispatcher
+  private implicit val system = ActorSystem("exercise1")
 
   private val route: Route = {
     ???

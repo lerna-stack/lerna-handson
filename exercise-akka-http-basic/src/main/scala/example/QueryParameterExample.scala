@@ -10,8 +10,7 @@ import spray.json._
 
 // curl --silent --noproxy '*' "localhost:8080/example/query?s=hello&page=3"
 object QueryParameterExample extends App {
-  private implicit val system           = ActorSystem("query-parameter-example")
-  private implicit val executionContext = system.dispatcher
+  private implicit val system = ActorSystem("query-parameter-example")
 
   private val route: Route = {
     // /example/query?s=hi&page=10

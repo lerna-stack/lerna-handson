@@ -9,8 +9,7 @@ import spray.json.DefaultJsonProtocol._
 
 // curl --silent --noproxy '*' -X POST  -H "Content-Type:application/json" -d '{"value":123}' localhost:8080/body-example
 object Answer2B extends App {
-  private implicit val system           = ActorSystem("answer2b")
-  private implicit val executionContext = system.dispatcher
+  private implicit val system = ActorSystem("answer2b")
 
   private case class MyRequestBody(value: Int)
   private case class MyResponseBody(message: String, value: Int)

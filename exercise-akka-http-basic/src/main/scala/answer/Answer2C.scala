@@ -7,8 +7,7 @@ import akka.http.scaladsl.server.Route
 
 // curl --silent --noproxy '*' "localhost:8080/query-example?p=12"
 object Answer2C extends App {
-  private implicit val system           = ActorSystem("entity-example")
-  private implicit val executionContext = system.dispatcher
+  private implicit val system = ActorSystem("entity-example")
 
   private val route: Route = {
     path("query-example") {
