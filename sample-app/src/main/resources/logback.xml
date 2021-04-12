@@ -5,6 +5,10 @@
             <pattern>[%-4level] [%d{MM/dd/yyyy HH:mm:ss.SSS}] [%thread] [%logger{36}] %msg%n</pattern>
         </encoder>
     </appender>
+
+    <!-- 演習を通して EventSourcedBehavior のログを確認したいため -->
+    <logger name="akka.persistence.typed" level="debug" />
+
     <logger name="example" level="debug"/>
     <root level="info">
         <appender-ref ref="STDOUT"/>
