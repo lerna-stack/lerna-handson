@@ -3,9 +3,9 @@ package example.application.http
 import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
 import example.application.http.controller.MyBoxOfficeResource
+import example.model.concert.service.BoxOfficeService
 import example.readmodel.ConcertRepository
 import example.testing.tags.ExerciseTest
-import example.usecase._
 import org.mockito.MockitoSugar
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
@@ -17,7 +17,7 @@ final class MyBoxOfficeResourceBindSpec extends ActorSpecBase() with AirframeDiS
   override protected val design: Design =
     MainHttpApiServerDiDesign.design
       .bind[ActorSystem[Nothing]].toInstance(system)
-      .bind[BoxOfficeUseCase].toInstance(mock[BoxOfficeUseCase])
+      .bind[BoxOfficeService].toInstance(mock[BoxOfficeService])
       .bind[ConcertRepository].toInstance(mock[ConcertRepository])
 
   // 演習で bind 成功を確認するために使用する
