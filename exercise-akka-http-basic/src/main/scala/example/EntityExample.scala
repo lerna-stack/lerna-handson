@@ -1,6 +1,7 @@
 package example
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
@@ -9,7 +10,7 @@ import spray.json.DefaultJsonProtocol._
 
 // curl --silent --noproxy '*' -X POST  -H "Content-Type:application/json" -d '{"value":123}' localhost:8080/example/entity
 object EntityExample extends App {
-  private implicit val system = ActorSystem("entity-example")
+  private implicit val system = ActorSystem(Behaviors.empty, "entity-example")
 
   private val route: Route = {
     // リクエストボディを取り出すためのケースクラス

@@ -1,6 +1,7 @@
 package exercise
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -19,7 +20,7 @@ import akka.http.scaladsl.server.Route
    curl --silent --noproxy '*' localhost:8080/my/question
  */
 object Exercise1 extends App {
-  private implicit val system = ActorSystem("exercise1")
+  private implicit val system = ActorSystem(Behaviors.empty, "exercise1")
 
   private val route: Route = {
     ???

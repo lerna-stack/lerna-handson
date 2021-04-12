@@ -1,6 +1,7 @@
 package exercise
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
@@ -13,7 +14,7 @@ import spray.json.DefaultJsonProtocol._
   curl --silent --noproxy '*' "localhost:8080/query-example?p=12"
  */
 object Exercise2C extends App {
-  private implicit val system = ActorSystem("entity-example")
+  private implicit val system = ActorSystem(Behaviors.empty, "entity-example")
 
   private val route: Route = {
     ???

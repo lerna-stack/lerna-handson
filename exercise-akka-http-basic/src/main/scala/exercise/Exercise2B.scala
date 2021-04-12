@@ -1,6 +1,7 @@
 package exercise
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
@@ -18,7 +19,7 @@ import spray.json.DefaultJsonProtocol._
   curl --silent --noproxy '*' -X POST  -H "Content-Type:application/json" -d '{"value":123}' localhost:8080/body-example
  */
 object Exercise2B extends App {
-  private implicit val system = ActorSystem("answer2b")
+  private implicit val system = ActorSystem(Behaviors.empty, "answer2b")
 
   // リクエストとレスポンスの型
   private case class MyRequestBody(value: Int)
