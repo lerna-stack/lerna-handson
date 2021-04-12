@@ -19,11 +19,11 @@ object QueryParameterExample extends App {
     // JSON で返す。
     path("example" / "query") {
       get {
-        parameters(("s", "page".as[Int] ? 0)) { (searchString, page) =>
+        parameters("s", "page".as[Int] ? 0) { (searchString, page) =>
           complete((searchString, page).toJson)
         }
       }
     }
   }
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().newServerAt("localhost", 8080).bind(route)
 }

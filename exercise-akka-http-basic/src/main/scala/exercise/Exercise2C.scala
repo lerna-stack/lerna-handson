@@ -19,5 +19,5 @@ object Exercise2C extends App {
   private val route: Route = {
     ???
   }
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().newServerAt("localhost", 8080).bind(route)
 }

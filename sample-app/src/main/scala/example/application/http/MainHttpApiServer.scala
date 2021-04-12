@@ -23,7 +23,8 @@ final class MainHttpApiServer(
   def start(): Future[Done] = {
     // HTTPサーバーの起動
     Http()
-      .bindAndHandle(resource.routes, config.host, config.port)
+      .newServerAt(config.host, config.port)
+      .bind(resource.routes)
       .map(onBindSuccess)
       .map(_ => Done)
   }

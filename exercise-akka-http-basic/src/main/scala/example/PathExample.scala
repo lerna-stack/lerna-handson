@@ -16,5 +16,5 @@ object PathExample extends App {
         complete("example_world")
       }
     }
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().newServerAt("localhost", 8080).bind(route)
 }

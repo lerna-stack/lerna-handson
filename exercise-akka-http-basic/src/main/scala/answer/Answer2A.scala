@@ -16,5 +16,5 @@ object Answer2A extends App {
         complete((value * 2).toString)
       }
     }
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().newServerAt("localhost", 8080).bind(route)
 }
