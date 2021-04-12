@@ -18,9 +18,9 @@ object GetConcertsResponseBody {
   implicit val GetConcertsResponseBodyJsonFormat: RootJsonFormat[GetConcertsResponseBody] =
     jsonFormat1(GetConcertsResponseBody.apply)
 
-  def from(response: Seq[ConcertItem]): GetConcertsResponseBody = {
+  def from(items: Seq[ConcertItem]): GetConcertsResponseBody = {
     GetConcertsResponseBody(
-      response.map(GetConcertsResponseBodyItem.from).toVector,
+      items.map(GetConcertsResponseBodyItem.from).toVector,
     )
   }
 
@@ -37,8 +37,8 @@ object GetConcertsResponseBodyItem {
   implicit val GetConcertsResponseBodyItemJsonFormat: RootJsonFormat[GetConcertsResponseBodyItem] =
     jsonFormat3(GetConcertsResponseBodyItem.apply)
 
-  def from(response: ConcertItem): GetConcertsResponseBodyItem = {
-    GetConcertsResponseBodyItem(response.id, response.numberOfTickets, response.cancelled)
+  def from(item: ConcertItem): GetConcertsResponseBodyItem = {
+    GetConcertsResponseBodyItem(item.id, item.numberOfTickets, item.cancelled)
   }
 
 }
