@@ -1,10 +1,9 @@
 package example.model.concert.actor
 
-import com.typesafe.config.ConfigFactory
 import example.ActorSpecBase
 
 final class DefaultConcertActorWithEventPersistenceSpec
-    extends ActorSpecBase(ConfigFactory.load("test-akka-cluster"))
+    extends ActorSpecBase()
     with ConcertActorBehaviors
     with ConcertActorClusterShardingBehaviors {
 
