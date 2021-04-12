@@ -4,7 +4,7 @@ import example.model.concert.ConcertId
 import spray.json.RootJsonFormat
 import spray.json.DefaultJsonProtocol._
 import ConcertJsonProtocol._
-import example.usecase.BoxOfficeUseCaseProtocol._
+import example.model.concert.service.BoxOfficeService.GetConcertResponse
 
 /** コンサート取得 レスポンス
   *
