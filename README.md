@@ -168,11 +168,7 @@ HTTP API サーバ
 - example.model  
 コマンド(ライト)側モデル
 - example.readmodel  
-コマンド(リード)側モデル
-- example.usecase  
-ユースケース
-- example.serialization  
-シリアライザ等
+クエリ(リード)側モデル
 
 
 ### テストに失敗する場合には?

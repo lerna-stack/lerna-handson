@@ -8,22 +8,22 @@ import akka.http.scaladsl.server.{ ExceptionHandler, Route }
 import example.application.http._
 import example.application.http.protocol._
 import example.model.concert.ConcertId
-import example.usecase._
+import example.model.concert.service.BoxOfficeService
+import example.readmodel.{ ConcertItem, ConcertRepository }
 
 import scala.concurrent._
 
 /** 演習でルートを実装していくクラス
   */
 final class MyBoxOfficeResource(
-    boxOfficeUseCase: BoxOfficeUseCase,
-    boxOfficeReadModelUseCase: BoxOfficeReadModelUseCase,
+    service: BoxOfficeService,
+    concertRepository: ConcertRepository,
 )(implicit
     executionContext: ResourceExecutionContext,
 ) extends MainHttpApiServerResource {
   import SprayJsonSupport._
   import example.application.http.dsl.ConcertPathMatchers._
-  import example.usecase.BoxOfficeReadModelUseCaseProtocol._
-  import example.usecase.BoxOfficeUseCaseProtocol._
+  import example.model.concert.service.BoxOfficeService._
 
   // ExceptionHandler を定義する
   // BoxOfficeExceptionHandler で処理できないものは GlobalExceptionHandler で処理する
@@ -56,10 +56,10 @@ final class MyBoxOfficeResource(
     path("concerts" / ConcertIdentifier) { concertId =>
       post {
         entity(as[CreateConcertRequestBody]) { body =>
-          val useCaseCreateResponseFuture: Future[CreateConcertResponse] =
-            boxOfficeUseCase.createConcert(concertId, body.tickets)
+          val serviceResponseFuture: Future[CreateConcertResponse] =
+            service.createConcert(concertId, body.tickets)
           val responseFuture: Future[CreateConcertResponseBody] =
-            useCaseCreateResponseFuture.map(response => {
+            serviceResponseFuture.map(response => {
               CreateConcertResponseBody.from(concertId, response)
             })
           onSuccess(responseFuture) { response =>
@@ -74,10 +74,10 @@ final class MyBoxOfficeResource(
   private def concertCancelRoute: Route = {
     path("concerts" / ConcertIdentifier / "cancel") { concertId =>
       post {
-        val useCaseCancelResponseFuture: Future[CancelConcertResponse] =
-          boxOfficeUseCase.cancelConcert(concertId)
+        val serviceResponseFuture: Future[CancelConcertResponse] =
+          service.cancelConcert(concertId)
         val responseFuture: Future[CancelConcertResponseBody] =
-          useCaseCancelResponseFuture.map(response => {
+          serviceResponseFuture.map(response => {
             CancelConcertResponseBody.from(concertId, response)
           })
         onSuccess(responseFuture) { response =>
@@ -92,10 +92,10 @@ final class MyBoxOfficeResource(
     path("concerts" / ConcertIdentifier / "tickets") { concertId =>
       post {
         entity(as[BuyConcertTicketsRequestBody]) { body =>
-          val useCaseBuyResponseFuture: Future[BuyConcertTicketsResponse] =
-            boxOfficeUseCase.buyConcertTickets(concertId, body.tickets)
+          val serviceResponseFuture: Future[BuyConcertTicketsResponse] =
+            service.buyConcertTickets(concertId, body.tickets)
           val responseFuture: Future[BuyConcertTicketsResponseBody] =
-            useCaseBuyResponseFuture.map(response => {
+            serviceResponseFuture.map(response => {
               BuyConcertTicketsResponseBody.from(concertId, response)
             })
           onSuccess(responseFuture) { response =>
@@ -111,10 +111,10 @@ final class MyBoxOfficeResource(
     path("concerts") {
       get {
         parameters("excludeCancelled".as[Boolean] ? false) { excludeCancelled =>
-          val useCaseGetListResponseFuture: Future[GetConcertListResponse] =
-            boxOfficeReadModelUseCase.getConcertList(excludeCancelled)
+          val repositoryResponseFuture: Future[Seq[ConcertItem]] =
+            concertRepository.fetchConcertList(excludeCancelled)
           val responseFuture: Future[GetConcertsResponseBody] =
-            useCaseGetListResponseFuture.map(GetConcertsResponseBody.from)
+            repositoryResponseFuture.map(GetConcertsResponseBody.from)
           onSuccess(responseFuture) { response =>
             complete(StatusCodes.OK -> response)
           }

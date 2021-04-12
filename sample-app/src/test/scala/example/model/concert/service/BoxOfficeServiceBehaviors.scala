@@ -1,6 +1,5 @@
 package example.model.concert.service
 
-import example.model.concert.actor.ConcertActor
 import example.model.concert.{ ConcertIdGenerator, ConcertTicketId }
 
 /** [[BoxOfficeService]] の 共通テスト を定義する
@@ -12,6 +11,7 @@ import example.model.concert.{ ConcertIdGenerator, ConcertTicketId }
   * を参照すること
   */
 trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
+  import example.model.concert.service.BoxOfficeService._
 
   val idGenerator = new ConcertIdGenerator()
 
@@ -21,39 +21,39 @@ trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
       val service        = newService
       val id             = idGenerator.nextId()
       val responseFuture = service.createConcert(id, 100)
-      responseFuture.futureValue shouldBe ConcertActor.CreateSucceeded(100)
+      responseFuture.futureValue shouldBe CreateConcertResponse(100)
     }
 
     "get the concert" in {
       val service              = newService
       val id                   = idGenerator.nextId()
       val createResponseFuture = service.createConcert(id, 10)
-      createResponseFuture.futureValue.isInstanceOf[ConcertActor.CreateSucceeded] shouldBe true
+      createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
 
       val getResponseFuture = service.getConcert(id)
       getResponseFuture.futureValue shouldBe
-      ConcertActor.GetSucceeded((1 to 10).map(ConcertTicketId).toVector, cancelled = false)
+      GetConcertResponse((1 to 10).map(ConcertTicketId).toVector, cancelled = false)
     }
 
     "buy concert tickets" in {
       val service              = newService
       val id                   = idGenerator.nextId()
       val createResponseFuture = service.createConcert(id, 10)
-      createResponseFuture.futureValue.isInstanceOf[ConcertActor.CreateSucceeded] shouldBe true
+      createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
 
       val buyResponseFuture = service.buyConcertTickets(id, 3)
       buyResponseFuture.futureValue shouldBe
-      ConcertActor.BuyTicketsSucceeded((1 to 3).map(ConcertTicketId).toVector)
+      BuyConcertTicketsResponse((1 to 3).map(ConcertTicketId).toVector)
     }
 
     "cancel the concert" in {
       val service              = newService
       val id                   = idGenerator.nextId()
       val createResponseFuture = service.createConcert(id, 10)
-      createResponseFuture.futureValue.isInstanceOf[ConcertActor.CreateSucceeded] shouldBe true
+      createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
 
       val cancelResponseFuture = service.cancelConcert(id)
-      cancelResponseFuture.futureValue shouldBe ConcertActor.CancelSucceeded(10)
+      cancelResponseFuture.futureValue shouldBe CancelConcertResponse(10)
     }
 
   }

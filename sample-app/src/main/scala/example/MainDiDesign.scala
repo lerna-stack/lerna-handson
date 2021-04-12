@@ -5,7 +5,6 @@ import example.application.http.MainHttpApiServerDiDesign
 import example.application.rmu.DefaultReadModelUpdaterDiDesign
 import example.model.ModelDiDesign
 import example.readmodel.DefaultReadModelDiDesign
-import example.usecase.DefaultUseCaseDiDesign
 import wvlet.airframe.Design
 
 import scala.concurrent.ExecutionContext
@@ -19,7 +18,6 @@ object MainDiDesign {
         system.executionContext
       }
       .add(ModelDiDesign.design)
-      .add(DefaultUseCaseDiDesign.design)
       .add(DefaultReadModelDiDesign.design)
       .add(DefaultReadModelUpdaterDiDesign.design)
       .add(MainHttpApiServerDiDesign.design)

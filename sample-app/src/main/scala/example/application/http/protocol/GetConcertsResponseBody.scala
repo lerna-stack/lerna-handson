@@ -4,7 +4,7 @@ import example.model.concert.ConcertId
 import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 import ConcertJsonProtocol._
-import example.usecase.BoxOfficeReadModelUseCaseProtocol._
+import example.readmodel.ConcertItem
 
 /** コンサート一覧取得 レスポンス
   *
@@ -18,9 +18,9 @@ object GetConcertsResponseBody {
   implicit val GetConcertsResponseBodyJsonFormat: RootJsonFormat[GetConcertsResponseBody] =
     jsonFormat1(GetConcertsResponseBody.apply)
 
-  def from(response: GetConcertListResponse): GetConcertsResponseBody = {
+  def from(items: Seq[ConcertItem]): GetConcertsResponseBody = {
     GetConcertsResponseBody(
-      response.items.map(GetConcertsResponseBodyItem.from).toVector,
+      items.map(GetConcertsResponseBodyItem.from).toVector,
     )
   }
 
@@ -37,8 +37,8 @@ object GetConcertsResponseBodyItem {
   implicit val GetConcertsResponseBodyItemJsonFormat: RootJsonFormat[GetConcertsResponseBodyItem] =
     jsonFormat3(GetConcertsResponseBodyItem.apply)
 
-  def from(response: GetConcertItemResponse): GetConcertsResponseBodyItem = {
-    GetConcertsResponseBodyItem(response.id, response.numberOfTickets, response.cancelled)
+  def from(item: ConcertItem): GetConcertsResponseBodyItem = {
+    GetConcertsResponseBodyItem(item.id, item.numberOfTickets, item.cancelled)
   }
 
 }
