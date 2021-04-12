@@ -7,14 +7,14 @@ import example.model.KryoSerializable
 import example.model.concert.ConcertError._
 import example.model.concert.ConcertEvent._
 import example.model.concert._
-import example.model.concert.actor.ConcertActorProtocol._
+import example.model.concert.actor.ConcertActor._
 
 import java.time.ZonedDateTime
 
 object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFactory {
-  def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[ConcertCommandRequest] = {
+  def apply(id: ConcertId, persistenceId: PersistenceId): Behavior[Command] = {
     EventSourcedBehavior
-      .withEnforcedReplies[ConcertCommandRequest, ConcertEvent, State](
+      .withEnforcedReplies[Command, ConcertEvent, State](
         persistenceId,
         emptyState = NoConcertState(id),
         (state, command) => state.applyCommand(command),
@@ -25,34 +25,34 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
 
   type ReplyEffect = akka.persistence.typed.scaladsl.ReplyEffect[ConcertEvent, State]
   sealed trait State extends KryoSerializable {
-    def applyCommand(command: ConcertCommandRequest): ReplyEffect
+    def applyCommand(command: Command): ReplyEffect
     def applyEvent(event: ConcertEvent): State
   }
 
   /** コンサートが存在しない場合 */
   final case class NoConcertState(id: ConcertId) extends State {
-    override def applyCommand(command: ConcertCommandRequest): ReplyEffect = {
+    override def applyCommand(command: Command): ReplyEffect = {
       command match {
-        case getRequest: GetConcertRequest =>
+        case getCommand: Get =>
           // 未作成なのでエラー
-          Effect.reply(getRequest.replyTo)(GetConcertFailed(ConcertNotFoundError(id)))
-        case createRequest: CreateConcertRequest =>
+          Effect.reply(getCommand.replyTo)(GetFailed(ConcertNotFoundError(id)))
+        case createCommand: Create =>
           // 作成イベントを発行する処理
-          if (createRequest.numTickets <= 0) {
+          if (createCommand.numTickets <= 0) {
             // チケット数が0枚以下なのでエラー
             val error = InvalidConcertOperationError("Cannot create concert without tickets.")
-            Effect.reply(createRequest.replyTo)(CreateConcertFailed(error))
+            Effect.reply(createCommand.replyTo)(CreateFailed(error))
           } else {
             // 作成成功
-            val event = ConcertCreated(id, createRequest.numTickets, ZonedDateTime.now)
-            Effect.persist(event).thenReply(createRequest.replyTo)(_ => CreateConcertSucceeded(event.numOfTickets))
+            val event = ConcertCreated(id, createCommand.numTickets, ZonedDateTime.now)
+            Effect.persist(event).thenReply(createCommand.replyTo)(_ => CreateSucceeded(event.numOfTickets))
           }
-        case cancelRequest: CancelConcertRequest =>
+        case cancelCommand: Cancel =>
           // 未作成なのでエラー
-          Effect.reply(cancelRequest.replyTo)(CancelConcertFailed(ConcertNotFoundError(id)))
-        case buyTicketsRequest: BuyConcertTicketsRequest =>
+          Effect.reply(cancelCommand.replyTo)(CancelFailed(ConcertNotFoundError(id)))
+        case buyTicketsCommand: BuyTickets =>
           // 未作成なのでエラー
-          Effect.reply(buyTicketsRequest.replyTo)(BuyConcertTicketsFailed(ConcertNotFoundError(id)))
+          Effect.reply(buyTicketsCommand.replyTo)(BuyTicketsFailed(ConcertNotFoundError(id)))
       }
     }
     override def applyEvent(event: ConcertEvent): State = {
@@ -69,31 +69,31 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
 
   /** コンサートが存在する場合(未キャンセル) */
   final case class AvailableConcertState(id: ConcertId, tickets: Vector[ConcertTicketId]) extends State {
-    override def applyCommand(command: ConcertCommandRequest): ReplyEffect = {
+    override def applyCommand(command: Command): ReplyEffect = {
       command match {
-        case getRequest: GetConcertRequest =>
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = false))
-        case createRequest: CreateConcertRequest =>
+        case getCommand: Get =>
+          Effect.reply(getCommand.replyTo)(GetSucceeded(tickets, cancelled = false))
+        case createCommand: Create =>
           // 既に作成済みなのでエラー
-          Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))
-        case cancelRequest: CancelConcertRequest =>
+          Effect.reply(createCommand.replyTo)(CreateFailed(DuplicatedConcertError(id)))
+        case cancelCommand: Cancel =>
           // キャンセル処理を実行する
           val event = ConcertCancelled(id, ZonedDateTime.now)
-          Effect.persist(event).thenReply(cancelRequest.replyTo)(_ => CancelConcertSucceeded(tickets.size))
-        case buyTicketsRequest: BuyConcertTicketsRequest =>
+          Effect.persist(event).thenReply(cancelCommand.replyTo)(_ => CancelSucceeded(tickets.size))
+        case buyTicketsCommand: BuyTickets =>
           // チケット購入処理
-          if (buyTicketsRequest.numberOfTickets <= 0) {
+          if (buyTicketsCommand.numberOfTickets <= 0) {
             // チケット枚数がゼロ以下なのでエラー
             val error = InvalidConcertOperationError("Cannot a buy non positive number of tickets.")
-            Effect.reply(buyTicketsRequest.replyTo)(BuyConcertTicketsFailed(error))
-          } else if (buyTicketsRequest.numberOfTickets > tickets.size) {
+            Effect.reply(buyTicketsCommand.replyTo)(BuyTicketsFailed(error))
+          } else if (buyTicketsCommand.numberOfTickets > tickets.size) {
             // 残チケット枚数が不足しているのでエラー
             val error = InvalidConcertOperationError("Not enough tickets available.")
-            Effect.reply(buyTicketsRequest.replyTo)(BuyConcertTicketsFailed(error))
+            Effect.reply(buyTicketsCommand.replyTo)(BuyTicketsFailed(error))
           } else {
-            val boughtTickets = tickets.take(buyTicketsRequest.numberOfTickets)
+            val boughtTickets = tickets.take(buyTicketsCommand.numberOfTickets)
             val event         = ConcertTicketsBought(id, boughtTickets, ZonedDateTime.now)
-            Effect.persist(event).thenReply(buyTicketsRequest.replyTo)(_ => BuyConcertTicketsSucceeded(event.tickets))
+            Effect.persist(event).thenReply(buyTicketsCommand.replyTo)(_ => BuyTicketsSucceeded(event.tickets))
           }
       }
     }
@@ -115,22 +115,22 @@ object DefaultConcertActorWithEventPersistence extends ConcertActorBehaviorFacto
   /** コンサートが存在する場合(キャンセル済み)
     */
   final case class CancelledConcertState(id: ConcertId, tickets: Vector[ConcertTicketId]) extends State {
-    override def applyCommand(command: ConcertCommandRequest): ReplyEffect = {
+    override def applyCommand(command: Command): ReplyEffect = {
       command match {
-        case getRequest: GetConcertRequest =>
+        case getCommand: Get =>
           // 取得処理は成功する
-          Effect.reply(getRequest.replyTo)(GetConcertSucceeded(tickets, cancelled = true))
-        case createRequest: CreateConcertRequest =>
+          Effect.reply(getCommand.replyTo)(GetSucceeded(tickets, cancelled = true))
+        case createCommand: Create =>
           // すでにコンサートが存在するのでエラー
-          Effect.reply(createRequest.replyTo)(CreateConcertFailed(DuplicatedConcertError(id)))
-        case cancelRequest: CancelConcertRequest =>
+          Effect.reply(createCommand.replyTo)(CreateFailed(DuplicatedConcertError(id)))
+        case cancelCommand: Cancel =>
           // すでにキャンセル済みなのでエラー
           val error = InvalidConcertOperationError("Concert is already cancelled.")
-          Effect.reply(cancelRequest.replyTo)(CancelConcertFailed(error))
-        case buyTicketsRequest: BuyConcertTicketsRequest =>
+          Effect.reply(cancelCommand.replyTo)(CancelFailed(error))
+        case buyTicketsCommand: BuyTickets =>
           // すでにキャンセル済みなのでエラー
           val error = InvalidConcertOperationError("Concert is already cancelled.")
-          Effect.reply(buyTicketsRequest.replyTo)(BuyConcertTicketsFailed(error))
+          Effect.reply(buyTicketsCommand.replyTo)(BuyTicketsFailed(error))
       }
     }
     override def applyEvent(event: ConcertEvent): State = {
