@@ -37,10 +37,6 @@ final class DefaultBoxOfficeService(
   }
 
   override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
-    // Ask先から一定時間返答がない場合に再送処理が行われる
-    // 永続化等はしていないので、Ask元がクラッシュした場合にはリクエストは失われることに注意すること
-    // リクエストが複数回　Ask先に到達して処理される可能性があるので、冪等な処理にのみ使える。
-    // TODO Use AtLeastOnceDelivery
     val entityRef = sharding.entityRefFor(id)
     entityRef
       .ask(replyTo => ConcertActor.Get(replyTo))
