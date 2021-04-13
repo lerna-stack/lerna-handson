@@ -56,10 +56,6 @@ Scala のサンプルコードがあります。
 演習問題も含まれています。
 - exercise-slick-basic  
 Slick のサンプルコードがあります。
-- lerna-library  
-Lernaのライブラリの一部です。
-- lerna-testkit  
-Lernaのテストライブラリの一部です。
 - sample-app  
 サンプルアプリです。
 - scripts  

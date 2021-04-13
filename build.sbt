@@ -121,37 +121,6 @@ lazy val SampleApp = (project in file("sample-app"))
       Dependencies.Logback.classic,
       Dependencies.MockitoScala.mockitoScala % Test,
     ),
-  ).dependsOn(
-    LernaLibrary,
-  )
-
-// Lernaライブラリ(必要な分だけ)
-// ライブラリとして整備されてないので、コピーして持ってきている
-// パッケージ名、バージョン番号、クラス名は変更される可能性がある
-lazy val LernaLibrary = (project in file("lerna-library"))
-  .settings(
-    name := "lerna-library",
-    libraryDependencies ++= Seq(
-      Dependencies.Akka.actor,
-      Dependencies.Akka.actorTestKit % Test,
-    ),
-  ).dependsOn(
-    LernaTestKit % Test,
-  )
-
-// Lernaテストキット(必要な分だけ)
-// ライブラリとして整備されてないので、コピーして持ってきている
-// パッケージ名、バージョン番号、クラス名は変更される可能性がある
-lazy val LernaTestKit = (project in file("lerna-testkit"))
-  .settings(
-    name := "lerna-testkit",
-    libraryDependencies ++= Seq(
-      Dependencies.Scalactic.scalactic,
-      Dependencies.ScalaXml.scalaXml,
-      Dependencies.ScalaTest.wordspec,
-      Dependencies.ScalaTest.shouldmatchers,
-      Dependencies.Expecty.expecty,
-    ),
   )
 
 // すべてのテストを実行する
@@ -165,8 +134,6 @@ addCommandAlias(
     |ExerciseAkkaHttpBasic/test;
     |ExerciseScalaBasic/test;
     |ExerciseSlickBasic/test;
-    |LernaTestKit/test;
-    |LernaLibrary/test;
     |SampleApp/testOnly -- -l example.testing.tags.ExerciseTest;
     |""".stripMargin,
 )

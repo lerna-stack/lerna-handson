@@ -2,13 +2,9 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    val akka     = "2.6.14"
-    val akkaHttp = "10.2.4"
-    // Scalactic, ScalaTest のバージョンは念のため同一にする
-    val scalactic                = "3.2.2"
+    val akka                     = "2.6.14"
+    val akkaHttp                 = "10.2.4"
     val scalaTest                = "3.2.2"
-    val scalaXml                 = "1.3.0"
-    val expecty                  = "0.14.1"
     val mockitoScala             = "1.15.0"
     val akkaPersistenceCassandra = "1.0.1"
     val kryo                     = "1.1.5"
@@ -37,23 +33,9 @@ object Dependencies {
     val httpTestKit = "com.typesafe.akka" %% "akka-http-testkit"    % Versions.akkaHttp
   }
 
-  object Scalactic {
-    val scalactic = "org.scalactic" %% "scalactic" % Versions.scalactic
-  }
-
-  object ScalaXml {
-    // これを依存に追加しないと Scalactic の Requirements でランタイムエラーになる
-    // See also https://www.scalatest.org/quick_start
-    val scalaXml = "org.scala-lang.modules" %% "scala-xml" % Versions.scalaXml
-  }
-
   object ScalaTest {
     val wordspec       = "org.scalatest" %% "scalatest-wordspec"       % Versions.scalaTest
     val shouldmatchers = "org.scalatest" %% "scalatest-shouldmatchers" % Versions.scalaTest
-  }
-
-  object Expecty {
-    val expecty = "com.eed3si9n.expecty" %% "expecty" % Versions.expecty
   }
 
   object MockitoScala {
