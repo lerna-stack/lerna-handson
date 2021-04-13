@@ -9,6 +9,7 @@ final class DefaultConcertActorSpec extends ConcertActorSpecBase {
     behave like availableConcertActor(createBehavior)
     behave like cancelledConcertActor(createBehavior)
     behave like shardedActor(createBehavior)
+    behave like snapshotPersistenceActor(createBehavior)
   }
 
 }

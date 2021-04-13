@@ -12,6 +12,8 @@ final class MyConcertActorSpec extends ConcertActorSpecBase {
     behave like availableConcertActor(createBehavior)
     behave like cancelledConcertActor(createBehavior)
     behave like shardedActor(createBehavior)
+    // スナップショットの実装時にコメントアウトを外す (この行はそのまま)
+    // behave like snapshotPersistenceActor(createBehavior)
   }
 
 }

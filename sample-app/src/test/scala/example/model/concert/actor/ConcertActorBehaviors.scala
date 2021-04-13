@@ -1,7 +1,7 @@
 package example.model.concert.actor
 
 import akka.actor.typed.ActorRef
-import akka.persistence.testkit.scaladsl.PersistenceTestKit
+import akka.persistence.testkit.scaladsl.{ PersistenceTestKit, SnapshotTestKit }
 import akka.persistence.typed.PersistenceId
 import example.ActorSpecBase
 import example.model.concert.ConcertIdGeneratorSupport
@@ -24,10 +24,12 @@ trait ConcertActorBehaviors extends BeforeAndAfterEach with ConcertIdGeneratorSu
   import example.model.concert.actor.ConcertActor._
 
   private val persistenceTestKit = PersistenceTestKit(system)
+  private val snapshotTestKit    = SnapshotTestKit(system)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
     persistenceTestKit.clearAll()
+    snapshotTestKit.clearAll()
   }
 
   private class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
@@ -214,6 +216,32 @@ trait ConcertActorBehaviors extends BeforeAndAfterEach with ConcertIdGeneratorSu
       resp.error shouldBe a[InvalidConcertOperationError]
       persistenceTestKit.expectNothingPersisted(persistenceId.id)
     }
+
+  }
+
+  // 演習実施順序の都合により、 Snapshot を保存しない実装パターンがある。
+  // このため、イベント永続化のテストとは異なり、個別でテストケースを記述する。
+  // 製品開発等では、イベント永続化と同じようにアクターのテストと同時にテストしたほうが良い。
+  def snapshotPersistenceActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
+    val id            = newConcertId()
+    val persistenceId = PersistenceId.ofUniqueId(id.value)
+    val actor         = testKit.spawn(createBehavior(id, persistenceId))
+    val probe         = testKit.createTestProbe[Response]()
+
+    actor ! Create(numTickets = 2, probe.ref)
+    probe.expectMessageType[CreateSucceeded]
+    snapshotTestKit.expectNothingPersisted(persistenceId.id)
+
+    actor ! BuyTickets(1, probe.ref)
+    probe.expectMessageType[BuyTicketsSucceeded]
+    snapshotTestKit.expectNothingPersisted(persistenceId.id)
+
+    actor ! Cancel(probe.ref)
+    probe.expectMessageType[CancelSucceeded]
+    // スナップショットが取得されることをテストする。
+    // コードを簡潔にするため、スナップショットの内容はチェックしない。
+    // 製品開発等では、スナップショットの内容をテストしたほうが良い(`Any`ではなく具体的な State の型を指定する)。
+    snapshotTestKit.expectNextPersistedType[Any](persistenceId.id)
 
   }
 
