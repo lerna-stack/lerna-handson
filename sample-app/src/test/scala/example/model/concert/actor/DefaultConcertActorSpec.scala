@@ -1,11 +1,6 @@
 package example.model.concert.actor
 
-import example.ActorSpecBase
-
-final class DefaultConcertActorSpec
-    extends ActorSpecBase()
-    with ConcertActorBehaviors
-    with ConcertActorClusterShardingBehaviors {
+final class DefaultConcertActorSpec extends ConcertActorSpecBase {
 
   private def createBehavior: ConcertActorBehaviorFactory = DefaultConcertActor
 

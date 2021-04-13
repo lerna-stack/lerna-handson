@@ -1,13 +1,9 @@
 package example.model.concert.actor
 
-import example.ActorSpecBase
 import example.testing.tags.ExerciseTest
 
 @ExerciseTest
-final class MyConcertActorSpec
-    extends ActorSpecBase()
-    with ConcertActorBehaviors
-    with ConcertActorClusterShardingBehaviors {
+final class MyConcertActorSpec extends ConcertActorSpecBase {
 
   private def createBehavior: ConcertActorBehaviorFactory = MyConcertActor
 
