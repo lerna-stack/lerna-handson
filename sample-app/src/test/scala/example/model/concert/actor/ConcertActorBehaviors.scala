@@ -20,13 +20,13 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
   import example.model.concert._
   import example.model.concert.actor.ConcertActor._
 
-  class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
+  private class EmptyConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     def create(id: ConcertId): ActorRef[Command] = {
       testKit.spawn(createBehavior(id, PersistenceId.ofUniqueId(id.value)))
     }
   }
 
-  class AvailableConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
+  private class AvailableConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     private val underlyingFactory = new EmptyConcertActorFactory(createBehavior)
     def create(id: ConcertId, numOfTickets: Int): ActorRef[Command] = {
       val actor = underlyingFactory.create(id)
@@ -37,7 +37,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
     }
   }
 
-  class CancelledConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
+  private class CancelledConcertActorFactory(createBehavior: ConcertActorBehaviorFactory) {
     private val underlyingFactory = new AvailableConcertActorFactory(createBehavior)
     def create(id: ConcertId, numOfTickets: Int): ActorRef[Command] = {
       val actor = underlyingFactory.create(id, numOfTickets)
@@ -48,11 +48,13 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
     }
   }
 
-  def emptyConcertActor(newConcertActor: EmptyConcertActorFactory): Unit = {
+  def emptyConcertActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
+
+    val factory = new EmptyConcertActorFactory(createBehavior)
 
     "can create a concert" in {
       val id           = newConcertId()
-      val actor        = newConcertActor.create(id)
+      val actor        = factory.create(id)
       val numOfTickets = 3
 
       val probe = testKit.createTestProbe[CreateResponse]()
@@ -63,7 +65,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "cannot get the concert if it is not created yet" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id)
+      val actor = factory.create(id)
 
       val probe = testKit.createTestProbe[GetResponse]()
       actor ! Get(probe.ref)
@@ -73,7 +75,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "cannot cancel a concert if the concert is not created" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id)
+      val actor = factory.create(id)
 
       val probe = testKit.createTestProbe[CancelResponse]()
       actor ! Cancel(probe.ref)
@@ -83,11 +85,13 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
   }
 
-  def availableConcertActor(newConcertActor: AvailableConcertActorFactory): Unit = {
+  def availableConcertActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
+
+    val factory = new AvailableConcertActorFactory(createBehavior)
 
     "cannot create a concert if it's already exists" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 3)
+      val actor = factory.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[CreateResponse]()
       actor ! Create(2, probe.ref)
@@ -97,7 +101,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "can get the concert" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 3)
+      val actor = factory.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[GetResponse]()
       actor ! Get(probe.ref)
@@ -107,7 +111,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "can cancel a concert" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 3)
+      val actor = factory.create(id, numOfTickets = 3)
 
       val probe = testKit.createTestProbe[CancelResponse]()
       actor ! Cancel(probe.ref)
@@ -117,7 +121,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "can buy tickets" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 2)
+      val actor = factory.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyTicketsResponse]()
       actor ! BuyTickets(2, probe.ref)
@@ -127,7 +131,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "cannot buy no tickets" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 2)
+      val actor = factory.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyTicketsResponse]()
       actor ! BuyTickets(0, probe.ref)
@@ -137,7 +141,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "cannot buy exceeded tickets" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 2)
+      val actor = factory.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[BuyTicketsResponse]()
       actor ! BuyTickets(3, probe.ref)
@@ -147,11 +151,13 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
   }
 
-  def cancelledConcertActor(newConcertActor: CancelledConcertActorFactory): Unit = {
+  def cancelledConcertActor(createBehavior: ConcertActorBehaviorFactory): Unit = {
+
+    val factory = new CancelledConcertActorFactory(createBehavior)
 
     "can get the concert even if it is cancelled" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 2)
+      val actor = factory.create(id, numOfTickets = 2)
 
       val probe = testKit.createTestProbe[GetResponse]()
       actor ! Get(probe.ref)
@@ -162,7 +168,7 @@ trait ConcertActorBehaviors extends ConcertIdGeneratorSupport {
 
     "cannot cancel a concert if the concert is already cancelled" in {
       val id    = newConcertId()
-      val actor = newConcertActor.create(id, numOfTickets = 1)
+      val actor = factory.create(id, numOfTickets = 1)
 
       val probe = testKit.createTestProbe[CancelResponse]()
       actor ! Cancel(probe.ref)
