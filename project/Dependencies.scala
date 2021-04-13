@@ -2,10 +2,8 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    val akka     = "2.6.14"
-    val akkaHttp = "10.2.4"
-    // Scalactic, ScalaTest のバージョンは念のため同一にする
-    val scalactic                = "3.2.2"
+    val akka                     = "2.6.14"
+    val akkaHttp                 = "10.2.4"
     val scalaTest                = "3.2.2"
     val mockitoScala             = "1.15.0"
     val akkaPersistenceCassandra = "1.0.1"
@@ -33,10 +31,6 @@ object Dependencies {
     val http        = "com.typesafe.akka" %% "akka-http"            % Versions.akkaHttp
     val sprayJson   = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
     val httpTestKit = "com.typesafe.akka" %% "akka-http-testkit"    % Versions.akkaHttp
-  }
-
-  object Scalactic {
-    val scalactic = "org.scalactic" %% "scalactic" % Versions.scalactic
   }
 
   object ScalaTest {
