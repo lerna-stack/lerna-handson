@@ -1,7 +1,7 @@
 package example
 
 import akka.actor.testkit.typed.scaladsl.{ ActorTestKit, ScalaTestWithActorTestKit }
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.concurrent.{ Eventually, ScalaFutures }
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
@@ -27,6 +27,10 @@ abstract class ActorSpecBase(testKit: ActorTestKit)
     // デフォルトの振る舞いでは `application-test` もしくは `reference` のみが読み込まれる。
     // テスト全般にわたって `application` と `reference` を使用したいため、ConfigFactory#load を使用する。
     this(ActorTestKit(ConfigFactory.load()))
+  }
+
+  def this(customConfig: Config) = {
+    this(ActorTestKit(customConfig))
   }
 
 }

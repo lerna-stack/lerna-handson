@@ -103,6 +103,7 @@ lazy val SampleApp = (project in file("sample-app"))
       Dependencies.Akka.cluster,
       Dependencies.Akka.clusterSharding,
       Dependencies.Akka.persistence,
+      Dependencies.Akka.persistenceTestKit % Test,
       Dependencies.Akka.persistenceQuery,
       Dependencies.Akka.stream,
       Dependencies.Akka.streamTestKit % Test,

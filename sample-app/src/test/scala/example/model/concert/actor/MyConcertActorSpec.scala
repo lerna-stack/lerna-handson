@@ -1,13 +1,9 @@
 package example.model.concert.actor
 
-import example.ActorSpecBase
 import example.testing.tags.ExerciseTest
 
 @ExerciseTest
-final class MyConcertActorSpec
-    extends ActorSpecBase()
-    with ConcertActorBehaviors
-    with ConcertActorClusterShardingBehaviors {
+final class MyConcertActorSpec extends ConcertActorSpecBase {
 
   private def createBehavior: ConcertActorBehaviorFactory = MyConcertActor
 
@@ -16,6 +12,8 @@ final class MyConcertActorSpec
     behave like availableConcertActor(createBehavior)
     behave like cancelledConcertActor(createBehavior)
     behave like shardedActor(createBehavior)
+    // スナップショットの実装時にコメントアウトを外す (この行はそのまま)
+    // behave like snapshotPersistenceActor(createBehavior)
   }
 
 }
