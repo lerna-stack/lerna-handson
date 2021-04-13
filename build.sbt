@@ -107,6 +107,8 @@ lazy val SampleApp = (project in file("sample-app"))
       Dependencies.Akka.persistenceQuery,
       Dependencies.Akka.stream,
       Dependencies.Akka.streamTestKit % Test,
+      Dependencies.AkkaProjection.eventsourced,
+      Dependencies.AkkaProjection.slick,
       Dependencies.AkkaHttp.http,
       Dependencies.AkkaHttp.sprayJson,
       Dependencies.AkkaHttp.httpTestKit % Test,

@@ -4,6 +4,7 @@ object Dependencies {
   object Versions {
     val akka                     = "2.6.14"
     val akkaHttp                 = "10.2.4"
+    val akkaProjection           = "1.1.0"
     val scalaTest                = "3.2.2"
     val mockitoScala             = "1.15.0"
     val akkaPersistenceCassandra = "1.0.1"
@@ -26,6 +27,11 @@ object Dependencies {
     val persistenceQuery   = "com.typesafe.akka" %% "akka-persistence-query"      % Versions.akka
     val stream             = "com.typesafe.akka" %% "akka-stream-typed"           % Versions.akka
     val streamTestKit      = "com.typesafe.akka" %% "akka-stream-testkit"         % Versions.akka
+  }
+
+  object AkkaProjection {
+    val eventsourced = "com.lightbend.akka" %% "akka-projection-eventsourced" % Versions.akkaProjection
+    val slick        = "com.lightbend.akka" %% "akka-projection-slick"        % Versions.akkaProjection
   }
 
   object AkkaHttp {
