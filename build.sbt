@@ -134,8 +134,6 @@ addCommandAlias(
     |ExerciseAkkaHttpBasic/test;
     |ExerciseScalaBasic/test;
     |ExerciseSlickBasic/test;
-    |LernaTestKit/test;
-    |LernaLibrary/test;
     |SampleApp/testOnly -- -l example.testing.tags.ExerciseTest;
     |""".stripMargin,
 )
