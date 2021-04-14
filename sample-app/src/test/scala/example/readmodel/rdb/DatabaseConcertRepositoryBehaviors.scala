@@ -5,12 +5,9 @@ import example.model.concert.ConcertEvent.{ ConcertCancelled, ConcertCreated, Co
 import example.model.concert.{ ConcertId, ConcertIdGenerator, ConcertTicketId }
 import example.readmodel.{ ConcertItem, ConcertRepository }
 
-import java.sql.Timestamp
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 import scala.concurrent.Await
-import scala.concurrent.duration.{ DurationInt, FiniteDuration }
+import scala.concurrent.duration.DurationInt
 
 /** RelationalDatabase を使う ConcertRepository の 共通テスト を定義する
   *
@@ -21,7 +18,7 @@ import scala.concurrent.duration.{ DurationInt, FiniteDuration }
   * を参照すること
   */
 trait DatabaseConcertRepositoryBehaviors { this: DatabaseConcertRepositorySpecBase =>
-  import DatabaseConcertRepositoryBehaviors._
+  import DatabaseConcertRepositorySpecBase._
 
   private val idGenerator = new ConcertIdGenerator()
 
@@ -238,27 +235,6 @@ trait DatabaseConcertRepositoryBehaviors { this: DatabaseConcertRepositorySpecBa
 
     }
 
-  }
-
-  // 現在時刻を秒精度で返す。
-  // 秒未満はデータベースによってデフォルト値やサポート範囲が異なるため秒精度に丸める。
-  // https://mariadb.com/kb/en/timestamp/#supported-values
-  // https://www.h2database.com/html/datatypes.html#timestamp_type
-  private def nowInSeconds: ZonedDateTime = {
-    ZonedDateTime.now.truncatedTo(ChronoUnit.SECONDS)
-  }
-
-}
-
-object DatabaseConcertRepositoryBehaviors {
-
-  implicit final class RichZonedDateTime(val time: ZonedDateTime) extends AnyVal {
-    def +(duration: FiniteDuration): ZonedDateTime = {
-      time.plusNanos(duration.toNanos)
-    }
-    def toSQLTimestamp: Timestamp = {
-      Timestamp.from(time.toInstant)
-    }
   }
 
 }
