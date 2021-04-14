@@ -20,7 +20,4 @@ object DefaultReadModelDiDesign {
       }
       .bind[ConcertProjectionRepository].to[DefaultConcertProjectionRepository]
       .bind[ConcertRepository].to[DefaultConcertRepository]
-      // TODO remove below binding
-      // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)
-      // .bind[ConcertRepository].to[MyConcertRepository]
 }

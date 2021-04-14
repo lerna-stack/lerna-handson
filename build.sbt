@@ -166,11 +166,3 @@ addCommandAlias(
   "testMyBoxOfficeResource",
   "SampleApp/testOnly example.application.http.controller.MyBoxOfficeResourceSpec",
 )
-addCommandAlias(
-  "testMyConcertRepositoryBinding",
-  "SampleApp/testOnly example.readmodel.MyConcertRepositoryBindSpec",
-)
-addCommandAlias(
-  "testMyConcertRepository",
-  "SampleApp/testOnly example.readmodel.rdb.MyConcertRepositorySpec",
-)
