@@ -2,7 +2,7 @@ package example.readmodel.rdb.projection
 
 import example.model.concert.ConcertEvent.{ ConcertCancelled, ConcertCreated, ConcertTicketsBought }
 import example.model.concert.{ ConcertId, ConcertIdGenerator, ConcertTicketId }
-import example.readmodel.rdb.{ ConcertDatabaseService, DatabaseConcertRepositorySpecBase }
+import example.readmodel.rdb.{ ConcertDatabaseService, DatabaseSpecBase }
 import slick.dbio.DBIO
 
 import scala.concurrent.Await
@@ -16,8 +16,8 @@ import scala.concurrent.duration.DurationInt
   * [[https://www.scalatest.org/user_guide/sharing_tests Sharing tests]]
   * を参照すること
   */
-trait DatabaseConcertProjectionRepositoryBehaviors { this: DatabaseConcertRepositorySpecBase =>
-  import DatabaseConcertRepositorySpecBase._
+trait DatabaseConcertProjectionRepositoryBehaviors { this: DatabaseSpecBase =>
+  import DatabaseSpecBase._
 
   private val idGenerator = new ConcertIdGenerator()
 

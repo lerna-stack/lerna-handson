@@ -12,8 +12,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import scala.concurrent.duration.FiniteDuration
 
-// TODO Rename to DatabaseSpecBase
-abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with BeforeAndAfter {
+abstract class DatabaseSpecBase() extends ActorSpecBase() with BeforeAndAfter {
   // NOTE: すべての操作が H2DB 互換であり、H2DB でテストにパスすればよいと妥協している
   protected val config: Config = ConfigFactory.parseString("""
       |h2db {
@@ -62,7 +61,7 @@ abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with 
 
 }
 
-object DatabaseConcertRepositorySpecBase {
+object DatabaseSpecBase {
 
   implicit final class RichZonedDateTime(val time: ZonedDateTime) extends AnyVal {
     def +(duration: FiniteDuration): ZonedDateTime = {

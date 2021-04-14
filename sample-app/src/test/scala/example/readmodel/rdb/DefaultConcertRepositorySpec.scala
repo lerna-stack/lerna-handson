@@ -9,9 +9,9 @@ import wvlet.airframe.Design
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-final class DefaultConcertRepositorySpec extends DatabaseConcertRepositorySpecBase() with AirframeDiSessionSupport {
+final class DefaultConcertRepositorySpec extends DatabaseSpecBase() with AirframeDiSessionSupport {
 
-  import DatabaseConcertRepositorySpecBase._
+  import DatabaseSpecBase._
 
   override protected val design: Design =
     DefaultReadModelDiDesign.design

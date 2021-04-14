@@ -9,7 +9,7 @@ import wvlet.airframe.Design
 
 @ExerciseTest
 final class MyConcertProjectionRepositorySpec
-    extends DatabaseConcertRepositorySpecBase()
+    extends DatabaseSpecBase()
     with AirframeDiSessionSupport
     with DatabaseConcertProjectionRepositoryBehaviors {
 

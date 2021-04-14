@@ -7,7 +7,7 @@ import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 
 final class DefaultConcertProjectionRepositorySpec
-    extends DatabaseConcertRepositorySpecBase()
+    extends DatabaseSpecBase()
     with AirframeDiSessionSupport
     with DatabaseConcertProjectionRepositoryBehaviors {
 
