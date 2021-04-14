@@ -32,6 +32,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-Xlint",
 ) ++ sys.env.get("lerna.enable.discipline").filter(_ == "true").map(_ => "-Xfatal-warnings").toSeq
 
+// DBを使ったテストの並列実行が難しいため
+ThisBuild / Test / parallelExecution := false
 // See: https://www.scalatest.org/user_guide/using_the_runner
 ThisBuild / Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oT")
 
