@@ -5,9 +5,11 @@ import example.model.concert.ConcertEvent.{ ConcertCancelled, ConcertCreated, Co
 import example.model.concert.{ ConcertId, ConcertIdGenerator, ConcertTicketId }
 import example.readmodel.{ ConcertItem, ConcertRepository }
 
+import java.sql.Timestamp
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import java.util.UUID
+import scala.concurrent.Await
 import scala.concurrent.duration.{ DurationInt, FiniteDuration }
 
 /** RelationalDatabase を使う ConcertRepository の 共通テスト を定義する
@@ -146,57 +148,94 @@ trait DatabaseConcertRepositoryBehaviors { this: DatabaseConcertRepositorySpecBa
     }
 
     "fetch concerts ordered by updated date" in {
-      // cancelled でフィルタされていないことがわかるようにする
-      // updatedAt ソートされることがわかるようにする
+
       val now = nowInSeconds
       val id1 = idGenerator.nextId()
       val id2 = idGenerator.nextId()
       val id3 = idGenerator.nextId()
-      val eventWithOffsetSequence = Seq(
-        ConcertCreated(id1, numOfTickets = 3, occurredAt = now),
-        ConcertCreated(id2, numOfTickets = 3, occurredAt = now + 1.second),
-        ConcertCreated(id3, numOfTickets = 3, occurredAt = now + 2.second),
-        ConcertCancelled(id1, occurredAt = now + 3.second),
-        ConcertTicketsBought(id3, tickets = Vector(1).map(ConcertTicketId), occurredAt = now + 4.second),
-        ConcertTicketsBought(id2, tickets = (1 to 2).map(ConcertTicketId).toVector, occurredAt = now + 5.second),
-      ) zip UUIDv1.map(TimeBasedUUID)
-      for (eventWithOffset <- eventWithOffsetSequence) {
-        val (event, offset) = eventWithOffset
-        repository.updateByConcertEvent(event, offset).futureValue
+
+      // Setup
+      // cancelled でフィルタされていないことがわかるようにする
+      // updatedAt ソートされることがわかるようにする
+      {
+        import databaseService._
+        import databaseService.profile.api._
+        val rows = Seq(
+          ConcertRow(
+            id = id1.value,
+            numberOfTickets = 3,
+            cancelled = true,
+            createdAt = now.toSQLTimestamp,
+            updatedAt = (now + 3.seconds).toSQLTimestamp,
+          ),
+          ConcertRow(
+            id = id2.value,
+            numberOfTickets = 1,
+            cancelled = false,
+            createdAt = (now + 1.second).toSQLTimestamp,
+            updatedAt = (now + 5.seconds).toSQLTimestamp,
+          ),
+          ConcertRow(
+            id = id3.value,
+            numberOfTickets = 2,
+            cancelled = false,
+            createdAt = (now + 2.seconds).toSQLTimestamp,
+            updatedAt = (now + 4.seconds).toSQLTimestamp,
+          ),
+        )
+        Await.result(database.run(concerts ++= rows), timeout.duration)
       }
 
-      val concerts = repository.fetchConcertList(excludeCancelled = false).futureValue
-      concerts shouldBe Seq(
+      // Check
+      repository.fetchConcertList(excludeCancelled = false).futureValue shouldBe Seq(
         ConcertItem(id2, numberOfTickets = 1, cancelled = false),
         ConcertItem(id3, numberOfTickets = 2, cancelled = false),
         ConcertItem(id1, numberOfTickets = 3, cancelled = true),
       )
+
     }
 
     "fetch non-cancelled concerts with excludeCancelled flag" in {
-      // cancelled でフィルタされることがわかるようにする
       val now = nowInSeconds
       val id1 = idGenerator.nextId()
       val id2 = idGenerator.nextId()
       val id3 = idGenerator.nextId()
-      val eventWithOffsetSequence = Seq(
-        ConcertCreated(id1, numOfTickets = 3, occurredAt = now),
-        ConcertCreated(id2, numOfTickets = 3, occurredAt = now + 1.second),
-        ConcertCreated(id3, numOfTickets = 3, occurredAt = now + 2.second),
-        ConcertCancelled(id1, occurredAt = now + 3.second),
-        ConcertTicketsBought(id3, tickets = Vector(1).map(ConcertTicketId), occurredAt = now + 4.second),
-        ConcertTicketsBought(id2, tickets = (1 to 2).map(ConcertTicketId).toVector, occurredAt = now + 5.second),
-      ) zip UUIDv1.map(TimeBasedUUID)
-      for (eventWithOffset <- eventWithOffsetSequence) {
-        val (event, offset) = eventWithOffset
-        repository.updateByConcertEvent(event, offset).futureValue
+
+      // cancelled でフィルタされることがわかるようにする
+      {
+        import databaseService._
+        import databaseService.profile.api._
+        val rows = Seq(
+          ConcertRow(
+            id = id1.value,
+            numberOfTickets = 3,
+            cancelled = true,
+            createdAt = now.toSQLTimestamp,
+            updatedAt = (now + 3.seconds).toSQLTimestamp,
+          ),
+          ConcertRow(
+            id = id2.value,
+            numberOfTickets = 1,
+            cancelled = false,
+            createdAt = (now + 1.second).toSQLTimestamp,
+            updatedAt = (now + 5.seconds).toSQLTimestamp,
+          ),
+          ConcertRow(
+            id = id3.value,
+            numberOfTickets = 2,
+            cancelled = false,
+            createdAt = (now + 2.seconds).toSQLTimestamp,
+            updatedAt = (now + 4.seconds).toSQLTimestamp,
+          ),
+        )
+        Await.result(database.run(concerts ++= rows), timeout.duration)
       }
 
-      val concerts = repository.fetchConcertList(excludeCancelled = true).futureValue
-      concerts shouldBe Seq(
+      repository.fetchConcertList(excludeCancelled = true).futureValue shouldBe Seq(
         ConcertItem(id2, numberOfTickets = 1, cancelled = false),
         ConcertItem(id3, numberOfTickets = 2, cancelled = false),
       )
+
     }
 
   }
@@ -216,6 +255,9 @@ object DatabaseConcertRepositoryBehaviors {
   implicit final class RichZonedDateTime(val time: ZonedDateTime) extends AnyVal {
     def +(duration: FiniteDuration): ZonedDateTime = {
       time.plusNanos(duration.toNanos)
+    }
+    def toSQLTimestamp: Timestamp = {
+      Timestamp.from(time.toInstant)
     }
   }
 
