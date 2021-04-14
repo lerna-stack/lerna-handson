@@ -2,7 +2,6 @@ package example.readmodel.rdb
 
 import akka.actor.typed.ActorSystem
 import example.model.concert.ConcertIdGenerator
-import example.readmodel.rdb.projection.DatabaseConcertProjectionRepositoryBehaviors
 import example.readmodel.{ ConcertItem, ConcertRepository, DefaultReadModelDiDesign }
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
@@ -10,10 +9,7 @@ import wvlet.airframe.Design
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-final class DefaultConcertRepositorySpec
-    extends DatabaseConcertRepositorySpecBase()
-    with DatabaseConcertProjectionRepositoryBehaviors
-    with AirframeDiSessionSupport {
+final class DefaultConcertRepositorySpec extends DatabaseConcertRepositorySpecBase() with AirframeDiSessionSupport {
 
   import DatabaseConcertRepositorySpecBase._
 
@@ -28,10 +24,6 @@ final class DefaultConcertRepositorySpec
 
   private val idGenerator                   = new ConcertIdGenerator()
   private val repository: ConcertRepository = session.build[DefaultConcertRepository]
-
-  classOf[DefaultConcertRepository].getSimpleName should {
-    behave like databaseConcertProjectionRepository(repository, databaseService)
-  }
 
   "fetch concerts ordered by updated date" in {
 
