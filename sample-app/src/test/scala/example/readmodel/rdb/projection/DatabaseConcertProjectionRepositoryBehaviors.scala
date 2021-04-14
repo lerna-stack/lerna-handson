@@ -9,6 +9,14 @@ import example.readmodel.rdb.{ ConcertDatabaseService, DatabaseConcertRepository
 import java.util.UUID
 import scala.concurrent.duration.DurationInt
 
+/** ConcertProjectionRepository の 共通テスト を定義する
+  *
+  * テスト共通化のため、このような形式でテストケースを実装する。
+  *
+  *  テスト共通化の方法については、
+  * [[https://www.scalatest.org/user_guide/sharing_tests Sharing tests]]
+  * を参照すること
+  */
 trait DatabaseConcertProjectionRepositoryBehaviors { this: DatabaseConcertRepositorySpecBase =>
   import DatabaseConcertRepositorySpecBase._
 
