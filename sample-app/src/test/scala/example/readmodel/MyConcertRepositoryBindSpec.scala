@@ -7,6 +7,7 @@ import example.testing.tags.ExerciseTest
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe._
 
+// TODO Remove this class
 @ExerciseTest
 final class MyConcertRepositoryBindSpec extends ActorSpecBase() with AirframeDiSessionSupport {
   override protected val design: Design =
