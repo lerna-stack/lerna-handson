@@ -7,5 +7,4 @@ import wvlet.airframe.Design
 object DefaultReadModelUpdaterDiDesign {
   lazy val design: Design =
     Design.newDesign
-      .bind[ConcertEventSourceFactory].to[CassandraConcertEventSourceFactory]
 }

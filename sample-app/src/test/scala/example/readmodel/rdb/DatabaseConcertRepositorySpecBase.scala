@@ -40,7 +40,7 @@ abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with 
 
     import databaseService._
     import databaseService.profile.api._
-    val schema = concerts.schema ++ updaterOffsets.schema
+    val schema = concerts.schema
     databaseService.database.run(schema.create).futureValue
   }
 
@@ -48,7 +48,7 @@ abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with 
     // 各テストケースごとに独立してデータを処理したいため
     import databaseService._
     import databaseService.profile.api._
-    val schema = concerts.schema ++ updaterOffsets.schema
+    val schema = concerts.schema
     databaseService.database.run(schema.truncate).futureValue
   }
 

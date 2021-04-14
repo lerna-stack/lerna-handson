@@ -15,14 +15,6 @@ trait ConcertDatabaseTables {
 
   import profile.api._
 
-  case class UpdaterOffsetRow(tagName: String, offsetUUID: String)
-  case class UpdaterOffsetTable(tag: Tag) extends Table[UpdaterOffsetRow](tag, "UPDATER_OFFSETS") {
-    val tagName    = column[String]("TAG_NAME", O.PrimaryKey, O.Length(64, varying = true))
-    val offsetUUID = column[String]("OFFSET_UUID", O.Length(36, varying = false))
-    def *          = (tagName, offsetUUID).mapTo[UpdaterOffsetRow]
-  }
-  val updaterOffsets = TableQuery[UpdaterOffsetTable]
-
   case class ConcertRow(
       id: String,
       numberOfTickets: Int,

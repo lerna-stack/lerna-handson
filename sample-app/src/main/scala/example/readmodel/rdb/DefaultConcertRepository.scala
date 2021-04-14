@@ -1,9 +1,7 @@
 package example.readmodel.rdb
 
-import akka.persistence.query.Offset
 import example.model.concert._
 import example.readmodel._
-import example.readmodel.rdb.projection.ConcertProjectionRepository
 
 import scala.concurrent._
 
@@ -11,11 +9,10 @@ import scala.concurrent._
   */
 final class DefaultConcertRepository(
     protected val databaseService: ConcertDatabaseService,
-    projectionRepository: ConcertProjectionRepository, // TODO remove
 )(implicit
     executionContext: RepositoryExecutionContext,
-) extends ConcertRepository
-    with UpdaterOffsetQuerySupport {
+) extends ConcertRepository {
+
   import databaseService._
   import databaseService.profile.api._
 
@@ -43,22 +40,6 @@ final class DefaultConcertRepository(
 
     // 実際に DBIO を発行する
     database.run(fetchDBIO)
-  }
-
-  override def fetchConcertEventOffset(): Future[Offset] = {
-    // ConcertEventの進捗情報(OFFSET)を取得するクエリを発行する
-    database.run(fetchOffset(ConcertEvent.tag))
-  }
-
-  override def updateByConcertEvent(event: ConcertEvent, offset: Offset): Future[Unit] = {
-    // CONCERTSテーブル更新 と 進捗(OFFSET)の保存処理を DBIO で合成する。
-    val updateDBIO: DBIO[Unit] = for {
-      _ <- projectionRepository.update(event)
-      _ <- insertOrUpdateOffset(ConcertEvent.tag, offset)
-    } yield ()
-
-    // 合成した DBIO をトランザクションの中で実行する。
-    database.run(updateDBIO.transactionally)
   }
 
 }
