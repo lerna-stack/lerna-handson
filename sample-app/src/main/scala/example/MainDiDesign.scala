@@ -2,7 +2,6 @@ package example
 
 import akka.actor.typed.ActorSystem
 import example.application.http.MainHttpApiServerDiDesign
-import example.application.rmu.DefaultReadModelUpdaterDiDesign
 import example.model.ModelDiDesign
 import example.readmodel.DefaultReadModelDiDesign
 import wvlet.airframe.Design
@@ -19,7 +18,6 @@ object MainDiDesign {
       }
       .add(ModelDiDesign.design)
       .add(DefaultReadModelDiDesign.design)
-      .add(DefaultReadModelUpdaterDiDesign.design)
       .add(MainHttpApiServerDiDesign.design)
   }
 }
