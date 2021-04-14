@@ -3,7 +3,6 @@ package example.readmodel.rdb
 import com.typesafe.config.{ Config, ConfigFactory }
 import example.ActorSpecBase
 import org.scalatest.BeforeAndAfter
-import org.scalatest.time.{ Milliseconds, Span }
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -30,9 +29,6 @@ abstract class DatabaseSpecBase() extends ActorSpecBase() with BeforeAndAfter {
     DatabaseConfig.forConfig("h2db", config)
 
   protected val databaseService: ConcertDatabaseService
-
-  // FIXME Define global patience config
-  override implicit lazy val patienceConfig: PatienceConfig = PatienceConfig(Span(1000L, Milliseconds))
 
   override def beforeAll(): Unit = {
     super.beforeAll()
