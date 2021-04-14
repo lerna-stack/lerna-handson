@@ -1,6 +1,7 @@
 package example.readmodel.rdb
 
 import akka.actor.typed.ActorSystem
+import example.readmodel.rdb.projection.DatabaseConcertProjectionRepositoryBehaviors
 import example.readmodel.{ ConcertRepository, DefaultReadModelDiDesign }
 import example.testing.tags.ExerciseTest
 import testkit.AirframeDiSessionSupport
@@ -10,6 +11,7 @@ import wvlet.airframe.Design
 final class MyConcertRepositorySpec
     extends DatabaseConcertRepositorySpecBase()
     with DatabaseConcertRepositoryBehaviors
+    with DatabaseConcertProjectionRepositoryBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =
     DefaultReadModelDiDesign.design
@@ -24,6 +26,7 @@ final class MyConcertRepositorySpec
 
   classOf[MyConcertRepository].getSimpleName should {
     behave like databaseConcertRepository(repository, databaseService)
+    behave like databaseConcertProjectionRepository(repository, databaseService)
   }
 
 }
