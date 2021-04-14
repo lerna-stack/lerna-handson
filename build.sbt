@@ -95,7 +95,7 @@ lazy val SampleApp = (project in file("sample-app"))
     name := "sample-app",
     scalacOptions ++= Seq(
       // 演習問題はunsedな宣言を事前にしているため警告をださない
-      "-Wconf:cat=unused&src=(MyConcertActor|MyBoxOfficeService|MyBoxOfficeResource)\\.scala:silent",
+      "-Wconf:cat=unused&src=(MyConcertActor|MyBoxOfficeService|MyBoxOfficeResource|MyConcertProjectionRepository)\\.scala:silent",
     ),
     libraryDependencies ++= Seq(
       Dependencies.ScalaTest.wordspec       % Test,
@@ -167,4 +167,12 @@ addCommandAlias(
 addCommandAlias(
   "testMyBoxOfficeResource",
   "SampleApp/testOnly example.application.http.controller.MyBoxOfficeResourceSpec",
+)
+addCommandAlias(
+  "testMyConcertProjectionRepositoryBinding",
+  "SampleApp/testOnly example.readmodel.rdb.projection.MyConcertProjectionRepositoryBindSpec",
+)
+addCommandAlias(
+  "testMyConcertProjectionRepository",
+  "SampleApp/testOnly example.readmodel.rdb.projection.MyConcertProjectionRepositorySpec",
 )

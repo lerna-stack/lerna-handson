@@ -18,6 +18,9 @@ object DefaultReadModelDiDesign {
       .bind[RepositoryExecutionContext].toSingletonProvider[ActorSystem[Nothing]] { system =>
         system.executionContext // TODO RDB用の ExecutionContxt を提供する。
       }
-      .bind[ConcertProjectionRepository].to[DefaultConcertProjectionRepository]
       .bind[ConcertRepository].to[DefaultConcertRepository]
+      .bind[ConcertProjectionRepository].to[DefaultConcertProjectionRepository]
+      // MyConcertProjectionRepository実装時にコメントアウトを外す (この行はそのまま)
+      // .bind[ConcertProjectionRepository].to[MyConcertProjectionRepository]
+
 }
