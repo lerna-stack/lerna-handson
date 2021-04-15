@@ -12,8 +12,21 @@ final class ConcertProjectionHandler(repository: ConcertProjectionRepository)
   private val logger = LoggerFactory.getLogger(getClass)
 
   override def process(envelope: EventEnvelope[ConcertEvent]): DBIO[Done] = {
-    logger.info(s"Handle ${envelope}")
+    logger.info(s"Handle ${format(envelope)}")
     repository.update(envelope.event)
+  }
+
+  /** [[EventEnvelope]] のフィールドを含めた文字列にフォーマットする
+    *
+    * [[EventEnvelope#toString()]] では達成できないため
+    */
+  private def format(envelope: EventEnvelope[ConcertEvent]): String = {
+    s"EventEnvelope(" +
+    s"offset=${envelope.offset}, " +
+    s"""persistenceId="${envelope.persistenceId}", """ +
+    s"sequenceNr=${envelope.sequenceNr}, " +
+    s"event=${envelope.event}, " +
+    s"timestamp=${envelope.timestamp})"
   }
 
 }
