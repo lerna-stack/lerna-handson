@@ -1,10 +1,6 @@
 package example.readmodel.rdb
 
-import java.sql.Timestamp
-
-import akka.persistence.query.Offset
 import example.model.concert._
-import example.model.concert.ConcertEvent._
 import example.readmodel._
 
 import scala.concurrent._
@@ -15,8 +11,8 @@ final class DefaultConcertRepository(
     protected val databaseService: ConcertDatabaseService,
 )(implicit
     executionContext: RepositoryExecutionContext,
-) extends ConcertRepository
-    with UpdaterOffsetQuerySupport {
+) extends ConcertRepository {
+
   import databaseService._
   import databaseService.profile.api._
 
@@ -44,81 +40,6 @@ final class DefaultConcertRepository(
 
     // 実際に DBIO を発行する
     database.run(fetchDBIO)
-  }
-
-  override def fetchConcertEventOffset(): Future[Offset] = {
-    // ConcertEventの進捗情報(OFFSET)を取得するクエリを発行する
-    database.run(fetchOffset(ConcertEvent.tag))
-  }
-
-  override def updateByConcertEvent(event: ConcertEvent, offset: Offset): Future[Unit] = {
-    // イベントをもとに DBIO を構築する。
-    val updateByEventDBIO: DBIO[AnyVal] = event match {
-      case created: ConcertCreated =>
-        handleConcertCreatedDBIO(created)
-      case cancelled: ConcertCancelled =>
-        handleConcertCancelledDBIO(cancelled)
-      case ticketsBought: ConcertTicketsBought =>
-        handleConcertTicketsBoughtDBIO(ticketsBought)
-    }
-    // CONCERTSテーブル更新 と 進捗(OFFSET)の保存処理を DBIO で合成する。
-    val updateDBIO: DBIO[Unit] = for {
-      _ <- updateByEventDBIO
-      _ <- insertOrUpdateOffset(ConcertEvent.tag, offset)
-    } yield ()
-
-    // 合成した DBIO をトランザクションの中で実行する。
-    database.run(updateDBIO.transactionally)
-  }
-
-  // コンサート作成イベントをもとに DBIO を構築する。
-  // このメソッドを実行しても 実際に DB にクエリが発行されるわけではないので注意すること
-  private def handleConcertCreatedDBIO(event: ConcertCreated): DBIO[Int] = {
-    // 新しいコンサートのエントリを追加する DBIO を構築する
-    // insert into "CONCERTS" ("ID", "NUMBER_OF_TICKETS", "CANCELLED", "CREATED_AT", "UPDATED_AT") values (?,?,?,?,?)
-    concerts +=
-      ConcertRow(
-        event.concertId.value,
-        event.numOfTickets,
-        cancelled = false,
-        Timestamp.from(event.occurredAt.toInstant),
-        Timestamp.from(event.occurredAt.toInstant),
-      )
-  }
-
-  // コンサートキャンセルイベントをもとに DBIO を構築する。
-  // このメソッドを実行しても 実際に DB にクエリが発行されるわけではないので注意すること
-  private def handleConcertCancelledDBIO(event: ConcertCancelled): DBIO[Int] = {
-    // 対応するコンサートの　キャンセル済 CANCELLED と 更新日時 UPDATED_AT を更新する DBIO を構築する
-    // update "CONCERTS" set "CANCELLED" = ?, "UPDATED_AT" = ? where "CONCERTS"."ID" = ?
-    concerts
-      .filter(_.id === event.concertId.value)
-      .map(item => (item.cancelled, item.updatedAt))
-      .update((true, Timestamp.from(event.occurredAt.toInstant)))
-  }
-
-  // コンサートチケット購入イベントをもとに DBIO を構築する。
-  // このメソッドを実行しても 実際に DB にクエリが発行されるわけではないので注意すること
-  private def handleConcertTicketsBoughtDBIO(event: ConcertTicketsBought): DBIO[Unit] = {
-    // 購入前のチケット枚数を読み込み、購入後のチケット枚数を計算して格納するクエリ
-    val updateByBoughtEventDBIO: DBIO[Unit] = for {
-      // 購入前のチケット枚数を取得する
-      // select "NUMBER_OF_TICKET" from "CONCERTS" where "ID" = ?
-      numOfTickets <-
-        concerts
-          .filter(_.id === event.concertId.value)
-          .map(item => item.numberOfTickets)
-          .result.head
-      // 新しいチケット枚数に更新する
-      // update "CONCERTS" set "NUMBER_OF_TICKETS" = ?, "UPDATED_AT" = ? where "CONCERTS"."ID" = ?
-      _ <-
-        concerts
-          .filter(_.id === event.concertId.value)
-          .map(item => (item.numberOfTickets, item.updatedAt))
-          .update((numOfTickets - event.tickets.size, Timestamp.from(event.occurredAt.toInstant)))
-    } yield ()
-    // このクエリはトランザクションの中で実行されなければいけない
-    updateByBoughtEventDBIO.transactionally
   }
 
 }

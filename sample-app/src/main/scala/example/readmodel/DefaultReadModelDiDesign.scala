@@ -2,6 +2,7 @@ package example.readmodel
 
 import akka.actor.typed.ActorSystem
 import example.readmodel.rdb._
+import example.readmodel.rdb.projection._
 import wvlet.airframe._
 
 /** RDBを使った ReadModel のデフォルト実装のDIデザイン
@@ -18,6 +19,8 @@ object DefaultReadModelDiDesign {
         system.executionContext // TODO RDB用の ExecutionContxt を提供する。
       }
       .bind[ConcertRepository].to[DefaultConcertRepository]
-      // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)
-      // .bind[ConcertRepository].to[MyConcertRepository]
+      .bind[ConcertProjectionRepository].to[DefaultConcertProjectionRepository]
+      // MyConcertProjectionRepository実装時にコメントアウトを外す (この行はそのまま)
+      // .bind[ConcertProjectionRepository].to[MyConcertProjectionRepository]
+
 }

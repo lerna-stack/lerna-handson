@@ -116,8 +116,8 @@ sbt testMyBoxOfficeServiceBinding
 sbt testMyBoxOfficeService
 sbt testMyBoxOfficeResourceBinding
 sbt testMyBoxOfficeResource
-sbt testMyConcertRepositoryBinding
-sbt testMyConcertRepository
+sbt testMyConcertProjectionRepositoryBinding
+sbt testMyConcertProjectionRepository
 ```
 
 ### API リクエスト例

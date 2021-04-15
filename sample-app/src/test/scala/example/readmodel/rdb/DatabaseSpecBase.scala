@@ -3,11 +3,15 @@ package example.readmodel.rdb
 import com.typesafe.config.{ Config, ConfigFactory }
 import example.ActorSpecBase
 import org.scalatest.BeforeAndAfter
-import org.scalatest.time.{ Milliseconds, Span }
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
-abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with BeforeAndAfter {
+import java.sql.Timestamp
+import java.time.ZonedDateTime
+import java.time.temporal.ChronoUnit
+import scala.concurrent.duration.FiniteDuration
+
+abstract class DatabaseSpecBase() extends ActorSpecBase() with BeforeAndAfter {
   // NOTE: すべての操作が H2DB 互換であり、H2DB でテストにパスすればよいと妥協している
   protected val config: Config = ConfigFactory.parseString("""
       |h2db {
@@ -26,15 +30,12 @@ abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with 
 
   protected val databaseService: ConcertDatabaseService
 
-  // FIXME Define global patience config
-  override implicit lazy val patienceConfig: PatienceConfig = PatienceConfig(Span(1000L, Milliseconds))
-
   override def beforeAll(): Unit = {
     super.beforeAll()
 
     import databaseService._
     import databaseService.profile.api._
-    val schema = concerts.schema ++ updaterOffsets.schema
+    val schema = concerts.schema
     databaseService.database.run(schema.create).futureValue
   }
 
@@ -42,8 +43,29 @@ abstract class DatabaseConcertRepositorySpecBase() extends ActorSpecBase() with 
     // 各テストケースごとに独立してデータを処理したいため
     import databaseService._
     import databaseService.profile.api._
-    val schema = concerts.schema ++ updaterOffsets.schema
+    val schema = concerts.schema
     databaseService.database.run(schema.truncate).futureValue
+  }
+
+  // 現在時刻を秒精度で返す。
+  // 秒未満はデータベースによってデフォルト値やサポート範囲が異なるため秒精度に丸める。
+  // https://mariadb.com/kb/en/timestamp/#supported-values
+  // https://www.h2database.com/html/datatypes.html#timestamp_type
+  protected def nowInSeconds: ZonedDateTime = {
+    ZonedDateTime.now.truncatedTo(ChronoUnit.SECONDS)
+  }
+
+}
+
+object DatabaseSpecBase {
+
+  implicit final class RichZonedDateTime(val time: ZonedDateTime) extends AnyVal {
+    def +(duration: FiniteDuration): ZonedDateTime = {
+      time.plusNanos(duration.toNanos)
+    }
+    def toSQLTimestamp: Timestamp = {
+      Timestamp.from(time.toInstant)
+    }
   }
 
 }

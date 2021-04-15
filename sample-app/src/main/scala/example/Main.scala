@@ -6,7 +6,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorSystem, Behavior }
 import akka.cluster.Cluster
 import example.application.http._
-import example.application.rmu._
+import example.readmodel.rdb.projection.ConcertProjection
 import org.slf4j.LoggerFactory
 
 import scala.concurrent._
@@ -37,7 +37,7 @@ object Main extends App {
   // Clusterに参加できたらサービスを開始する。
   Cluster(system).registerOnMemberUp {
     startHttpServer()
-    startRmuServer()
+    startProjection()
   }
 
   // HTTP Server を起動する。
@@ -51,10 +51,10 @@ object Main extends App {
     }
   }
 
-  // ReadModelUpdateServer を起動する。
-  // 起動に失敗したら ActorSystem 自体を終了させる。
-  private def startRmuServer(): Unit = {
-    val server = session.build[ConcertReadModelUpdateServer]
-    server.start()
+  // Projection を起動する。
+  private def startProjection(): Unit = {
+    val projection = session.build[ConcertProjection]
+    projection.start()
   }
+
 }
