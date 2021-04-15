@@ -146,33 +146,33 @@ addCommandAlias(
 // 演習で使うコマンドたち
 addCommandAlias(
   "testMyConcertActorBinding",
-  "SampleApp/testOnly example.model.MyConcertActorBindSpec",
+  "SampleApp/testOnly example.application.MyConcertActorBindSpec",
 )
 addCommandAlias(
   "testMyConcertActor",
-  "SampleApp/testOnly example.model.concert.actor.MyConcertActorSpec",
+  "SampleApp/testOnly example.application.command.actor.MyConcertActorSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeServiceBinding",
-  "SampleApp/testOnly example.model.MyBoxOfficeServiceBindSpec",
+  "SampleApp/testOnly example.application.MyBoxOfficeServiceBindSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeService",
-  "SampleApp/testOnly example.model.concert.service.MyBoxOfficeServiceSpec",
+  "SampleApp/testOnly example.application.command.MyBoxOfficeServiceSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeResourceBinding",
-  "SampleApp/testOnly example.application.http.MyBoxOfficeResourceBindSpec",
+  "SampleApp/testOnly example.presentation.MyBoxOfficeResourceBindSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeResource",
-  "SampleApp/testOnly example.application.http.controller.MyBoxOfficeResourceSpec",
+  "SampleApp/testOnly example.presentation.MyBoxOfficeResourceSpec",
 )
 addCommandAlias(
   "testMyConcertProjectionRepositoryBinding",
-  "SampleApp/testOnly example.readmodel.rdb.projection.MyConcertProjectionRepositoryBindSpec",
+  "SampleApp/testOnly example.application.MyConcertProjectionRepositoryBindSpec",
 )
 addCommandAlias(
   "testMyConcertProjectionRepository",
-  "SampleApp/testOnly example.readmodel.rdb.projection.MyConcertProjectionRepositorySpec",
+  "SampleApp/testOnly example.application.projection.MyConcertProjectionRepositorySpec",
 )
