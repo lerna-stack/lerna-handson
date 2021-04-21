@@ -46,19 +46,7 @@ final class MyBoxOfficeResource(
   // コンサート取得
   // 演習で実装する箇所
   private def concertGetRoute: Route = {
-    path("concerts" / ConcertIdentifier) { concertId =>
-      get {
-        val serviceResponseFuture: Future[GetConcertResponse] =
-          service.getConcert(concertId)
-        val responseFuture: Future[GetConcertResponseBody] =
-          serviceResponseFuture.map(response => {
-            GetConcertResponseBody.from(concertId, response)
-          })
-        onSuccess(responseFuture) { response =>
-          complete(StatusCodes.OK -> response)
-        }
-      }
-    }
+    ???
   }
 
   // コンサート作成

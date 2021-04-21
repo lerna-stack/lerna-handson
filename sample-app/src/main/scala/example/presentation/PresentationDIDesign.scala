@@ -12,5 +12,5 @@ object PresentationDIDesign {
       }
       .bind[BoxOfficeResource].to[DefaultBoxOfficeResource]
       // MyBoxOfficeResource 実装時にコメントアウトを外す (この行はそのまま)
-      .bind[BoxOfficeResource].to[MyBoxOfficeResource]
+      // .bind[BoxOfficeResource].to[MyBoxOfficeResource]
 }

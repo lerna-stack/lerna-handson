@@ -39,14 +39,7 @@ final class MyConcertProjectionRepository(
   private def handleConcertCreatedDBIO(event: ConcertCreated): DBIO[Int] = {
     // 新しいコンサートのエントリを追加する DBIO を構築する
     // insert into "CONCERTS" ("ID", "NUMBER_OF_TICKETS", "CANCELLED", "CREATED_AT", "UPDATED_AT") values (?,?,?,?,?)
-    concerts +=
-      ConcertRow(
-        event.concertId.value,
-        event.numOfTickets,
-        cancelled = false,
-        Timestamp.from(event.occurredAt.toInstant),
-        Timestamp.from(event.occurredAt.toInstant),
-      )
+    ???
   }
 
   // 演習で実装する項目
@@ -55,10 +48,7 @@ final class MyConcertProjectionRepository(
   private def handleConcertCancelledDBIO(event: ConcertCancelled): DBIO[Int] = {
     // 対応するコンサートの　キャンセル済 CANCELLED と 更新日時 UPDATED_AT を更新する DBIO を構築する
     // update "CONCERTS" set "CANCELLED" = ?, "UPDATED_AT" = ? where "CONCERTS"."ID" = ?
-    concerts
-      .filter(_.id === event.concertId.value)
-      .map(item => (item.cancelled, item.updatedAt))
-      .update((true, Timestamp.from(event.occurredAt.toInstant)))
+    ???
   }
 
   // コンサートチケット購入イベントをもとに DBIO を構築する。

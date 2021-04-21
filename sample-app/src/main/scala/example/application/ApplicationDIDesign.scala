@@ -17,14 +17,14 @@ object ApplicationDIDesign {
         }
         .bind[BoxOfficeService].to[DefaultBoxOfficeService]
         // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)
-        .bind[BoxOfficeService].to[MyBoxOfficeService]
+        // .bind[BoxOfficeService].to[MyBoxOfficeService]
         .bind[ConcertActorBehaviorFactory].toInstance(DefaultConcertActor)
         // MyConcertActor実装時にコメントアウトを外す (この行はそのまま)
-        .bind[ConcertActorBehaviorFactory].toInstance(MyConcertActor)
+        // .bind[ConcertActorBehaviorFactory].toInstance(MyConcertActor)
         .bind[ConcertRepository].to[DefaultConcertRepository]
         .bind[ConcertProjection].to[DefaultConcertProjection]
         .bind[ConcertProjectionRepository].to[DefaultConcertProjectionRepository]
         // MyConcertProjectionRepository実装時にコメントアウトを外す (この行はそのまま)
-        .bind[ConcertProjectionRepository].to[MyConcertProjectionRepository]
+        // .bind[ConcertProjectionRepository].to[MyConcertProjectionRepository]
 
 }

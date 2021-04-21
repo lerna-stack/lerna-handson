@@ -24,70 +24,22 @@ final class MyBoxOfficeService(
   private val sharding                                    = new ConcertActorClusterSharding(system, behaviorFactory)
 
   override def createConcert(id: ConcertId, numberOfTickets: Int): Future[CreateConcertResponse] = {
-    val entityRef = sharding.entityRefFor(id)
-    entityRef
-      .ask(replyTo => ConcertActor.Create(numberOfTickets, replyTo))
-      .flatMap {
-        case createConcertSucceeded: ConcertActor.CreateSucceeded =>
-          Future.successful {
-            CreateConcertResponse(createConcertSucceeded.numTickets)
-          }
-        case createConcertFailed: ConcertActor.CreateFailed =>
-          Future.failed {
-            new BoxOfficeServiceException(createConcertFailed.error)
-          }
-      }
+    ???
   }
 
   override def getConcert(id: ConcertId): Future[GetConcertResponse] = {
-    val entityRef = sharding.entityRefFor(id)
-    entityRef
-      .ask(replyTo => ConcertActor.Get(replyTo))
-      .flatMap {
-        case succeeded: ConcertActor.GetSucceeded =>
-          Future.successful {
-            GetConcertResponse(succeeded.tickets, succeeded.cancelled)
-          }
-        case failed: ConcertActor.GetFailed =>
-          Future.failed {
-            new BoxOfficeServiceException(failed.error)
-          }
-      }
+    ???
   }
 
   override def cancelConcert(id: ConcertId): Future[CancelConcertResponse] = {
-    val entityRef = sharding.entityRefFor(id)
-    entityRef
-      .ask(replyTo => ConcertActor.Cancel(replyTo))
-      .flatMap {
-        case succeeded: ConcertActor.CancelSucceeded =>
-          Future.successful {
-            CancelConcertResponse(succeeded.numberOfTickets)
-          }
-        case failed: ConcertActor.CancelFailed =>
-          Future.failed {
-            new BoxOfficeServiceException(failed.error)
-          }
-      }
+    ???
   }
 
   override def buyConcertTickets(
       id: ConcertId,
       numberOfTickets: Int,
   ): Future[BuyConcertTicketsResponse] = {
-    val entityRef = sharding.entityRefFor(id)
-    entityRef
-      .ask(replyTo => ConcertActor.BuyTickets(numberOfTickets, replyTo))
-      .flatMap {
-        case succeeded: ConcertActor.BuyTicketsSucceeded =>
-          Future.successful {
-            BuyConcertTicketsResponse(succeeded.tickets)
-          }
-        case failed: ConcertActor.BuyTicketsFailed =>
-          Future.failed {
-            new BoxOfficeServiceException(failed.error)
-          }
-      }
+    ???
   }
 
 }
