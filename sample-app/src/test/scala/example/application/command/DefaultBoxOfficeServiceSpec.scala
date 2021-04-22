@@ -1,7 +1,7 @@
 package example.application.command
 
 import akka.actor.typed.ActorSystem
-import example.adapter.BoxOfficeService
+import example.adapter.command.BoxOfficeService
 import example.application.ApplicationDIDesign
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design

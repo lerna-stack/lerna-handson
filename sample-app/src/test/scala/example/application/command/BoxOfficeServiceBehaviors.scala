@@ -1,6 +1,7 @@
 package example.application.command
 
-import example.adapter.{ BoxOfficeService, ConcertIdGenerator, ConcertTicketId }
+import example.adapter.command.BoxOfficeService
+import example.adapter.{ ConcertIdGenerator, ConcertTicketId }
 
 /** [[BoxOfficeService]] の 共通テスト を定義する
   *
@@ -11,7 +12,7 @@ import example.adapter.{ BoxOfficeService, ConcertIdGenerator, ConcertTicketId }
   * を参照すること
   */
 trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
-  import example.adapter.BoxOfficeService._
+  import example.adapter.command.BoxOfficeService._
 
   val idGenerator = new ConcertIdGenerator()
 

@@ -2,7 +2,7 @@ package example.application
 
 import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
-import example.adapter.BoxOfficeService
+import example.adapter.command.BoxOfficeService
 import example.application.command.MyBoxOfficeService
 import example.testing.tags.ExerciseTest
 import testkit.AirframeDiSessionSupport

@@ -1,4 +1,6 @@
-package example.adapter
+package example.adapter.command
+
+import example.adapter.{ ConcertId, ConcertTicketId }
 
 import scala.concurrent.Future
 

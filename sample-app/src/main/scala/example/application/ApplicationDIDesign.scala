@@ -1,7 +1,8 @@
 package example.application
 
 import akka.actor.typed.ActorSystem
-import example.adapter.{ BoxOfficeService, ConcertProjection, ConcertRepository }
+import example.adapter.command.BoxOfficeService
+import example.adapter.{ ConcertProjection, ConcertRepository }
 import example.application.command._
 import example.application.command.actor._
 import example.application.projection._

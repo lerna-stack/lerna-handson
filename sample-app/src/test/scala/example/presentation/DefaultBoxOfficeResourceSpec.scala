@@ -1,7 +1,8 @@
 package example.presentation
 
 import example.RouteSpecBase
-import example.adapter.{ BoxOfficeService, ConcertRepository }
+import example.adapter.ConcertRepository
+import example.adapter.command.BoxOfficeService
 
 final class DefaultBoxOfficeResourceSpec extends RouteSpecBase with BoxOfficeResourceBehaviors {
 

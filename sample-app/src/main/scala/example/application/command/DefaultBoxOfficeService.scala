@@ -2,7 +2,8 @@ package example.application.command
 
 import akka.actor.typed.ActorSystem
 import akka.util.Timeout
-import example.adapter.{ BoxOfficeService, ConcertId }
+import example.adapter.ConcertId
+import example.adapter.command.BoxOfficeService
 import example.application.command.actor.{ ConcertActor, ConcertActorBehaviorFactory, ConcertActorClusterSharding }
 
 import scala.concurrent.{ ExecutionContext, Future }

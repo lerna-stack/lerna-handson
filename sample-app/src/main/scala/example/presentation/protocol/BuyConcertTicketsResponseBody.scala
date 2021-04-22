@@ -4,7 +4,7 @@ import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 import ConcertJsonProtocol._
 import example.adapter.{ ConcertId, ConcertTicketId }
-import example.adapter.BoxOfficeService.BuyConcertTicketsResponse
+import example.adapter.command.BoxOfficeService.BuyConcertTicketsResponse
 
 /** コンサートチケット購入 レスポンス
   *

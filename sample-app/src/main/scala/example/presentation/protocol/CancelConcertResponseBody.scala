@@ -4,7 +4,7 @@ import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 import ConcertJsonProtocol._
 import example.adapter.ConcertId
-import example.adapter.BoxOfficeService.CancelConcertResponse
+import example.adapter.command.BoxOfficeService.CancelConcertResponse
 
 /** コンサートキャンセル レスポンス
   *

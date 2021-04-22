@@ -2,7 +2,8 @@ package example.presentation
 
 import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
-import example.adapter.{ BoxOfficeService, ConcertRepository }
+import example.adapter.ConcertRepository
+import example.adapter.command.BoxOfficeService
 import example.testing.tags.ExerciseTest
 import org.mockito.MockitoSugar
 import testkit.AirframeDiSessionSupport

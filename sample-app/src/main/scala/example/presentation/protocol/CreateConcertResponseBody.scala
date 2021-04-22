@@ -4,7 +4,7 @@ import spray.json.DefaultJsonProtocol._
 import spray.json.RootJsonFormat
 import ConcertJsonProtocol._
 import example.adapter.ConcertId
-import example.adapter.BoxOfficeService.CreateConcertResponse
+import example.adapter.command.BoxOfficeService.CreateConcertResponse
 
 /** コンサート作成 レスポンス
   * @param id コンサートID

@@ -5,7 +5,8 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{ ExceptionHandler, Route }
-import example.adapter.{ BoxOfficeService, ConcertRepository }
+import example.adapter.ConcertRepository
+import example.adapter.command.BoxOfficeService
 import example.presentation.protocol._
 
 import scala.concurrent._
@@ -19,7 +20,7 @@ final class MyBoxOfficeResource(
     executionContext: PresentationExecutionContext,
 ) extends BoxOfficeResource {
   import SprayJsonSupport._
-  import example.adapter.BoxOfficeService._
+  import example.adapter.command.BoxOfficeService._
   import example.adapter.ConcertRepository._
   import example.presentation.dsl.ConcertPathMatchers._
 

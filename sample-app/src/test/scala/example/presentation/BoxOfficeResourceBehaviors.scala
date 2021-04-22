@@ -2,7 +2,8 @@ package example.presentation
 
 import akka.http.scaladsl.model.{ ContentTypes, HttpEntity, StatusCodes }
 import example.RouteSpecBase
-import example.adapter.{ BoxOfficeService, ConcertIdGenerator, ConcertRepository, ConcertTicketId }
+import example.adapter.command.BoxOfficeService
+import example.adapter.{ ConcertIdGenerator, ConcertRepository, ConcertTicketId }
 
 import scala.concurrent.Future
 
@@ -17,7 +18,7 @@ import scala.concurrent.Future
 trait BoxOfficeResourceBehaviors {
   this: RouteSpecBase =>
 
-  import example.adapter.BoxOfficeService._
+  import example.adapter.command.BoxOfficeService._
   import example.adapter.ConcertRepository._
   import example.presentation.protocol._
 
