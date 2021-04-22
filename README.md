@@ -155,16 +155,25 @@ docker-compose down --volumes
 
 ### パッケージ構成
 
-主要なパッケージは次の通りです。
+パッケージは次の通りです。  
+[プロジェクト構成詳解](https://github.com/lerna-stack/lerna-sample-payment-app/blob/v1.0.0/docs/プロジェクト構成詳解.md) と同様の構成になっています。
 
-- example.application.rmu  
-リードモデルアップデータ
-- example.application.http  
-HTTP API サーバ
-- example.model  
-コマンド(ライト)側モデル
-- example.readmodel  
-クエリ(リード)側モデル
+- `example.adapter`  
+  Application の インターフェース (trait) を定義します。
+- `example.application`  
+  業務ロジックを記述します。
+  - `example.application.command`  
+    書き込みとインメモリからの読み込みを実装します。  
+  - `example.application.projection`  
+    リードモデル更新を実装します。
+  - `example.application.query`  
+    リードモデルからの読み込みを実装します。
+- `example.entrypoint`  
+  Main クラスを実装します。
+- `example.presentation`  
+  HTTP API を実装します。
+- `exaple.readmodel`  
+  RDBMS にアクセスするコードを配置します。
 
 
 ### テストに失敗する場合には?
