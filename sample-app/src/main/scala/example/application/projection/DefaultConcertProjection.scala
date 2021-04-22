@@ -9,7 +9,7 @@ import akka.projection.{ ProjectionBehavior, ProjectionId }
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider
 import akka.projection.scaladsl.{ ExactlyOnceProjection, SourceProvider }
 import akka.projection.slick.SlickProjection
-import example.adapter.{ ConcertEvent, ConcertProjection, ConcertProjectionRepository }
+import example.adapter.{ ConcertEvent, ConcertProjection }
 
 final class DefaultConcertProjection(projectionRepository: ConcertProjectionRepository)(implicit
     system: ActorSystem[Nothing],

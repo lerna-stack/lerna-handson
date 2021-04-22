@@ -2,8 +2,7 @@ package example.application
 
 import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
-import example.adapter.ConcertProjectionRepository
-import example.application.projection.MyConcertProjectionRepository
+import example.application.projection.{ ConcertProjectionRepository, MyConcertProjectionRepository }
 import example.readmodel.ReadModelDIDesign
 import example.testing.tags.ExerciseTest
 import testkit.AirframeDiSessionSupport

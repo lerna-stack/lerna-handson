@@ -1,7 +1,7 @@
 package example.application.projection
 
 import example.DatabaseSpecBase
-import example.adapter.{ ConcertId, ConcertIdGenerator, ConcertProjectionRepository, ConcertTicketId }
+import example.adapter.{ ConcertId, ConcertIdGenerator, ConcertTicketId }
 import example.adapter.ConcertEvent.{ ConcertCancelled, ConcertCreated, ConcertTicketsBought }
 import example.readmodel.ConcertDatabaseService
 import slick.dbio.DBIO
