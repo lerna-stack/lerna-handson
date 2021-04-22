@@ -19,8 +19,8 @@ trait ConcertActorBehaviors extends BeforeAndAfterEach with ConcertIdGeneratorSu
   this: ActorSpecBase =>
 
   import example.adapter.ConcertError._
-  import example.adapter.ConcertEvent._
   import example.adapter._
+  import example.application.ConcertEvent._
   import example.application.command.actor.ConcertActor._
 
   private val persistenceTestKit = PersistenceTestKit(system)

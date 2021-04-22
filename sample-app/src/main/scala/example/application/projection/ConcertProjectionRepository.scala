@@ -1,7 +1,7 @@
 package example.application.projection
 
 import akka.Done
-import example.adapter.ConcertEvent
+import example.application.ConcertEvent
 import slick.basic.DatabaseConfig
 import slick.dbio.DBIO
 import slick.jdbc.JdbcProfile

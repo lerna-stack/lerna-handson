@@ -3,7 +3,7 @@ package example.application.projection
 import akka.Done
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.slick.SlickHandler
-import example.adapter.ConcertEvent
+import example.application.ConcertEvent
 import org.slf4j.LoggerFactory
 import slick.dbio.DBIO
 

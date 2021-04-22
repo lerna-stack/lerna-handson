@@ -5,7 +5,8 @@ import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{ Effect, EventSourcedBehavior }
 import example.adapter._
 import example.adapter.ConcertError._
-import example.adapter.ConcertEvent._
+import example.application.ConcertEvent._
+import example.application.ConcertEvent
 import example.application.command.actor.ConcertActor._
 
 import java.time.ZonedDateTime

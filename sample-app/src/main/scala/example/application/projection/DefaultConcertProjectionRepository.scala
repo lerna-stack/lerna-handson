@@ -1,9 +1,8 @@
 package example.application.projection
 
 import akka.Done
-import example.adapter.ConcertEvent
-import example.adapter.ConcertEvent.{ ConcertCancelled, ConcertCreated, ConcertTicketsBought }
-import example.application.ApplicationExecutionContext
+import example.application.ConcertEvent.{ ConcertCancelled, ConcertCreated, ConcertTicketsBought }
+import example.application.{ ApplicationExecutionContext, ConcertEvent }
 import example.readmodel.ConcertDatabaseService
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
