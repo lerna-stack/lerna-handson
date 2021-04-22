@@ -16,7 +16,7 @@ final class MyBoxOfficeServiceBindSpec extends ActorSpecBase() with AirframeDiSe
 
   // 演習で bind 成功を確認するために使用する
   // MyBoxOfficeService のバインドに成功したら success になる
-  "BoxOfficeService bind to MyBoxOfficeService" in {
+  "BoxOfficeService should be bound to MyBoxOfficeService" in {
     val service = session.build[BoxOfficeService]
     service shouldBe a[MyBoxOfficeService]
   }

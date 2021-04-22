@@ -16,7 +16,7 @@ final class MyConcertProjectionRepositoryBindSpec extends ActorSpecBase() with A
       .bind[ActorSystem[Nothing]].toInstance(system)
 
   // 演習で bind 成功を確認するために使用する
-  // MyBoxOfficeService のバインドに成功したら success になる
+  // MyConcertProjectionRepository のバインドに成功したら success になる
   "ConcertProjectionRepository should be bound to MyConcertProjectionRepository" in {
     val service = session.build[ConcertProjectionRepository]
     service shouldBe a[MyConcertProjectionRepository]

@@ -14,8 +14,8 @@ final class MyConcertActorBindSpec extends ActorSpecBase() with AirframeDiSessio
       .bind[ActorSystem[Nothing]].toInstance(system)
 
   // 演習で bind 成功を確認するために使用する
-  // MyConcertActor.props のバインドに成功したら success になる
-  "ConcertActorClusterShardingFactory.ConcertActorProps bind to MyConcertActor.props" in {
+  // MyConcertActor のバインドに成功したら success になる
+  "ConcertActorClusterShardingFactory should be bound to MyConcertActor" in {
     val behaviorFactory = session.build[ConcertActorBehaviorFactory]
     behaviorFactory shouldBe MyConcertActor
   }

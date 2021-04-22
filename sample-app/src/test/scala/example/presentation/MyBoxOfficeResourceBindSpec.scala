@@ -20,7 +20,7 @@ final class MyBoxOfficeResourceBindSpec extends ActorSpecBase() with AirframeDiS
 
   // 演習で bind 成功を確認するために使用する
   // MyBoxOfficeResource のバインドに成功したら success になる
-  "MyBoxOfficeResource bind to MainHttpApiServerResource" in {
+  "MyBoxOfficeResource should be bound to BoxOfficeResource" in {
     val resource = session.build[BoxOfficeResource]
     resource shouldBe a[MyBoxOfficeResource]
   }
