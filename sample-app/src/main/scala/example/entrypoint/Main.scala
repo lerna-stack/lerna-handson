@@ -5,7 +5,7 @@ import akka.actor.CoordinatedShutdown
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorSystem, Behavior }
 import akka.cluster.Cluster
-import example.adapter.ConcertProjection
+import example.adapter.projection.ConcertProjection
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Future

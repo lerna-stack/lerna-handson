@@ -2,7 +2,7 @@ package example.application
 
 import akka.actor.typed.ActorSystem
 import example.adapter.command.BoxOfficeService
-import example.adapter.ConcertProjection
+import example.adapter.projection.ConcertProjection
 import example.adapter.query.ConcertRepository
 import example.application.command._
 import example.application.command.actor._
