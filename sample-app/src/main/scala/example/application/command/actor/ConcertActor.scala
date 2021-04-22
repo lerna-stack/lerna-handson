@@ -1,7 +1,8 @@
 package example.application.command.actor
 
 import akka.actor.typed.ActorRef
-import example.adapter.{ ConcertError, ConcertTicketId, KryoSerializable }
+import example.adapter.{ ConcertError, ConcertTicketId }
+import example.application.KryoSerializable
 
 /** このサンプルアプリでは、テストコードの共通化などを目的として、
   * 次の3つの Behavior のプロトコルを [[ConcertActor]] にて共通で定義している。

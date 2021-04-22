@@ -6,7 +6,7 @@ import akka.persistence.typed.scaladsl._
 import example.adapter._
 import example.adapter.ConcertError._
 import example.application.ConcertEvent._
-import example.application.ConcertEvent
+import example.application.{ ConcertEvent, KryoSerializable }
 import example.application.command.actor.ConcertActor._
 
 import java.time.ZonedDateTime

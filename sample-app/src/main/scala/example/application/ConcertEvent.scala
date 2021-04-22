@@ -1,6 +1,6 @@
 package example.application
 
-import example.adapter.{ ConcertId, ConcertTicketId, KryoSerializable }
+import example.adapter.{ ConcertId, ConcertTicketId }
 
 import java.time.ZonedDateTime
 

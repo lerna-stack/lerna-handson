@@ -1,4 +1,4 @@
-package example.adapter
+package example.application
 
 /** kryo でシリアライズするためのマーカー
   */
