@@ -1,17 +1,11 @@
 package example
 
-import akka.actor.ActorSystem
-
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 object FutureExample extends App {
-  // ExecutionContext (Futureなどを処理する実行コンテキスト)
-  // 今回は ActorSystem から持ってくる
-  val system = ActorSystem("future-example")
-  import system.dispatcher
-
   // Future[Int]
   // いつか結果が Int で戻る
   val future1: Future[Int] = Future {
@@ -34,7 +28,4 @@ object FutureExample extends App {
   // 1秒くらい結果が来るか待ってみる
   val result2: Int = Await.result(future2, 1 second)
   println(result2) // 1
-
-  // ActorSystemを終了する
-  system.terminate()
 }
