@@ -156,7 +156,7 @@ docker-compose down --volumes
 ### パッケージ構成
 
 パッケージは次の通りです。  
-[プロジェクト構成詳解](https://github.com/lerna-stack/lerna-sample-payment-app/blob/65469a3cec9c8fcba3deeb6ccd6fc13a51ad29a5/docs/プロジェクト構成詳解.md) と同様の構成になっています。
+[プロジェクト構成詳解](https://github.com/lerna-stack/lerna-sample-payment-app/blob/v1.0.0/docs/プロジェクト構成詳解.md) と同様の構成になっています。
 
 - `example.adapter`  
   Application の インターフェース (trait) を定義します。
