@@ -168,11 +168,11 @@ docker-compose down --volumes
     リードモデル更新を実装します。
   - `example.application.query`  
     リードモデルからの読み込みを実装します。
-- `entrypoint`  
+- `example.entrypoint`  
   Main クラスを実装します。
-- `presentation`  
+- `example.presentation`  
   HTTP API を実装します。
-- `readmodel`  
+- `exaple.readmodel`  
   RDBMS にアクセスするコードを配置します。
 
 
