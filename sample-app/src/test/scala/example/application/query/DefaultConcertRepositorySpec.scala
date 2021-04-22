@@ -2,7 +2,8 @@ package example.application.query
 
 import akka.actor.typed.ActorSystem
 import example.DatabaseSpecBase
-import example.adapter.{ ConcertIdGenerator, ConcertRepository }
+import example.adapter.ConcertIdGenerator
+import example.adapter.query.ConcertRepository
 import example.application.ApplicationDIDesign
 import example.readmodel.{ ConcertDatabaseService, DefaultConcertDatabaseServiceConfig, ReadModelDIDesign }
 import testkit.AirframeDiSessionSupport

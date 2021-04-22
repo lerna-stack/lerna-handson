@@ -1,6 +1,7 @@
 package example.application.query
 
-import example.adapter.{ ConcertId, ConcertRepository }
+import example.adapter.ConcertId
+import example.adapter.query.ConcertRepository
 import example.application.ApplicationExecutionContext
 import example.readmodel.ConcertDatabaseService
 

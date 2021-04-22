@@ -1,4 +1,6 @@
-package example.adapter
+package example.adapter.query
+
+import example.adapter.ConcertId
 
 import scala.concurrent.Future
 
