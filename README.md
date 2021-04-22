@@ -162,11 +162,11 @@ docker-compose down --volumes
   Application の インターフェース (trait) を定義します。
 - `example.application`  
   業務ロジックを記述します。
-  - `command`  
+  - `example.application.command`  
     書き込みとインメモリからの読み込みを実装します。  
-  - `projection`  
+  - `example.application.projection`  
     リードモデル更新を実装します。
-  - `query`  
+  - `example.application.query`  
     リードモデルからの読み込みを実装します。
 - `entrypoint`  
   Main クラスを実装します。
