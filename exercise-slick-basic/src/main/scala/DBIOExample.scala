@@ -37,8 +37,7 @@ object DBIOExample extends App {
   // select * from "COFFEES" where "PRICE" < 10.0
   val action2: DBIO[Seq[(String, Double)]] = coffees.filter(_.price < 10.0).result
   // select "NAME" from "COFFEES" order by "NAME" limit 1
-  val action3 = coffees.sortBy(_.name).map(_.name).take(1).result.head
-  println(action3.statements)
+  val action3: DBIO[String] = coffees.sortBy(_.name).map(_.name).take(1).result.head
 
   // DBIO の結果に対して処理をすることも可能である
   // この場合は action3 で取得した文字列を大文字に変換する
