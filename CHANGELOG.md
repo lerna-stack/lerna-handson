@@ -26,6 +26,25 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 - Akka HTTP 10.2.4 に更新します
 - [lerna-stack/lerna-app-library](https://github.com/lerna-stack/lerna-app-library) への依存を廃止します
 
+### ハンズオン資料の更新
+
+- Akka HTTP
+  - 資料中のサンプルコードを Akka HTTP 10.2.4, Akka Typed に対応させます
+  - サンプルアプリの処理フロー図を `usecase` を使用しないシンプルなものに変更します
+  - ファイルパスを Lerna 標準パッケージ構造に合うように更新します
+  - サンプルコードや説明を改善します
+  - 演習問題を新サンプルアプリに合うように更新します
+- Accord
+  - ファイルパスを Lerna 標準パッケージ構造に合うように更新します
+  - サンプルコードを改善します
+- Slick
+  - リードモデルアップデータを Projection と呼ぶように変更します
+  - サンプルアプリの処理フロー図を Akka Projection に対応するように更新します
+  - Projection を担当するクラスを`ConcertRepository` から `ConcertProjectionRepository`に変更します
+  - ファイルパスを Lerna 標準パッケージ構造に合うように更新します
+  - サンプルコードや説明を改善します
+  - 演習問題を新サンプルアプリに合うように更新します
+  - 演習問題で使用するsbtコマンドを変更します
 
 ## v1.0.0
 初回リリース
