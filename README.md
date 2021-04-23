@@ -2,7 +2,7 @@
 
 ## 概要
 
-Lernaハンズオンに必要なサンプルアプリや演習問題が含まれています。  
+Lerna ハンズオン (*lerna-handson*) に必要なサンプルアプリや演習問題が含まれています。  
 ハンズオン資料は次の2つです。
 - [Lernaハンズオン事前準備](docs/hands-on-preparation.pdf)
 - [Lernaハンズオン](docs/hands-on.pdf)
@@ -186,6 +186,9 @@ docker-compose down --volumes
 akka.test.default-timeout = 5s
 akka.test.timefactor = 1.0
 ```
+
+## 変更履歴
+*lerna-handson* に関する注目すべき変更は、[CHANGELOG.md](CHANGELOG.md) で確認できます。
 
 ## License
 *lerna-handson*, except for files in the [docs](docs) directory, is released under the terms of the [Apache License Version 2.0](LICENSE).
