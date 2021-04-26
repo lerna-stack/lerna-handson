@@ -1,4 +1,4 @@
-package answer
+package exercise
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -6,18 +6,23 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{ Failure, Success }
 
-object Answer4 extends App {
+object Exercise8 extends App {
 
   def doubling(source: Future[Int]): Future[Int] = {
-    source.map(_ * 2)
+    // (A) Future[Int] を受け取り、要素を2倍して返すメソッドを実装してみよう
+    ???
   }
 
   def mapToDouble(source: Future[Int]): Future[Double] = {
-    source.map(_.toDouble)
+    // (B) Future[Int] を受け取り、浮動小数点数(Double)に変換して返すメソッドを実装してみよう
+    // 123.toDouble で浮動小数に変換できる
+    ???
   }
 
   def parseInt(source: Future[String]): Future[Int] = {
-    source.map(_.toInt)
+    // (C) Future[String] を受け取り、整数にパースするメソッドを実装してみよう
+    // "123".toInt で整数に変換できる
+    ???
   }
 
   // ここより下は簡単なテストコード
@@ -38,4 +43,5 @@ object Answer4 extends App {
   Await.ready(parseFailure, 1 second)
 
   println("OK")
+
 }
