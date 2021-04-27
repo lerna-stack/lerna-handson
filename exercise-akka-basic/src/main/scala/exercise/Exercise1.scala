@@ -2,7 +2,6 @@ package exercise
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
-import com.typesafe.config.{ Config, ConfigFactory }
 
 /** 演習1: [[UpperCasePrintActor]] を実装しよう
   *
@@ -22,10 +21,8 @@ object UpperCasePrintActor {
 }
 
 object Exercise1 extends App {
-  val config: Config =
-    ConfigFactory.parseString("akka.log-dead-letters=0")
   val system: ActorSystem[String] =
-    ActorSystem(UpperCasePrintActor(), "exercise1", config)
+    ActorSystem(UpperCasePrintActor(), "exercise1")
   val actorRef: ActorRef[String] = system
 
   // (B) ここでメッセージを送ってみよう

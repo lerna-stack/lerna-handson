@@ -2,7 +2,6 @@ package exercise
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
-import com.typesafe.config.{ Config, ConfigFactory }
 
 /** 演習4: 状態を持つアクター [[CounterActor]] を実装してみよう。
   *
@@ -25,10 +24,8 @@ object CounterActor {
 }
 
 object Exercise4 extends App {
-  val config: Config =
-    ConfigFactory.parseString("akka.log-dead-letters=0")
   val system: ActorSystem[Int] =
-    ActorSystem(CounterActor(), "exercise4", config)
+    ActorSystem(CounterActor(), "exercise4")
 
   val actorRef: ActorRef[Int] = system
   // (B) ここでメッセージを送ってみよう

@@ -2,7 +2,6 @@ package answer
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
-import com.typesafe.config.{ Config, ConfigFactory }
 
 object DefaultUpperCasePrintActor {
   def apply(): Behavior[String] = {
@@ -15,10 +14,8 @@ object DefaultUpperCasePrintActor {
 }
 
 object Answer1 extends App {
-  val config: Config =
-    ConfigFactory.parseString("akka.log-dead-letters=0")
   val system: ActorSystem[String] =
-    ActorSystem(DefaultUpperCasePrintActor(), "answer1", config)
+    ActorSystem(DefaultUpperCasePrintActor(), "answer1")
   val actorRef: ActorRef[String] = system
 
   // (B) ここでメッセージを送ってみよう

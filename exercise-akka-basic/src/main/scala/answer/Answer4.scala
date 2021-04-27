@@ -2,7 +2,6 @@ package answer
 
 import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
 import akka.actor.typed.scaladsl.Behaviors
-import com.typesafe.config.{ Config, ConfigFactory }
 
 object DefaultCounterActor {
   def apply(): Behavior[Int] = {
@@ -19,10 +18,8 @@ object DefaultCounterActor {
 }
 
 object Answer4 extends App {
-  val config: Config =
-    ConfigFactory.parseString("akka.log-dead-letters=0")
   val system: ActorSystem[Int] =
-    ActorSystem(DefaultCounterActor(), "answer4", config)
+    ActorSystem(DefaultCounterActor(), "answer4")
 
   val actorRef: ActorRef[Int] = system
   // (B) ここでメッセージを送ってみよう

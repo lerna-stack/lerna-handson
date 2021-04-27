@@ -4,7 +4,6 @@ import akka.actor.typed.scaladsl.AskPattern.{ schedulerFromActorSystem, Askable 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
 import akka.util.Timeout
-import com.typesafe.config.{ Config, ConfigFactory }
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
@@ -32,11 +31,9 @@ object UpperCaseEchoActor {
 }
 
 object Exercise2 extends App {
-  val config: Config =
-    ConfigFactory.parseString("akka.log-dead-letters=0")
   implicit val askTimeout: Timeout = 3.seconds
   implicit val system: ActorSystem[UpperCaseEchoActor.Message] =
-    ActorSystem(UpperCaseEchoActor(), "exercise2", config)
+    ActorSystem(UpperCaseEchoActor(), "exercise2")
   import system.executionContext
 
   val actorRef: ActorRef[UpperCaseEchoActor.Message] = system
