@@ -134,7 +134,7 @@ addCommandAlias(
   """
     |compile;
     |ExerciseAccordBasic/test;
-    |ExerciseAkkaBasic/test;
+    |ExerciseAkkaBasic/testOnly -- -l testing.tags.ExerciseTest;
     |ExerciseAkkaHttpBasic/test;
     |ExerciseScalaBasic/test;
     |ExerciseSlickBasic/test;
