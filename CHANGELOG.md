@@ -28,6 +28,11 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 
 ### ハンズオン資料の更新
 
+- Akka Actor の基礎
+  - 資料中の説明を Akka Typed に合わせて改修します
+  - サンプル、演習、解答コード を Akka Typed に対応させます
+  - tell, ask, 到達保証の説明を追加します
+  - Akka Typed により適した演習問題に変更します
 - Akka HTTP
   - 資料中のサンプルコードを Akka HTTP 10.2.4, Akka Typed に対応させます
   - サンプルアプリの処理フロー図を `usecase` を使用しないシンプルなものに変更します
