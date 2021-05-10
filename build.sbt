@@ -30,6 +30,9 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-Xlint",
+  // 演習問題をスムーズに進められるように、演習問題が含まれる exercise パッケージには unused な宣言がある。
+  // これらの unused な宣言は lint では無視してほしいため、ここで設定する。
+  "-Wconf:cat=unused&src=exercise/.*\\.scala:silent",
 ) ++ sys.env.get("lerna.enable.discipline").filter(_ == "true").map(_ => "-Xfatal-warnings").toSeq
 
 // DBを使ったテストの並列実行が難しいため
@@ -60,10 +63,6 @@ lazy val ExerciseAkkaBasic = (project in file("exercise-akka-basic"))
 lazy val ExerciseAkkaHttpBasic = (project in file("exercise-akka-http-basic"))
   .settings(
     name := "exercise-akka-http-basic",
-    scalacOptions ++= Seq(
-      // 演習問題はunsedな宣言を事前にしているため警告をださない
-      "-Wconf:cat=unused&src=exercise/.*\\.scala:silent",
-    ),
     libraryDependencies ++= Seq(
       Dependencies.Akka.stream,
       Dependencies.AkkaHttp.http,
