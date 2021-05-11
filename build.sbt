@@ -69,6 +69,8 @@ lazy val ExerciseAkkaPersistenceBasic = (project in file("exercise-akka-persiste
       Dependencies.Akka.persistence,
       Dependencies.Akka.persistenceTestKit % Test,
       Dependencies.AkkaKryoSerialization.akkakryoSerialization,
+      // サンプルの動作確認や演習取り組みを Cassandra 等のデータストアを起動せずにできるようにするため LevelDB を使用する
+      Dependencies.LevelDbJni.all,
     ),
   )
 

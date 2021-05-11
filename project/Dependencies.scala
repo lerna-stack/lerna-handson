@@ -15,6 +15,7 @@ object Dependencies {
     val h2                       = "1.4.200"
     val mariadbConnectorJ        = "2.6.2"
     val logback                  = "1.2.3"
+    val levelDbJni               = "1.8"
   }
 
   object Akka {
@@ -83,4 +84,9 @@ object Dependencies {
   object Logback {
     val classic = "ch.qos.logback" % "logback-classic" % Versions.logback
   }
+
+  object LevelDbJni {
+    val all = "org.fusesource.leveldbjni" % "leveldbjni-all" % Versions.levelDbJni
+  }
+
 }
