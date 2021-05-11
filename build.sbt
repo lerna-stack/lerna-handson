@@ -60,6 +60,18 @@ lazy val ExerciseAkkaBasic = (project in file("exercise-akka-basic"))
     ),
   )
 
+lazy val ExerciseAkkaPersistenceBasic = (project in file("exercise-akka-persistence-basic"))
+  .settings(
+    name := "exercise-akka-persistence-basic",
+    libraryDependencies ++= Seq(
+      Dependencies.ScalaTest.wordspec       % Test,
+      Dependencies.ScalaTest.shouldmatchers % Test,
+      Dependencies.Akka.persistence,
+      Dependencies.Akka.persistenceTestKit % Test,
+      Dependencies.AkkaKryoSerialization.akkakryoSerialization,
+    ),
+  )
+
 lazy val ExerciseAkkaHttpBasic = (project in file("exercise-akka-http-basic"))
   .settings(
     name := "exercise-akka-http-basic",
@@ -135,6 +147,7 @@ addCommandAlias(
     |compile;
     |ExerciseAccordBasic/test;
     |ExerciseAkkaBasic/testOnly -- -l testing.tags.ExerciseTest;
+    |ExerciseAkkaPersistenceBasic/test;
     |ExerciseAkkaHttpBasic/test;
     |ExerciseScalaBasic/test;
     |ExerciseSlickBasic/test;
