@@ -32,23 +32,23 @@ Akka Persistence Typed の基礎に対応するコードサンプル、演習問
 
 ### ハンズオン資料の更新
 
-- Akka Actor の基礎
+- 章「Akka Actor の基礎」
   - 資料中の説明を Akka Typed に合わせて改修します
   - サンプル、演習、解答コード を Akka Typed に対応させます
   - tell, ask, 到達保証の説明を追加します
   - Akka Typed により適した演習問題に変更します
-- Akka Persistence の基礎
+- 章「Akka Persistence の基礎」
   - Akka Persistence Typed に対応した説明資料、演習を追加します
-- Akka HTTP
+- 章「Akka HTTP による HTTP 処理」
   - 資料中のサンプルコードを Akka HTTP 10.2.4, Akka Typed に対応させます
   - サンプルアプリの処理フロー図を `usecase` を使用しないシンプルなものに変更します
   - ファイルパスを Lerna 標準パッケージ構造に合うように更新します
   - サンプルコードや説明を改善します
   - 演習問題を新サンプルアプリに合うように更新します
-- Accord
+- 章「Accord によるデータバリデーション」
   - ファイルパスを Lerna 標準パッケージ構造に合うように更新します
   - サンプルコードを改善します
-- Slick
+- 章「Slick によるRDBアクセス」
   - リードモデルアップデータを Projection と呼ぶように変更します
   - サンプルアプリの処理フロー図を Akka Projection に対応するように更新します
   - Projection を担当するクラスを`ConcertRepository` から `ConcertProjectionRepository`に変更します
