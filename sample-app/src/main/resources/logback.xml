@@ -9,6 +9,9 @@
     <!-- 演習を通して EventSourcedBehavior のログを確認したいため -->
     <logger name="akka.persistence.typed" level="debug" />
 
+    <!-- 演習を通して Automatic Passivation のログを確認したいため -->
+    <logger name="akka.cluster.sharding" level="debug" />
+
     <!-- アプリケーションのログは詳細に出したいため -->
     <logger name="example" level="debug"/>
 
