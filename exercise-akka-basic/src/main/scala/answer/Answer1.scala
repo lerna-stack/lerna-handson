@@ -1,29 +1,28 @@
 package answer
 
-import akka.actor._
-import com.typesafe.config.{ Config, ConfigFactory }
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
 
-// (A)
-final class DefaultUpperCaseEchoActor extends Actor {
-  override def receive: Receive = {
-    // 文字列のメッセージのみを処理する
-    case msg: String =>
-      val upperCaseMsg = msg.toUpperCase
-      println(upperCaseMsg)
-      sender() ! upperCaseMsg
+object DefaultUpperCasePrintActor {
+  def apply(): Behavior[String] = {
+    // (A) アクターの定義はここに書こう
+    Behaviors.receiveMessage { message: String =>
+      println(message.toUpperCase)
+      Behaviors.same
+    }
   }
 }
 
 object Answer1 extends App {
-  val config: Config      = ConfigFactory.parseString("akka.log-dead-letters=0")
-  val system: ActorSystem = ActorSystem("exercise1", config)
+  val system: ActorSystem[String] =
+    ActorSystem(DefaultUpperCasePrintActor(), "answer1")
+  val actorRef: ActorRef[String] = system
 
-  // (B)
-  val actorRef = system.actorOf(Props(new DefaultUpperCaseEchoActor()))
-  actorRef ! "abc!" // ABC!
-  actorRef ! 123    // 無視される
-  actorRef ! "def?" // DEF?
+  // (B) ここでメッセージを送ってみよう
+  actorRef ! "hello" // => HELLO
+  actorRef ! "world" // => WORLD
 
+  // アクターがメッセージを処理完了するまで適当に待って終了する
   Thread.sleep(3000)
   system.terminate()
 }

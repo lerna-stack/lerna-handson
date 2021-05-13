@@ -1,8 +1,7 @@
 package example
 
-import akka.actor.ActorSystem
-
 import scala.annotation.nowarn
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -12,11 +11,6 @@ import scala.util.{ Failure, Success }
 // ゼロ除算で例外を意図的に起こしているため
 @nowarn("cat=lint-constant")
 object FutureFailureExample extends App {
-  // ExecutionContext (Futureなどを処理する実行コンテキスト)
-  // 今回は ActorSystem から持ってくる
-  val system = ActorSystem("future-example")
-  import system.dispatcher
-
   // 失敗する
   val failureFuture: Future[Int] = Future {
     // ゼロ除算エラーにしてみる
@@ -32,7 +26,4 @@ object FutureFailureExample extends App {
   }
   // failureFuture の実行完了まで最大1秒まつ
   Await.ready(failureFuture, 1 second)
-
-  // ActorSystemを終了する
-  system.terminate()
 }

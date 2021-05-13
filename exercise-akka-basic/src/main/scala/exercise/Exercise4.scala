@@ -1,56 +1,37 @@
 package exercise
 
-import akka.actor.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
 
-import scala.concurrent.duration._
-import scala.concurrent._
-import scala.language.postfixOps
-import scala.util.{ Failure, Success }
+/** 演習4: 状態を持つアクター [[CounterActor]] を実装してみよう。
+  *
+  * (A) 次のようなアクターを実装しよう。
+  *   - 任意のInt型数値を受け取り、その数値分カウントアップする
+  *     (負数を受け取った場合はカウントダウンになる)
+  *   - オーバーフローは気にしなくてよい
+  *   - カウンタの初期値は0とする
+  *   - メッセージを処理したらすぐに更新後のカウンタ値をコンソールに表示する
+  *
+  * (B) メッセージを送って、意図通りのカウンタ値がコンソールに表示されるか確認しよう。
+  *
+  * 解答は [[answer.DefaultCounterActor]] で確認できる。
+  */
+object CounterActor {
+  def apply(): Behavior[Int] = {
+    // (A) アクターの定義はここに書こう
+    ???
+  }
+}
 
 object Exercise4 extends App {
-  // ExecutionContext (Futureなどを処理する実行コンテキスト)
-  // 今回は ActorSystem から持ってくる
-  val system = ActorSystem("exercise4")
-  import system.dispatcher
+  val system: ActorSystem[Int] =
+    ActorSystem(CounterActor(), "exercise4")
 
-  def doubling(source: Future[Int]): Future[Int] = {
-    // (A) Future[Int] を受け取り、要素を2倍して返すメソッドを実装してみよう
-    ???
-  }
+  val actorRef: ActorRef[Int] = system
+  // (B) ここでメッセージを送ってみよう
+  ???
 
-  def mapToDouble(source: Future[Int]): Future[Double] = {
-    // (B) Future[Int] を受け取り、浮動小数点数(Double)に変換して返すメソッドを実装してみよう
-    // 123.toDouble で浮動小数に変換できる
-    ???
-  }
-
-  def parseInt(source: Future[String]): Future[Int] = {
-    // (C) Future[String] を受け取り、整数にパースするメソッドを実装してみよう
-    // "123".toInt で整数に変換できる
-    ???
-  }
-
-  try {
-    // いくつかのテスト
-    val future200 = doubling(Future.successful(100))
-    assert(Await.result(future200, 1 second) == 200)
-
-    val future123 = mapToDouble(Future.successful(123))
-    assert((Await.result(future123, 1 second) - 123).abs < 1e-5)
-
-    val parseSuccess = parseInt(Future.successful("1024"))
-    assert(Await.result(parseSuccess, 1 second) == 1024)
-
-    val parseFailure = parseInt(Future.successful("abcdefg"))
-    parseFailure.onComplete {
-      case Success(value)     => assert(false)
-      case Failure(exception) => assert(true)
-    }
-    Await.ready(parseFailure, 1 second)
-
-    println("OK")
-  } finally {
-    // ActorSystem を終了させる
-    system.terminate()
-  }
+  // アクターがメッセージを処理完了するまで適当に待って終了する
+  Thread.sleep(3000)
+  system.terminate()
 }
