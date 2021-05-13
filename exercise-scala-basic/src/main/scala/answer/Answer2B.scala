@@ -1,6 +1,6 @@
 package answer
 
-object Answer3B extends App {
+object Answer2B extends App {
   // (B)
   // メソッド定義
   def doubling(obj: AnyVal): Unit = {

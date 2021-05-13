@@ -1,6 +1,6 @@
 package answer
 
-object Answer3A extends App {
+object Answer2A extends App {
   // (A)
   // メソッド定義
   def reciprocal(n: Int): Unit = {

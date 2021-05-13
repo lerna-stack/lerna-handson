@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise3A extends App {
+object Exercise2A extends App {
   /*
     ある数値nが与えられるので、0 なら 0、0以外なら 1.0 / n をコンソールに表示しよう。
     - if式でもかけるが match式を使ってみよう。

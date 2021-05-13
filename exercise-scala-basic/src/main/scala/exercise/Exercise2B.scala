@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise3B extends App {
+object Exercise2B extends App {
   /*
     あるAnyVal型の変数obj が与えられるので、
     Int, Double なら 2倍の値をコンソールに表示しよう。
