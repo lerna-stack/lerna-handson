@@ -48,6 +48,9 @@ Accord のサンプルコードがあります。
 - exercise-akka-basic  
 Akka のサンプルコードがあります。  
 演習問題も含まれています。
+- exercise-akka-persistence-basic  
+Akka Persistence のサンプルコードがあります。  
+演習問題も含まれています。
 - exercise-akka-http-basic  
 Akka HTTP のサンプルコードがあります。  
 演習問題も含まれています。

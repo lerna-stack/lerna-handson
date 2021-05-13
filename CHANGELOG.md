@@ -26,6 +26,10 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 - Akka HTTP 10.2.4 に更新します
 - [lerna-stack/lerna-app-library](https://github.com/lerna-stack/lerna-app-library) への依存を廃止します
 
+### サブプロジェクト exercise-akka-persistence-basic の追加
+Akka Persistence Typed の基礎に対応するコードサンプル、演習問題、解答を格納するため、  
+サブプロジェクト `exercise-akka-persistence-basic` を追加します。
+
 ### ハンズオン資料の更新
 
 - Akka Actor の基礎
@@ -33,6 +37,8 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
   - サンプル、演習、解答コード を Akka Typed に対応させます
   - tell, ask, 到達保証の説明を追加します
   - Akka Typed により適した演習問題に変更します
+- Akka Persistence の基礎
+  - Akka Persistence Typed に対応した説明資料、演習を追加します
 - Akka HTTP
   - 資料中のサンプルコードを Akka HTTP 10.2.4, Akka Typed に対応させます
   - サンプルアプリの処理フロー図を `usecase` を使用しないシンプルなものに変更します
