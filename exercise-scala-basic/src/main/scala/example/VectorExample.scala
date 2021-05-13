@@ -7,13 +7,12 @@ object VectorExample extends App {
   val myStringVector: Vector[String] = Vector("a", "b", "c")
 
   // 型推論されます
-  val myVector2                  = Vector(1, 2, 3)
+  val myVector2                  = Vector(4, 5, 6)
   val myEmptyVector: Vector[Int] = Vector.empty
 
-  // for で使うことができます
-  for (x <- Vector(1, 2, 3)) {
-    println(x)
-  }
+  // 次のように要素にアクセスできます
+  println(myVector2(0)) // 4
+  println(myVector2(1)) // 6
 
   // 要素を2倍する
   // = Vector(2, 4, 6)
