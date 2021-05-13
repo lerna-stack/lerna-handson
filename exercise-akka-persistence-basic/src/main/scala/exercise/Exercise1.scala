@@ -78,11 +78,11 @@ object MyDoorActor {
   /** ドアが開いている状態 */
   final case class OpenedState(openedCount: Int) extends State {
     override def applyCommand(command: Command): Effect[Event, State] = {
-      // Opened 状態の Command Handler を実装しよう
+      // OpenedStateの Command Handler を実装しよう
       ???
     }
     override def applyEvent(event: Event): State = {
-      // Opened 状態の Event Handler を実装しよう
+      // OpenedState の Event Handler を実装しよう
       ???
     }
   }
