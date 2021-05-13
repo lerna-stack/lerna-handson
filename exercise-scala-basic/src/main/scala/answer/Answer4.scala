@@ -1,6 +1,6 @@
 package answer
 
-object Answer6 extends App {
+object Answer4 extends App {
   sealed trait Animal
   case class Dog()    extends Animal
   case class Cat()    extends Animal

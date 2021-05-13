@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise6 extends App {
+object Exercise4 extends App {
   /*
     sealed trait Animal と それを実装した case class が定義されている。
     - パターンマッチを使い、各ケースクラスごとに以下の処理を試してみよう。
