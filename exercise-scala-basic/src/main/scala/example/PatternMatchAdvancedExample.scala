@@ -1,15 +1,15 @@
 package example
 
 object PatternMatchAdvancedExample extends App {
-  // sealed trait や sealed abstract class は、
-  // 同じファイル内でのみ ミクスイン or 実装 できる
+  // sealed trait は、同じファイル内でのみ 実装 できる
   sealed trait Animal
-  case class Dog()    extends Animal
-  case class Cat()    extends Animal
-  case class Monkey() extends Animal
+  final case class Dog()    extends Animal
+  final case class Cat()    extends Animal
+  final case class Monkey() extends Animal
 
-  // パターンマッチからMonkeyを消すと、
-  // すべてのパターンを網羅していないため、コンパイラが警告を出す。
+  // 次のパターンマッチから Monkey を消すと、
+  // すべてのパターンを網羅できていないため、
+  // コンパイラが警告を出すことを確認できる
   val animal: Animal = Cat()
   val msg: String = animal match {
     case dog: Dog =>
