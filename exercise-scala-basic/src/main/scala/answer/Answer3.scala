@@ -1,6 +1,6 @@
 package answer
 
-object Answer5 extends App {
+object Answer3 extends App {
   class Circle(val x: Int, val y: Int, val r: Int) {
     def area(): Double = math.Pi * r * r
 
