@@ -19,21 +19,17 @@ final class DefaultBoxOfficeServiceSpec
     ApplicationDIDesign.design
       .bind[ActorSystem[Nothing]].toInstance(system)
 
-  private def newService: BoxOfficeService = {
+  val service: DefaultBoxOfficeService =
     session.build[DefaultBoxOfficeService]
-  }
-
   val idGenerator = new ConcertIdGenerator()
 
   "create a concert" in {
-    val service        = newService
     val id             = idGenerator.nextId()
     val responseFuture = service.createConcert(id, 100)
     responseFuture.futureValue shouldBe CreateConcertResponse(100)
   }
 
   "get the concert" in {
-    val service              = newService
     val id                   = idGenerator.nextId()
     val createResponseFuture = service.createConcert(id, 10)
     createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
@@ -44,7 +40,6 @@ final class DefaultBoxOfficeServiceSpec
   }
 
   "buy concert tickets" in {
-    val service              = newService
     val id                   = idGenerator.nextId()
     val createResponseFuture = service.createConcert(id, 10)
     createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
@@ -55,7 +50,6 @@ final class DefaultBoxOfficeServiceSpec
   }
 
   "cancel the concert" in {
-    val service              = newService
     val id                   = idGenerator.nextId()
     val createResponseFuture = service.createConcert(id, 10)
     createResponseFuture.futureValue shouldBe a[CreateConcertResponse]
