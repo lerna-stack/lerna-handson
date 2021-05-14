@@ -190,6 +190,9 @@ akka.test.default-timeout = 5s
 akka.test.timefactor = 1.0
 ```
 
+### 永続化されたデータ確認方法
+Cassandra に永続化されたデータを確認する方法は、[Cassandra の基本操作](docs/cassandra-ops.md) に記載されています。
+
 ## 変更履歴
 *lerna-handson* に関する注目すべき変更は、[CHANGELOG.md](CHANGELOG.md) で確認できます。
 
