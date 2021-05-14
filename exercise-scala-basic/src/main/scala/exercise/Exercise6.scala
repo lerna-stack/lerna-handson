@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{ Failure, Success }
 
-object Exercise8 extends App {
+object Exercise6 extends App {
 
   def doubling(source: Future[Int]): Future[Int] = {
     // (A) Future[Int] を受け取り、要素を2倍して返すメソッドを実装してみよう

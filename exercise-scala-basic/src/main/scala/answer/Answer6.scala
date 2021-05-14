@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.{ Failure, Success }
 
-object Answer8 extends App {
+object Answer6 extends App {
 
   def doubling(source: Future[Int]): Future[Int] = {
     source.map(_ * 2)
