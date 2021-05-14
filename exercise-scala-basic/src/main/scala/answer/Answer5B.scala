@@ -1,6 +1,6 @@
 package answer
 
-object Answer7B extends App {
+object Answer5B extends App {
 
   def fizzbuzz(source: Vector[Int]): Vector[String] = {
     source.map(x =>

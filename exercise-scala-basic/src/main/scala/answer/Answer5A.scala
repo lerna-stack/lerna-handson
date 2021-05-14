@@ -1,6 +1,6 @@
 package answer
 
-object Answer7A extends App {
+object Answer5A extends App {
 
   def reciprocal(source: Vector[Int]): Vector[Double] = {
     source.map(n => {

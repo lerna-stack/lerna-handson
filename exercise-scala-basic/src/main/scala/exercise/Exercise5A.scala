@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise7A extends App {
+object Exercise5A extends App {
   /*
 
    - Vector[Int] を受け取り、各要素Nについて、次のように変換するメソッドを実装しよう

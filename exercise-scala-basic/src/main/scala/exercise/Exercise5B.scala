@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise7B extends App {
+object Exercise5B extends App {
   /*
     Vector[Int] を受け取り、FizzBuzzの結果を Vector[String] で返すメソッドを実装しよう
    */
