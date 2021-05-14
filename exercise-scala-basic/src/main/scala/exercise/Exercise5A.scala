@@ -4,7 +4,7 @@ object Exercise5A extends App {
   /*
 
    - Vector[Int] を受け取り、各要素Nについて、次のように変換するメソッドを実装しよう
-      - 0以外なら0
+      - 0なら0
       - 0以外なら1.0/N
 
    - foreach とはなんだろう？
