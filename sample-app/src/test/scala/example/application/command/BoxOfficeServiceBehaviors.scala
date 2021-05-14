@@ -1,5 +1,6 @@
 package example.application.command
 
+import example.ActorSpecBase
 import example.adapter.command.BoxOfficeService
 import example.adapter.{ ConcertIdGenerator, ConcertTicketId }
 
@@ -11,7 +12,7 @@ import example.adapter.{ ConcertIdGenerator, ConcertTicketId }
   * [[https://www.scalatest.org/user_guide/sharing_tests Sharing tests]]
   * を参照すること
   */
-trait BoxOfficeServiceBehaviors { this: BoxOfficeServiceSpecBase =>
+trait BoxOfficeServiceBehaviors { this: ActorSpecBase with ClusterShardingSpecLike =>
   import example.adapter.command.BoxOfficeService._
 
   val idGenerator = new ConcertIdGenerator()

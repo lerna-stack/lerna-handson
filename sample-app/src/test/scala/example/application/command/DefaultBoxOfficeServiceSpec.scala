@@ -1,13 +1,15 @@
 package example.application.command
 
 import akka.actor.typed.ActorSystem
+import example.ActorSpecBase
 import example.adapter.command.BoxOfficeService
 import example.application.ApplicationDIDesign
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
 
 final class DefaultBoxOfficeServiceSpec
-    extends BoxOfficeServiceSpecBase()
+    extends ActorSpecBase()
+    with ClusterShardingSpecLike
     with BoxOfficeServiceBehaviors
     with AirframeDiSessionSupport {
   override protected val design: Design =
