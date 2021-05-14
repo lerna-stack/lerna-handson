@@ -1,6 +1,7 @@
 package answer
 
 object Answer7B extends App {
+
   def fizzbuzz(source: Vector[Int]): Vector[String] = {
     source.map(x =>
       x match {
@@ -18,7 +19,6 @@ object Answer7B extends App {
 
   val source: Vector[Int]       = (1 to 100).toVector
   val converted: Vector[String] = fizzbuzz(source)
-  for (x <- converted) {
-    println(x)
-  }
+  converted.foreach(println)
+
 }
