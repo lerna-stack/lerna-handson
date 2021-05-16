@@ -10,7 +10,7 @@ object ObjectApplyExample extends App {
   }
 
   // 関数のように振る舞う
-  val number4: Int = SquaredIntFactory(2)
-  println(number4) // 4
+  val number: Int = SquaredIntFactory(2)
+  println(number) // 4
 
 }
