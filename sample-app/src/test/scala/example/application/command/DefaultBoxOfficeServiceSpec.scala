@@ -3,7 +3,6 @@ package example.application.command
 import akka.actor.typed.ActorSystem
 import example.ActorSpecBase
 import example.adapter.{ ConcertIdGenerator, ConcertTicketId }
-import example.adapter.command.BoxOfficeService
 import example.application.ApplicationDIDesign
 import testkit.AirframeDiSessionSupport
 import wvlet.airframe.Design
