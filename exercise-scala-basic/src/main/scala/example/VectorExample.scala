@@ -12,7 +12,7 @@ object VectorExample extends App {
 
   // 次のように要素にアクセスできます
   println(myVector2(0)) // 4
-  println(myVector2(1)) // 6
+  println(myVector2(1)) // 5
 
   // 要素を2倍する
   // = Vector(2, 4, 6)
