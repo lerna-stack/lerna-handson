@@ -2,8 +2,12 @@
 
 ## 概要
 
-Lerna ハンズオン (*lerna-handson*) に必要なサンプルアプリや演習問題が含まれています。  
-ハンズオン資料は次の2つです。
+Lerna ハンズオン (*lerna-handson*) で使用するサンプルアプリと演習問題です。
+
+[Releases · lerna-stack/lerna-handson](https://github.com/lerna-stack/lerna-handson/releases) から、
+最新版のアーカイブファイルをダウンロードしてください。このアーカイブファイルにはハンズオンで使用するソースコードと説明PDF資料が含まれています。
+
+ハンズオンの説明PDF資料は次の2つです。
 - [Lernaハンズオン事前準備](docs/hands-on-preparation.pdf)
 - [Lernaハンズオン](docs/hands-on.pdf)
 
