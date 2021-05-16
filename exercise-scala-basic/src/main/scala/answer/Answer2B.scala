@@ -2,13 +2,20 @@ package answer
 
 object Answer2B extends App {
   // (B)
-  for (i <- 1 to 10) {
-    if (i % 2 == 0) {
-      println(i)
+  // メソッド定義
+  def doubling(obj: AnyVal): Unit = {
+    obj match {
+      case int: Int =>
+        println(int * 2)
+      case double: Double =>
+        println(double * 2)
+      case other =>
+        println(other)
     }
   }
-  // or
-  for (i <- 2 to 10 by 2) {
-    println(i)
-  }
+
+  // ↑のメソッドを呼び出している
+  doubling(12)    // 24
+  doubling(0.125) // 0.25
+  doubling('c')   // c
 }

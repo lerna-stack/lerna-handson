@@ -1,6 +1,6 @@
 package exercise
 
-object Exercise5 extends App {
+object Exercise3 extends App {
   /*
     - Circleクラスを定義しよう
       - 次のフィールドを持つ(変更不可にしてね)

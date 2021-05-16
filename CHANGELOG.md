@@ -33,6 +33,18 @@ Akka Persistence Typed の基礎に対応するコードサンプル、演習問
 
 ### ハンズオン資料の更新
 
+- 章「Scala 言語の基礎」
+  - 内容の改訂を行いました
+    - 他のトピックに時間を投資するため、幾つかの説明を削除します
+      - for
+      - secondary constructor
+      - abstract class
+      - companion
+    - apply メソッドの説明を追加します
+      - Akka Typed で頻繁に使用するためです
+    - Future について説明を追加します
+      - 章「Akka Actor の基礎」にて`ActorRef[T].ask` を説明するために必要です
+    - その他、いくつかの細かい改善をします
 - 章「Akka Actor の基礎」
   - 資料中の説明を Akka Typed に合わせて改修します
   - サンプル、演習、解答コード を Akka Typed に対応させます
