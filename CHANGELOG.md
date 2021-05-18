@@ -21,6 +21,8 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
   独自実装を廃止し、Akka を最大限活用します。
 - サンプルアプリのパッケージ構造を Lerna 標準構造に準拠させます
 - Cassandra に永続化されたデータを確認する方法をドキュメントとして提供します
+- MyBoxOfficeService を実装する演習を削除します
+  - sbt コマンド `testMyBoxOfficeServiceBinding`, `testMyBoxOfficeService` も併せて削除します
   
 ### 依存ライブラリの更新&廃止
 - Akka 2.6.14 に更新します
@@ -65,6 +67,9 @@ Akka Persistence Typed の基礎に対応するコードサンプル、演習問
   - 演習を改善します
     - 演習の解答をユニットテストします
     - Cassandra にスナップショットが永続化されたことを確認する演習を追加します
+- 章「アクターへの問い合わせ」
+  - この章に含まれていた内容は「Scala 言語の基礎」と「Akka Persistence の基礎」に移動します
+  - この章はハンズオン資料から削除します
 - 章「Akka HTTP による HTTP 処理」
   - 資料中のサンプルコードを Akka HTTP 10.2.4, Akka Typed に対応させます
   - サンプルアプリの処理フロー図を `usecase` を使用しないシンプルなものに変更します

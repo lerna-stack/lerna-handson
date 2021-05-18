@@ -119,8 +119,6 @@ sbt testAll
 ```sh
 sbt testMyConcertActorBinding
 sbt testMyConcertActor
-sbt testMyBoxOfficeServiceBinding
-sbt testMyBoxOfficeService
 sbt testMyBoxOfficeResourceBinding
 sbt testMyBoxOfficeResource
 sbt testMyConcertProjectionRepositoryBinding

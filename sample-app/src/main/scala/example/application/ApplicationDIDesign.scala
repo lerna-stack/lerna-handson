@@ -18,8 +18,6 @@ object ApplicationDIDesign {
           system.executionContext // TODO application で使用する ExecutionContext を準備する。
         }
         .bind[BoxOfficeService].to[DefaultBoxOfficeService]
-        // MyBoxOfficeService実装時にコメントアウトを外す (この行はそのまま)
-        // .bind[BoxOfficeService].to[MyBoxOfficeService]
         .bind[ConcertActorBehaviorFactory].toInstance(DefaultConcertActor)
         // MyConcertActor実装時にコメントアウトを外す (この行はそのまま)
         // .bind[ConcertActorBehaviorFactory].toInstance(MyConcertActor)
