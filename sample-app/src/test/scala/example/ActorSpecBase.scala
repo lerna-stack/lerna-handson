@@ -1,6 +1,6 @@
 package example
 
-import akka.actor.testkit.typed.scaladsl.{ ActorTestKit, ScalaTestWithActorTestKit }
+import akka.actor.testkit.typed.scaladsl.{ ActorTestKit, LogCapturing, ScalaTestWithActorTestKit }
 import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.concurrent.{ Eventually, ScalaFutures }
 import org.scalatest.matchers.should.Matchers
@@ -21,7 +21,8 @@ abstract class ActorSpecBase(testKit: ActorTestKit)
     with Eventually
     with ScalaFutures
     with EitherValues
-    with AkkaTypedSpanScaleFactorSupport {
+    with AkkaTypedSpanScaleFactorSupport
+    with LogCapturing {
 
   def this() = {
     // デフォルトの振る舞いでは `application-test` もしくは `reference` のみが読み込まれる。
