@@ -2,10 +2,20 @@
 
 ## 概要
 
-Lerna ハンズオン (*lerna-handson*) に必要なサンプルアプリや演習問題が含まれています。  
-ハンズオン資料は次の2つです。
-- [Lernaハンズオン事前準備](docs/hands-on-preparation.pdf)
-- [Lernaハンズオン](docs/hands-on.pdf)
+Lerna ハンズオン (*lerna-handson*) で使用するサンプルアプリと演習問題です。
+
+[Releases · lerna-stack/lerna-handson](https://github.com/lerna-stack/lerna-handson/releases) から、
+次の3つのファイルをダウンロードしてください。
+
+- アーカイブファイル (zip もしくは tar.gz)  
+  サンプルアプリと演習問題のソースコードです。  
+- `hands-on-preparation.pdf`  
+  環境構築などの事前準備が記載された資料です。  
+- `hands-on.pdf`  
+  ハンズオンで使用する説明資料です。
+
+`hands-on-preparation.pdf` に従って環境構築を行うことで、  
+サンプルアプリの動作確認や演習問題に取り組むことができるようになります。
 
 ## クイックスタート
 
@@ -194,6 +204,9 @@ akka.test.timefactor = 1.0
 
 ## 変更履歴
 *lerna-handson* に関する注目すべき変更は、[CHANGELOG.md](CHANGELOG.md) で確認できます。
+
+## Contribution
+リリース方法などは [CONTRIBUTING.md](CONTRIBUTING.md) に記載されています。
 
 ## License
 *lerna-handson*, except for files in the [docs](docs) directory, is released under the terms of the [Apache License Version 2.0](LICENSE).

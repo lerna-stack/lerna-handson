@@ -35,6 +35,8 @@ Akka Persistence Typed の基礎に対応するコードサンプル、演習問
 
 ### ハンズオン資料の更新
 
+ハンズオン資料は [Releases · lerna-stack/lerna-handson](https://github.com/lerna-stack/lerna-handson/releases) のリリースに添付するように変更します。
+
 - 章「Scala 言語の基礎」
   - 内容の改訂を行いました
     - 他のトピックに時間を投資するため、幾つかの説明を削除します
