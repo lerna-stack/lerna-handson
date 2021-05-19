@@ -1,5 +1,6 @@
 package example
 
+import akka.actor.testkit.typed.scaladsl.LogCapturing
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.mockito.IdiomaticMockito
@@ -24,3 +25,4 @@ abstract class RouteSpecBase
     with SprayJsonSupport
     with IdiomaticMockito
     with AkkaSpanScaleFactorSupport
+    with LogCapturing
