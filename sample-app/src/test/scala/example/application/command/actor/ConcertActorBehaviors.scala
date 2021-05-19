@@ -78,7 +78,7 @@ trait ConcertActorBehaviors extends BeforeAndAfterEach with ConcertIdGeneratorSu
       resp.numTickets shouldBe numOfTickets
       val createdEvent = persistenceTestKit.expectNextPersistedType[ConcertCreated](persistenceId.id)
       createdEvent.concertId shouldBe id
-      createdEvent.numOfTickets shouldBe numOfTickets
+      createdEvent.numOfTickets shouldBe 2
     }
 
     "cannot get the concert if it is not created yet" in {
@@ -131,7 +131,7 @@ trait ConcertActorBehaviors extends BeforeAndAfterEach with ConcertIdGeneratorSu
       val probe = testKit.createTestProbe[GetResponse]()
       actor ! Get(probe.ref)
       val resp = probe.expectMessageType[GetSucceeded]
-      resp.tickets.size shouldBe 3
+      resp.tickets.size shouldBe 2
       persistenceTestKit.expectNothingPersisted(persistenceId.id)
     }
 
