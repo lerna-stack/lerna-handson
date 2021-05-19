@@ -204,6 +204,9 @@ Cassandra に永続化されたデータを確認する方法は、[Cassandra �
 ## 変更履歴
 *lerna-handson* に関する注目すべき変更は、[CHANGELOG.md](CHANGELOG.md) で確認できます。
 
+## Contribution
+リリース方法などは [CONTRIBUTING.md](CONTRIBUTING.md) に記載されています。
+
 ## License
 *lerna-handson*, except for files in the [docs](docs) directory, is released under the terms of the [Apache License Version 2.0](LICENSE).
 The files in the [docs](docs) is released under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
