@@ -5,11 +5,17 @@
 Lerna ハンズオン (*lerna-handson*) で使用するサンプルアプリと演習問題です。
 
 [Releases · lerna-stack/lerna-handson](https://github.com/lerna-stack/lerna-handson/releases) から、
-最新版のアーカイブファイルをダウンロードしてください。このアーカイブファイルにはハンズオンで使用するソースコードと説明PDF資料が含まれています。
+次の3つのファイルをダウンロードしてください。
 
-ハンズオンの説明PDF資料は次の2つです。
-- [Lernaハンズオン事前準備](docs/hands-on-preparation.pdf)
-- [Lernaハンズオン](docs/hands-on.pdf)
+- アーカイブファイル (zip もしくは tar.gz)  
+  サンプルアプリと演習問題のソースコードです。  
+- `hands-on-preparation.pdf`  
+  環境構築などの事前準備が記載された資料です。  
+- `hands-on.pdf`  
+  ハンズオンで使用する説明資料です。
+
+`hands-on-preparation.pdf` に従って環境構築を行うことで、  
+サンプルアプリの動作確認や演習問題に取り組むことができるようになります。
 
 ## クイックスタート
 
