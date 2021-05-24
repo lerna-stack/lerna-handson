@@ -2,13 +2,10 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    val akka     = "2.6.8"
-    val akkaHttp = "10.1.12"
-    // Scalactic, ScalaTest のバージョンは念のため同一にする
-    val scalactic                = "3.2.2"
+    val akka                     = "2.6.14"
+    val akkaHttp                 = "10.2.4"
+    val akkaProjection           = "1.1.0"
     val scalaTest                = "3.2.2"
-    val scalaXml                 = "1.3.0"
-    val expecty                  = "0.14.1"
     val mockitoScala             = "1.15.0"
     val akkaPersistenceCassandra = "1.0.1"
     val kryo                     = "1.1.5"
@@ -18,19 +15,24 @@ object Dependencies {
     val h2                       = "1.4.200"
     val mariadbConnectorJ        = "2.6.2"
     val logback                  = "1.2.3"
+    val levelDbJni               = "1.8"
   }
 
   object Akka {
-    val actor            = "com.typesafe.akka" %% "akka-actor"             % Versions.akka
-    val stream           = "com.typesafe.akka" %% "akka-stream"            % Versions.akka
-    val slf4j            = "com.typesafe.akka" %% "akka-slf4j"             % Versions.akka
-    val testKit          = "com.typesafe.akka" %% "akka-testkit"           % Versions.akka
-    val cluster          = "com.typesafe.akka" %% "akka-cluster"           % Versions.akka
-    val clusterTools     = "com.typesafe.akka" %% "akka-cluster-tools"     % Versions.akka
-    val clusterSharding  = "com.typesafe.akka" %% "akka-cluster-sharding"  % Versions.akka
-    val persistence      = "com.typesafe.akka" %% "akka-persistence"       % Versions.akka
-    val persistenceQuery = "com.typesafe.akka" %% "akka-persistence-query" % Versions.akka
-    val streamTestKit    = "com.typesafe.akka" %% "akka-stream-testkit"    % Versions.akka
+    val actor              = "com.typesafe.akka" %% "akka-actor-typed"            % Versions.akka
+    val actorTestKit       = "com.typesafe.akka" %% "akka-actor-testkit-typed"    % Versions.akka
+    val cluster            = "com.typesafe.akka" %% "akka-cluster-typed"          % Versions.akka
+    val clusterSharding    = "com.typesafe.akka" %% "akka-cluster-sharding-typed" % Versions.akka
+    val persistence        = "com.typesafe.akka" %% "akka-persistence-typed"      % Versions.akka
+    val persistenceTestKit = "com.typesafe.akka" %% "akka-persistence-testkit"    % Versions.akka
+    val persistenceQuery   = "com.typesafe.akka" %% "akka-persistence-query"      % Versions.akka
+    val stream             = "com.typesafe.akka" %% "akka-stream-typed"           % Versions.akka
+    val streamTestKit      = "com.typesafe.akka" %% "akka-stream-testkit"         % Versions.akka
+  }
+
+  object AkkaProjection {
+    val eventsourced = "com.lightbend.akka" %% "akka-projection-eventsourced" % Versions.akkaProjection
+    val slick        = "com.lightbend.akka" %% "akka-projection-slick"        % Versions.akkaProjection
   }
 
   object AkkaHttp {
@@ -39,23 +41,9 @@ object Dependencies {
     val httpTestKit = "com.typesafe.akka" %% "akka-http-testkit"    % Versions.akkaHttp
   }
 
-  object Scalactic {
-    val scalactic = "org.scalactic" %% "scalactic" % Versions.scalactic
-  }
-
-  object ScalaXml {
-    // これを依存に追加しないと Scalactic の Requirements でランタイムエラーになる
-    // See also https://www.scalatest.org/quick_start
-    val scalaXml = "org.scala-lang.modules" %% "scala-xml" % Versions.scalaXml
-  }
-
   object ScalaTest {
     val wordspec       = "org.scalatest" %% "scalatest-wordspec"       % Versions.scalaTest
     val shouldmatchers = "org.scalatest" %% "scalatest-shouldmatchers" % Versions.scalaTest
-  }
-
-  object Expecty {
-    val expecty = "com.eed3si9n.expecty" %% "expecty" % Versions.expecty
   }
 
   object MockitoScala {
@@ -96,4 +84,9 @@ object Dependencies {
   object Logback {
     val classic = "ch.qos.logback" % "logback-classic" % Versions.logback
   }
+
+  object LevelDbJni {
+    val all = "org.fusesource.leveldbjni" % "leveldbjni-all" % Versions.levelDbJni
+  }
+
 }

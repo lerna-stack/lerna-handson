@@ -30,8 +30,13 @@ ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
   "-Xlint",
+  // 演習問題をスムーズに進められるように、演習問題が含まれる exercise パッケージには unused な宣言がある。
+  // これらの unused な宣言は lint では無視してほしいため、ここで設定する。
+  "-Wconf:cat=unused&src=exercise/.*\\.scala:silent",
 ) ++ sys.env.get("lerna.enable.discipline").filter(_ == "true").map(_ => "-Xfatal-warnings").toSeq
 
+// DBを使ったテストの並列実行が難しいため
+ThisBuild / Test / parallelExecution := false
 // See: https://www.scalatest.org/user_guide/using_the_runner
 ThisBuild / Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oT")
 
@@ -51,17 +56,27 @@ lazy val ExerciseAkkaBasic = (project in file("exercise-akka-basic"))
       Dependencies.ScalaTest.wordspec       % Test,
       Dependencies.ScalaTest.shouldmatchers % Test,
       Dependencies.Akka.actor,
-      Dependencies.Akka.testKit % Test,
+      Dependencies.Akka.actorTestKit % Test,
+    ),
+  )
+
+lazy val ExerciseAkkaPersistenceBasic = (project in file("exercise-akka-persistence-basic"))
+  .settings(
+    name := "exercise-akka-persistence-basic",
+    libraryDependencies ++= Seq(
+      Dependencies.ScalaTest.wordspec       % Test,
+      Dependencies.ScalaTest.shouldmatchers % Test,
+      Dependencies.Akka.persistence,
+      Dependencies.Akka.persistenceTestKit % Test,
+      Dependencies.AkkaKryoSerialization.akkakryoSerialization,
+      // サンプルの動作確認や演習取り組みを Cassandra 等のデータストアを起動せずにできるようにするため LevelDB を使用する
+      Dependencies.LevelDbJni.all,
     ),
   )
 
 lazy val ExerciseAkkaHttpBasic = (project in file("exercise-akka-http-basic"))
   .settings(
     name := "exercise-akka-http-basic",
-    scalacOptions ++= Seq(
-      // 演習問題はunsedな宣言を事前にしているため警告をださない
-      "-Wconf:cat=unused&src=exercise/.*\\.scala:silent",
-    ),
     libraryDependencies ++= Seq(
       Dependencies.Akka.stream,
       Dependencies.AkkaHttp.http,
@@ -93,21 +108,22 @@ lazy val SampleApp = (project in file("sample-app"))
     name := "sample-app",
     scalacOptions ++= Seq(
       // 演習問題はunsedな宣言を事前にしているため警告をださない
-      "-Wconf:cat=unused&src=(MyConcertActor|MyBoxOfficeService|MyBoxOfficeResource)\\.scala:silent",
+      "-Wconf:cat=unused&src=(MyConcertActor|MyBoxOfficeResource|MyConcertProjectionRepository)\\.scala:silent",
     ),
     libraryDependencies ++= Seq(
       Dependencies.ScalaTest.wordspec       % Test,
       Dependencies.ScalaTest.shouldmatchers % Test,
       Dependencies.Akka.actor,
-      Dependencies.Akka.stream,
-      Dependencies.Akka.slf4j,
+      Dependencies.Akka.actorTestKit % Test,
       Dependencies.Akka.cluster,
-      Dependencies.Akka.clusterTools,
       Dependencies.Akka.clusterSharding,
       Dependencies.Akka.persistence,
+      Dependencies.Akka.persistenceTestKit % Test,
       Dependencies.Akka.persistenceQuery,
-      Dependencies.Akka.testKit       % Test,
+      Dependencies.Akka.stream,
       Dependencies.Akka.streamTestKit % Test,
+      Dependencies.AkkaProjection.eventsourced,
+      Dependencies.AkkaProjection.slick,
       Dependencies.AkkaHttp.http,
       Dependencies.AkkaHttp.sprayJson,
       Dependencies.AkkaHttp.httpTestKit % Test,
@@ -123,37 +139,6 @@ lazy val SampleApp = (project in file("sample-app"))
       Dependencies.Logback.classic,
       Dependencies.MockitoScala.mockitoScala % Test,
     ),
-  ).dependsOn(
-    LernaLibrary,
-  )
-
-// Lernaライブラリ(必要な分だけ)
-// ライブラリとして整備されてないので、コピーして持ってきている
-// パッケージ名、バージョン番号、クラス名は変更される可能性がある
-lazy val LernaLibrary = (project in file("lerna-library"))
-  .settings(
-    name := "lerna-library",
-    libraryDependencies ++= Seq(
-      Dependencies.Akka.actor,
-      Dependencies.Akka.testKit % Test,
-    ),
-  ).dependsOn(
-    LernaTestKit % Test,
-  )
-
-// Lernaテストキット(必要な分だけ)
-// ライブラリとして整備されてないので、コピーして持ってきている
-// パッケージ名、バージョン番号、クラス名は変更される可能性がある
-lazy val LernaTestKit = (project in file("lerna-testkit"))
-  .settings(
-    name := "lerna-testkit",
-    libraryDependencies ++= Seq(
-      Dependencies.Scalactic.scalactic,
-      Dependencies.ScalaXml.scalaXml,
-      Dependencies.ScalaTest.wordspec,
-      Dependencies.ScalaTest.shouldmatchers,
-      Dependencies.Expecty.expecty,
-    ),
   )
 
 // すべてのテストを実行する
@@ -163,12 +148,11 @@ addCommandAlias(
   """
     |compile;
     |ExerciseAccordBasic/test;
-    |ExerciseAkkaBasic/test;
+    |ExerciseAkkaBasic/testOnly -- -l testing.tags.ExerciseTest;
+    |ExerciseAkkaPersistenceBasic/testOnly -- -l testing.tags.ExerciseTest;
     |ExerciseAkkaHttpBasic/test;
     |ExerciseScalaBasic/test;
     |ExerciseSlickBasic/test;
-    |LernaTestKit/test;
-    |LernaLibrary/test;
     |SampleApp/testOnly -- -l example.testing.tags.ExerciseTest;
     |""".stripMargin,
 )
@@ -176,33 +160,25 @@ addCommandAlias(
 // 演習で使うコマンドたち
 addCommandAlias(
   "testMyConcertActorBinding",
-  "SampleApp/testOnly example.model.MyConcertActorBindSpec",
+  "SampleApp/testOnly example.application.MyConcertActorBindSpec",
 )
 addCommandAlias(
   "testMyConcertActor",
-  "SampleApp/testOnly example.model.concert.actor.MyConcertActorSpec",
-)
-addCommandAlias(
-  "testMyBoxOfficeServiceBinding",
-  "SampleApp/testOnly example.model.MyBoxOfficeServiceBindSpec",
-)
-addCommandAlias(
-  "testMyBoxOfficeService",
-  "SampleApp/testOnly example.model.concert.service.MyBoxOfficeServiceSpec",
+  "SampleApp/testOnly example.application.command.actor.MyConcertActorSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeResourceBinding",
-  "SampleApp/testOnly example.application.http.MyBoxOfficeResourceBindSpec",
+  "SampleApp/testOnly example.presentation.MyBoxOfficeResourceBindSpec",
 )
 addCommandAlias(
   "testMyBoxOfficeResource",
-  "SampleApp/testOnly example.application.http.controller.MyBoxOfficeResourceSpec",
+  "SampleApp/testOnly example.presentation.MyBoxOfficeResourceSpec",
 )
 addCommandAlias(
-  "testMyConcertRepositoryBinding",
-  "SampleApp/testOnly example.readmodel.MyConcertRepositoryBindSpec",
+  "testMyConcertProjectionRepositoryBinding",
+  "SampleApp/testOnly example.application.MyConcertProjectionRepositoryBindSpec",
 )
 addCommandAlias(
-  "testMyConcertRepository",
-  "SampleApp/testOnly example.readmodel.rdb.MyConcertRepositorySpec",
+  "testMyConcertProjectionRepository",
+  "SampleApp/testOnly example.application.projection.MyConcertProjectionRepositorySpec",
 )

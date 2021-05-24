@@ -1,31 +1,37 @@
 package example
 
-import akka.actor.ActorSystem
-import akka.testkit.{ ImplicitSender, TestKit }
-import org.scalatest.{ BeforeAndAfterAll, EitherValues, Inside }
+import akka.actor.testkit.typed.scaladsl.{ ActorTestKit, LogCapturing, ScalaTestWithActorTestKit }
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.concurrent.{ Eventually, ScalaFutures }
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
-import testkit.{ AkkaPatienceConfigurationSupport, AkkaSpanScaleFactorSupport }
+import org.scalatest.{ BeforeAndAfterAll, EitherValues, Inside }
+import testkit.AkkaTypedSpanScaleFactorSupport
 
 /** A test class which improve consistency and reduce boilerplate.
   *
   * @see [[https://www.scalatest.org/user_guide/defining_base_classes Defining base classes for your project]]
   */
-abstract class ActorSpecBase(system: ActorSystem)
-    extends TestKit(system)
+abstract class ActorSpecBase(testKit: ActorTestKit)
+    extends ScalaTestWithActorTestKit(testKit)
     with AnyWordSpecLike
     with Matchers
     with Inside
     with BeforeAndAfterAll
-    with ImplicitSender
     with Eventually
     with ScalaFutures
     with EitherValues
-    with AkkaPatienceConfigurationSupport
-    with AkkaSpanScaleFactorSupport {
-  override protected def afterAll(): Unit = {
-    try shutdown(system)
-    finally super.afterAll()
+    with AkkaTypedSpanScaleFactorSupport
+    with LogCapturing {
+
+  def this() = {
+    // デフォルトの振る舞いでは `application-test` もしくは `reference` のみが読み込まれる。
+    // テスト全般にわたって `application` と `reference` を使用したいため、ConfigFactory#load を使用する。
+    this(ActorTestKit(ConfigFactory.load()))
   }
+
+  def this(customConfig: Config) = {
+    this(ActorTestKit(customConfig))
+  }
+
 }

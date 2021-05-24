@@ -1,27 +1,20 @@
 package example
 
-import akka.actor._
+import akka.actor.typed.{ ActorRef, ActorSystem }
 
 object TellExample extends App {
-  val system = ActorSystem("tell-example")
+  val system: ActorSystem[String] =
+    ActorSystem(PrintActor(), "tell-example")
 
-  final class EchoActor extends Actor {
-    override def receive: Receive = {
-      case msg =>
-        println((sender(), msg))
-        sender() ! msg
-    }
-  }
-  val actorRef: ActorRef = system.actorOf(Props(new EchoActor))
+  // PrintActor
+  val actorRef: ActorRef[String] = system
 
-  // 次の2つは同じ意味(アクター外からtellする場合)
-  // ! を使う場合には、送信アクターは暗黙的に解決される。
-  // tell を使う場合には、明示的に与える必要がある。
+  // アクターにメッセージを送るには ! または tell を使う
+  // 次の2つは同じ意味である
   actorRef ! "message"
-  actorRef.tell("message", Actor.noSender)
+  actorRef.tell("message")
 
-  // アクターが処理完了かわからないので、
-  // 適当に1秒くらい待って終了する
+  // アクターがメッセージを処理するまで適当に1秒まってから終了する
   Thread.sleep(1000)
   system.terminate()
 }

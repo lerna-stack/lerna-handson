@@ -1,5 +1,6 @@
 package example
 
+import akka.actor.testkit.typed.scaladsl.LogCapturing
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.mockito.IdiomaticMockito
@@ -8,7 +9,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import spray.json.DefaultJsonProtocol
-import testkit.{ AkkaPatienceConfigurationSupport, AkkaSpanScaleFactorSupport }
+import testkit.AkkaSpanScaleFactorSupport
 
 /** A test class which improve consistency and reduce boilerplate.
   *
@@ -23,5 +24,5 @@ abstract class RouteSpecBase
     with DefaultJsonProtocol
     with SprayJsonSupport
     with IdiomaticMockito
-    with AkkaPatienceConfigurationSupport
     with AkkaSpanScaleFactorSupport
+    with LogCapturing

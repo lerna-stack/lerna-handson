@@ -1,50 +1,37 @@
 package answer
 
-import akka.actor.ActorSystem
+import akka.actor.typed.{ ActorRef, ActorSystem, Behavior }
+import akka.actor.typed.scaladsl.Behaviors
 
-import scala.concurrent.duration._
-import scala.concurrent._
-import scala.language.postfixOps
-import scala.util.{ Failure, Success }
+object DefaultCounterActor {
+  def apply(): Behavior[Int] = {
+    // (A) アクターの定義はここに書こう
+    apply(0)
+  }
+  private def apply(count: Int): Behavior[Int] = {
+    Behaviors.receiveMessage { delta: Int =>
+      val newCount: Int = count + delta
+      println(newCount)
+      apply(newCount)
+    }
+  }
+}
 
 object Answer4 extends App {
-  // ExecutionContext (Futureなどを処理する実行コンテキスト)
-  // 今回は ActorSystem から持ってくる
-  val system = ActorSystem("answer4")
-  import system.dispatcher
+  val system: ActorSystem[Int] =
+    ActorSystem(DefaultCounterActor(), "answer4")
 
-  def doubling(source: Future[Int]): Future[Int] = {
-    source.map(_ * 2)
-  }
+  val actorRef: ActorRef[Int] = system
+  // (B) ここでメッセージを送ってみよう
+  actorRef ! +2
+  actorRef ! -3
+  actorRef ! +5
+  // 2
+  // -1
+  // 4
+  // が表示される
 
-  def mapToDouble(source: Future[Int]): Future[Double] = {
-    source.map(_.toDouble)
-  }
-
-  def parseInt(source: Future[String]): Future[Int] = {
-    source.map(_.toInt)
-  }
-
-  try {
-    val future200 = doubling(Future.successful(100))
-    assert(Await.result(future200, 1 second) == 200)
-
-    val future123 = mapToDouble(Future.successful(123))
-    assert((Await.result(future123, 1 second) - 123).abs < 1e-5)
-
-    val parseSuccess = parseInt(Future.successful("1024"))
-    assert(Await.result(parseSuccess, 1 second) == 1024)
-
-    val parseFailure = parseInt(Future.successful("abcdefg"))
-    parseFailure.onComplete {
-      case Success(value)     => assert(false)
-      case Failure(exception) => assert(true)
-    }
-    Await.ready(parseFailure, 1 second)
-
-    println("OK")
-  } finally {
-    // ActorSystem を終了させる
-    system.terminate()
-  }
+  // アクターがメッセージを処理完了するまで適当に待って終了する
+  Thread.sleep(3000)
+  system.terminate()
 }

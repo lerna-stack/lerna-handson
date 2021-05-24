@@ -14,7 +14,7 @@ import org.scalatest.concurrent.ScaledTimeSpans
   */
 trait AkkaSpanScaleFactorSupport extends ScaledTimeSpans {
   // No trait provides the ActorSystem in both TestKit and RouteTest
-  implicit val system: ActorSystem
+  implicit def system: ActorSystem
 
   /** Configure the ScalaTest time factor from Akka TestKit's test time factor.
     * <p>

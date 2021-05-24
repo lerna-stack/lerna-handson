@@ -2,10 +2,20 @@
 
 ## 概要
 
-Lernaハンズオンに必要なサンプルアプリや演習問題が含まれています。  
-ハンズオン資料は次の2つです。
-- [Lernaハンズオン事前準備](docs/hands-on-preparation.pdf)
-- [Lernaハンズオン](docs/hands-on.pdf)
+Lerna ハンズオン (*lerna-handson*) で使用するサンプルアプリと演習問題です。
+
+[Releases · lerna-stack/lerna-handson](https://github.com/lerna-stack/lerna-handson/releases) から、
+次の3つのファイルをダウンロードしてください。
+
+- アーカイブファイル (zip もしくは tar.gz)  
+  サンプルアプリと演習問題のソースコードです。  
+- `hands-on-preparation.pdf`  
+  環境構築などの事前準備が記載された資料です。  
+- `hands-on.pdf`  
+  ハンズオンで使用する説明資料です。
+
+`hands-on-preparation.pdf` に従って環境構築を行うことで、  
+サンプルアプリの動作確認や演習問題に取り組むことができるようになります。
 
 ## クイックスタート
 
@@ -48,6 +58,9 @@ Accord のサンプルコードがあります。
 - exercise-akka-basic  
 Akka のサンプルコードがあります。  
 演習問題も含まれています。
+- exercise-akka-persistence-basic  
+Akka Persistence のサンプルコードがあります。  
+演習問題も含まれています。
 - exercise-akka-http-basic  
 Akka HTTP のサンプルコードがあります。  
 演習問題も含まれています。
@@ -56,10 +69,6 @@ Scala のサンプルコードがあります。
 演習問題も含まれています。
 - exercise-slick-basic  
 Slick のサンプルコードがあります。
-- lerna-library  
-Lernaのライブラリの一部です。
-- lerna-testkit  
-Lernaのテストライブラリの一部です。
 - sample-app  
 サンプルアプリです。
 - scripts  
@@ -116,12 +125,10 @@ sbt testAll
 ```sh
 sbt testMyConcertActorBinding
 sbt testMyConcertActor
-sbt testMyBoxOfficeServiceBinding
-sbt testMyBoxOfficeService
 sbt testMyBoxOfficeResourceBinding
 sbt testMyBoxOfficeResource
-sbt testMyConcertRepositoryBinding
-sbt testMyConcertRepository
+sbt testMyConcertProjectionRepositoryBinding
+sbt testMyConcertProjectionRepository
 ```
 
 ### API リクエスト例
@@ -159,20 +166,25 @@ docker-compose down --volumes
 
 ### パッケージ構成
 
-主要なパッケージは次の通りです。
+パッケージは次の通りです。  
+[プロジェクト構成詳解](https://github.com/lerna-stack/lerna-sample-payment-app/blob/v1.0.0/docs/プロジェクト構成詳解.md) と同様の構成になっています。
 
-- example.application.rmu  
-リードモデルアップデータ
-- example.application.http  
-HTTP API サーバ
-- example.model  
-コマンド(ライト)側モデル
-- example.readmodel  
-コマンド(リード)側モデル
-- example.usecase  
-ユースケース
-- example.serialization  
-シリアライザ等
+- `example.adapter`  
+  Application の インターフェース (trait) を定義します。
+- `example.application`  
+  業務ロジックを記述します。
+  - `example.application.command`  
+    書き込みとインメモリからの読み込みを実装します。  
+  - `example.application.projection`  
+    リードモデル更新を実装します。
+  - `example.application.query`  
+    リードモデルからの読み込みを実装します。
+- `example.entrypoint`  
+  Main クラスを実装します。
+- `example.presentation`  
+  HTTP API を実装します。
+- `exaple.readmodel`  
+  RDBMS にアクセスするコードを配置します。
 
 
 ### テストに失敗する場合には?
@@ -185,6 +197,16 @@ HTTP API サーバ
 akka.test.default-timeout = 5s
 akka.test.timefactor = 1.0
 ```
+
+### 永続化されたデータ確認方法
+- Cassandra に永続化されたデータを確認する方法は、[Cassandra の基本操作](docs/cassandra-ops.md) に記載されています。
+- MariaDB に永続化されたデータを確認する方法は、[MariaDB の基本操作](docs/mariadb-ops.md) に記載されています。
+
+## 変更履歴
+*lerna-handson* に関する注目すべき変更は、[CHANGELOG.md](CHANGELOG.md) で確認できます。
+
+## Contribution
+リリース方法などは [CONTRIBUTING.md](CONTRIBUTING.md) に記載されています。
 
 ## License
 *lerna-handson*, except for files in the [docs](docs) directory, is released under the terms of the [Apache License Version 2.0](LICENSE).
