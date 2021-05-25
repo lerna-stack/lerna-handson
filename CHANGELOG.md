@@ -6,6 +6,9 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 
 ## Unreleased
 
+
+## v1.1.0
+
 ### サンプルアプリの変更
 - Akka Typed に移行します
   - 型安全な Typed Actor を使うように変更します
