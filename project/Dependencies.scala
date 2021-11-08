@@ -11,7 +11,7 @@ object Dependencies {
     val kryo                     = "1.1.5"
     val airframe                 = "20.9.0"
     val accord                   = "0.7.6"
-    val slick                    = "3.3.2"
+    val slick                    = "3.3.3"
     val h2                       = "1.4.200"
     val mariadbConnectorJ        = "2.6.2"
     val logback                  = "1.2.3"
