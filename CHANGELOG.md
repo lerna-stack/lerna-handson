@@ -10,6 +10,7 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 - Akka 2.6.17 に更新します [PR#45](https://github.com/lerna-stack/lerna-handson/pull/45)
 - Akka HTTP 10.2.7 に更新します [PR#46](https://github.com/lerna-stack/lerna-handson/pull/46)
 - Slick 3.3.3 に更新します [PR#47](https://github.com/lerna-stack/lerna-handson/pull/47)
+- Akka Persistence Cassandra 1.0.5 に更新します [PR#49](https://github.com/lerna-stack/lerna-handson/pull/49)
 - sbt Native Packager への依存を削除します [PR#50](https://github.com/lerna-stack/lerna-handson/pull/50)
 
 ## v1.1.0
