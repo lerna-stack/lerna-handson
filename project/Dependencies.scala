@@ -5,7 +5,7 @@ object Dependencies {
     val akka                     = "2.6.14"
     val akkaHttp                 = "10.2.4"
     val akkaProjection           = "1.1.0"
-    val scalaTest                = "3.2.2"
+    val scalaTest                = "3.2.10"
     val mockitoScala             = "1.15.0"
     val akkaPersistenceCassandra = "1.0.1"
     val kryo                     = "1.1.5"
