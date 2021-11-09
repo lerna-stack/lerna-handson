@@ -5,7 +5,7 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 このファイルの書き方については [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) を参照してください。
 
 ## Unreleased
-
+- sbt 1.5.5 に更新します [PR#43](https://github.com/lerna-stack/lerna-handson/pull/43)
 
 ## v1.1.0
 

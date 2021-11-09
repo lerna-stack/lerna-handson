@@ -6,6 +6,9 @@ target/
 # sbt
 sbt-cache/
 
+# BSP
+.bsp/
+
 # lightbend credentials
 .lightbend/commercial.credentials
 
