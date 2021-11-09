@@ -22,7 +22,7 @@ ThisBuild / homepage := Some(url("https://github.com/lerna-stack/lerna-handson")
 
 // このビルドで使う scala version
 // サブプロジェクトで上書きしない限り適用される。
-ThisBuild / scalaVersion := "2.13.3"
+ThisBuild / scalaVersion := "2.13.7"
 ThisBuild / scalacOptions ++= Seq(
   "-encoding",
   "utf8",
