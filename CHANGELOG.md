@@ -8,6 +8,7 @@ lerna-handson に関する注目すべき変更はこのファイルで文書化
 - sbt 1.5.5 に更新します [PR#43](https://github.com/lerna-stack/lerna-handson/pull/43)
 - Scala 2.13.7 に更新します [PR#44](https://github.com/lerna-stack/lerna-handson/pull/44)
 - Akka 2.6.17 に更新します [PR#45](https://github.com/lerna-stack/lerna-handson/pull/45)
+- Akka HTTP 10.2.7 に更新します [PR#46](https://github.com/lerna-stack/lerna-handson/pull/46)
 
 ## v1.1.0
 
